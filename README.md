@@ -1,4 +1,4 @@
-# nf
+# netflix-clone
 
 ## Project setup
 ```

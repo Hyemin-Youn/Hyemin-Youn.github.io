@@ -1,18 +1,15 @@
-// router/index.js
-import { createRouter, createWebHistory } from 'vue-router';
-import Login from '../components/Login.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import Home from "../components/Home.vue"; // 경로를 실제 컴포넌트 위치에 맞게 조정하세요.
+import UserLogin from "../UserLogin.vue";
 
 const routes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  }
+  { path: "/", component: UserLogin },
+  { path: "/home", component: Home },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
+  history: createWebHistory(),
+  routes,
 });
 
 export default router;

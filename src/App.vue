@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import UserLogin from './components/UserLogin.vue';
+import UserLogin from './UserLogin.vue';
 
 export default {
   components: {
-    UserLogin,
+    UserLogin, Home
   },
 };
 </script>

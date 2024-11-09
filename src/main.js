@@ -1,7 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router"; // 라우터 경로를 확인하세요
-import { fetchPopularMovies } from './URL';
+import { fetchPopularMovies } from './components/URL';
+import { fetchPopularMovies } from '@/URL';
 
 
 

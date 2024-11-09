@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiKey = '75b7c972001662bd9d37622e0e222947'; // 실제 API 키로 변경하세요
+const apiKey = 'apikey'; // 실제 API 키로 변경하세요
 const language = 'ko-KR';
 
 // API 엔드포인트 구성

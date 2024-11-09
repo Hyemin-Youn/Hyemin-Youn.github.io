@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 const apiKey = process.env.VUE_APP_API_KEY; // 환경 변수에서 API 키 가져오기
 const language = 'ko-KR';
 

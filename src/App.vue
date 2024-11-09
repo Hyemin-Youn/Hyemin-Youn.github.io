@@ -6,7 +6,8 @@
 </template>
 
 <script>
-import UserLogin from './components/UserLogin.vue';
+import HomePage from '../views/Home.vue';
+
 
 
 /* eslint-disable */

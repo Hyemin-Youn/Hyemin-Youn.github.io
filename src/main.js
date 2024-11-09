@@ -1,15 +1,9 @@
-import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router"; // 라우터 경로를 확인하세요
-import { fetchPopularMovies } from './URL';
-
-
-
+// src/main.js
+import { createApp } from 'vue';
+import App from './App.vue';
+import router from './router'; // router 설정 가져오기
+import './assets/styles.css'; // 전역 스타일 가져오기
 
 const app = createApp(App);
 app.use(router);
-app.mount("#app");
-
-fetchPopularMovies(1)
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
+app.mount('#app');

@@ -7,13 +7,11 @@
 
 <script>
 import UserLogin from './components/UserLogin.vue';
-import HomePage from './components/Home.vue';
 
 
+/* eslint-disable */
 export default {
-  components: {
-    UserLogin, Home
-  },
+  name: 'Home',
 };
 </script>
 

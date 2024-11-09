@@ -2,7 +2,7 @@
 node_modules
 /dist
 .env
-
+apiKey="75b7c972001662bd9d37622e0e222947"
 
 # local env files
 .env.local

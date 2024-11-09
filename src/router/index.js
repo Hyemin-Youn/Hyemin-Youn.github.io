@@ -1,16 +1,21 @@
 // src/router/index.js
-import Home from '../views/Home.vue';
-import About from '../views/About.vue';
-import MovieList from '../components/MovieList.vue';
+import { createRouter, createWebHistory } from 'vue-router';
+import HomePage from '../views/HomePage.vue';
+import UserLogin from '../components/UserLogin.vue';
+
+
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/movies', component: MovieList }
+  { path: '/home', component: HomePage },
+  { path: '/', component: UserLogin },
+ 
 ];
-
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+
+
 
 export default router;

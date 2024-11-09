@@ -5,13 +5,13 @@
 </template>
 
 <script>
-import HomePage from '../views/Home.vue';
+
 
 
 
 /* eslint-disable */
 export default {
-  name: 'Home',
+  name: 'HomePage',
 };
 </script>
 

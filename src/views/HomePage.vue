@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import { fetchPopularMovies } from '../URL';
+import { fetchPopularMovies } from '@/URL';
 
 export default {
-  name: 'Home',
+  name: 'HomePage',
   data() {
     return {
       movies: []

@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { fetchPopularMovies, fetchNowPlayingMovies, fetchDiscoverMovies } from '../URL';
+import { fetchPopularMovies, fetchNowPlayingMovies, fetchDiscoverMovies } from './URL';
 
 export default {
   name: 'Home',

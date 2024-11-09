@@ -6,7 +6,9 @@
 </template>
 
 <script>
-import UserLogin from './UserLogin.vue';
+import UserLogin from './components/UserLogin.vue';
+import HomePage from './components/Home.vue';
+
 
 export default {
   components: {

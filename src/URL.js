@@ -1,7 +1,11 @@
 import axios from 'axios';
 
-const apiKey = process.env.VUE_APP_API_KEY; // 환경 변수에서 API 키 가져오기
+const apiKey = process.env.VUE_APP_API_KEY;// 환경 변수에서 API 키 가져오기
 const language = 'ko-KR';
+
+export function fetchPopularMovies() {
+  return axios.get(`https://api.example.com/popular?api_key=${apiKey}`);
+}
 
 const endpoints = {
   popularMovies: (page = 1) => `/movie/popular?api_key=${apiKey}&language=${language}&page=${page}`,

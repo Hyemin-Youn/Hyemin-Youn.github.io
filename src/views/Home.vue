@@ -1,17 +1,9 @@
-<!-- src/views/Home.vue -->
 <template>
   <div>
     <h1>Popular Movies</h1>
-    <div v-if="movies.length">
-      <div v-for="movie in movies" :key="movie.id" class="movie">
-        <h2>{{ movie.title }}</h2>
-        <p>{{ movie.overview }}</p>
-        <img :src="getImageUrl(movie.poster_path)" alt="Movie poster" />
-      </div>
-    </div>
-    <div v-else>
-      <p>Loading movies...</p>
-    </div>
+    <ul>
+      <li v-for="movie in movies" :key="movie.id">{{ movie.title }}</li>
+    </ul>
   </div>
 </template>
 
@@ -25,11 +17,6 @@ export default {
       movies: []
     };
   },
-  methods: {
-    getImageUrl(path) {
-      return `https://image.tmdb.org/t/p/w500${path}`;
-    }
-  },
   async created() {
     try {
       const response = await fetchPopularMovies();
@@ -40,9 +27,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.movie {
-  margin: 10px 0;
-}
-</style>

@@ -19,10 +19,10 @@
   <script>
   import { ref, onMounted, onBeforeUnmount } from 'vue';
   import Navbar from '@/components/Navbar.vue';
-  import BannerComponent from '@/components/home-main/BannerComponent.vue';
-  import MovieRowComponent from '@/components/home-main/MovieRowComponent.vue';
+//   import BannerComponent from '@/components/home-main/BannerComponent.vue';
+//   import MovieRowComponent from '@/components/home-main/MovieRowComponent.vue';
   import Footer from '@/components/Footer.vue';
-  import URLService from '@/util/movie/URL'; // URL 서비스 임포트
+//   import URLService from '@/util/movie/URL'; // URL 서비스 임포트
   
   export default {
     components: {

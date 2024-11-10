@@ -2,9 +2,9 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import SignIn from '@/components/sign-in/SignIn.vue';
 import Home from '@/components/home/Home.vue';
 import HomeMain from '@/components/home/main/HomeMain.vue';
-import HomeWishlist from '@/components/home/wishlist/HomeWishlist.vue';
-import HomeSearch from '@/components/search/HomeSearch.vue';
-import HomePopular from '@/components/home/popular/HomePopular.vue';
+// import HomeWishlist from '@/components/home/wishlist/HomeWishlist.vue';
+// import HomeSearch from '@/components/search/HomeSearch.vue';
+// import HomePopular from '@/components/home/popular/HomePopular.vue';
 
 // 라우트 정의
 const routes = [
@@ -17,18 +17,18 @@ const routes = [
         path: '',
         component: HomeMain
       },
-      {
-        path: 'popular',
-        component: HomePopular
-      },
-      {
-        path: 'wishlist',
-        component: HomeWishlist
-      },
-      {
-        path: 'search',
-        component: HomeSearch
-      }
+      //{
+      //   path: 'popular',
+      //   component: HomePopular
+      // },
+      // {
+      //   path: 'wishlist',
+      //   component: HomeWishlist
+      // },
+      // {
+      //   path: 'search',
+      //   component: HomeSearch
+      // }
     ]
   },
   {

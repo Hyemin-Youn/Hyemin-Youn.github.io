@@ -1,19 +1,33 @@
 <template>
-    <nav class="navbar">
-      <div class="logo" @click="goHome">
-        <img src="@/assets/logo.png" alt="Logo" class="logo-image" />
-        <span>홈</span>
-      </div>
-      <ul class="nav-links">
-        <li v-for="item in menuItems" :key="item.text" @click="navigate(item.route)">
-          <span>{{ item.text }}</span>
-        </li>
-      </ul>
-      <div class="user-icon" @click="goProfile">
-        <i class="fas fa-user"></i>
-      </div>
-    </nav>
-  </template>
+  <nav class="navbar">
+    <div
+      class="logo"
+      @click="goHome"
+    >
+      <img
+        src="@/assets/logo.png"
+        alt="Logo"
+        class="logo-image"
+      >
+      <span>홈</span>
+    </div>
+    <ul class="nav-links">
+      <li
+        v-for="item in menuItems"
+        :key="item.text"
+        @click="navigate(item.route)"
+      >
+        <span>{{ item.text }}</span>
+      </li>
+    </ul>
+    <div
+      class="user-icon"
+      @click="goProfile"
+    >
+      <i class="fas fa-user" />
+    </div>
+  </nav>
+</template>
   
   <script>
   export default {

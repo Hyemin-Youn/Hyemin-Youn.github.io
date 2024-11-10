@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import Navbar from './components/Navbar.vue';
 
 
 
@@ -12,7 +13,7 @@
 /* eslint-disable */
 export default {
   components: {
-
+    Navbar
   }
 };
 

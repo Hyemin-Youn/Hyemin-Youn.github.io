@@ -7,15 +7,6 @@
 <script>
 
 
-
-
-/* eslint-disable */
-export default {
-  components: {
-
-  }
-};
-
 </script>
 
 <style>

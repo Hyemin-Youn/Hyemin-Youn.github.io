@@ -1,9 +1,5 @@
 {
-<<<<<<< HEAD
-  "name": "nf",
-=======
   "name": "netflix-clone",
->>>>>>> feature/Home
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -12,27 +8,19 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-<<<<<<< HEAD
-=======
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-solid-svg-icons": "^6.6.0",
     "@fortawesome/vue-fontawesome": "^3.0.8",
     "axios": "^1.7.7",
->>>>>>> feature/Home
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-router": "^4.4.5"
   },
   "devDependencies": {
-<<<<<<< HEAD
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-=======
     "@babel/core": "^7.26.0",
     "@babel/eslint-parser": "^7.12.16",
     "@babel/preset-env": "^7.26.0",
->>>>>>> feature/Home
     "@vue/cli-plugin-babel": "~5.0.0",
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",

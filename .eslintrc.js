@@ -9,3 +9,9 @@ module.exports = {
     sourceType: "module",
   },
 };
+
+module.exports = {
+  rules: {
+    'vue/multi-word-component-names': 'off'
+  }
+};

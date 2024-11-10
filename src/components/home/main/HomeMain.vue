@@ -10,9 +10,9 @@
 
 <script>
 import { onMounted, onBeforeUnmount, ref } from 'vue';
-import Banner from '@/components/Banner.vue';
-import MovieRow from '@/components/MovieRow.vue';
-import URLService from '@/util/movie/URL';
+import Banner from '@/views/home-main/Banner.vue';
+import MovieRow from '@/views/home-main/MovieRow.vue';
+import URL from '@/utils/movie/URL.js';
 
 export default {
   components: {
@@ -26,13 +26,13 @@ export default {
     const newReleasesUrl = ref('');
     const actionMoviesUrl = ref('');
 
-    const urlService = new URLService();
-    popularMoviesUrl.value = urlService.getURL4PopularMovies(apiKey);
-    newReleasesUrl.value = urlService.getURL4ReleaseMovies(apiKey);
-    actionMoviesUrl.value = urlService.getURL4GenreMovies(apiKey, '28');
+    const url = new URL();
+    popularMoviesUrl.value = url.getURL4PopularMovies(apiKey);
+    newReleasesUrl.value = url.getURL4ReleaseMovies(apiKey);
+    actionMoviesUrl.value = url.getURL4GenreMovies(apiKey, '28');
 
     const loadFeaturedMovie = async () => {
-      featuredMovie.value = await urlService.fetchFeaturedMovie(apiKey);
+      featuredMovie.value = await url.fetchFeaturedMovie(apiKey);
     };
 
     const handleScroll = () => {

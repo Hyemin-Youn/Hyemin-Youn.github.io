@@ -11,7 +11,7 @@
 
 /* eslint-disable */
 export default {
-  name: 'HomePage',
+  name: 'Home',
 };
 </script>
 

@@ -1,21 +1,26 @@
 <template>
     <div class="home">
-      <h1>Home - Movie List</h1>
-      <div class="movie-list">
-        <div
-          v-for="(movie, index) in movies"
-          :key="index"
-          class="movie-card"
-        >
-          <img
-            :src="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
-            :alt="movie.title"
-            class="movie-poster"
-          />
-          <h2 class="movie-title">{{ movie.title }}</h2>
-          <p class="movie-overview">{{ movie.overview }}</p>
-          <p class="movie-rating">Rating: {{ movie.vote_average }}</p>
-          <p class="movie-release-date">Release Date: {{ movie.release_date }}</p>
+      <!-- Hero Section -->
+      <div class="hero">
+        <img :src="heroImage" alt="Hero Movie" class="hero-image" />
+        <div class="hero-content">
+          <h2>{{ heroMovie.title }}</h2>
+          <p>{{ heroMovie.overview }}</p>
+          <button @click="goToDetail(heroMovie.id)">상세 보기</button>
+        </div>
+      </div>
+  
+      <!-- Movie Categories -->
+      <div class="movie-category" v-for="category in movieCategories" :key="category.name">
+        <h3>{{ category.title }}</h3>
+        <div class="movie-list">
+          <div v-for="movie in category.movies" :key="movie.id" class="movie-card">
+            <img
+              :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+              :alt="movie.title"
+              class="movie-poster"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -25,31 +30,53 @@
   import axios from 'axios';
   
   export default {
-    name: "Home",
+    name: 'Home',
     data() {
       return {
-        movies: []
+        heroMovie: {},
+        movieCategories: [
+          { name: 'popular', title: '인기 영화', movies: [] },
+          { name: 'now_playing', title: '최신 영화', movies: [] },
+          { name: 'top_rated', title: '높은 평점 영화', movies: [] },
+          { name: 'upcoming', title: '개봉 예정 영화', movies: [] }
+        ]
       };
     },
+    computed: {
+      heroImage() {
+        return this.heroMovie.backdrop_path
+          ? `https://image.tmdb.org/t/p/original${this.heroMovie.backdrop_path}`
+          : '';
+      }
+    },
     created() {
+      this.fetchHeroMovie();
       this.fetchMovies();
     },
     methods: {
+      async fetchHeroMovie() {
+        const API_KEY = 'YOUR_TMDB_API_KEY';
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
+          );
+          this.heroMovie = response.data.results[0];
+        } catch (error) {
+          console.error('Error fetching hero movie:', error);
+        }
+      },
       async fetchMovies() {
         const API_KEY = 'YOUR_TMDB_API_KEY';
-        const urls = [
-          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`,
-          `https://api.themoviedb.org/3/movie/top_rated?api_key=${API_KEY}&language=en-US&page=1`,
-          `https://api.themoviedb.org/3/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`,
-          `https://api.themoviedb.org/3/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1`
-        ];
-  
-        try {
-          const responses = await Promise.all(urls.map(url => axios.get(url)));
-          this.movies = responses.flatMap(response => response.data.results);
-        } catch (error) {
-          console.error("Error fetching movies:", error);
-        }
+        const requests = this.movieCategories.map(async (category) => {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
+          );
+          category.movies = response.data.results;
+        });
+        await Promise.all(requests);
+      },
+      goToDetail(movieId) {
+        this.$router.push(`/movie/${movieId}`);
       }
     }
   };
@@ -58,41 +85,74 @@
   <style scoped>
   .home {
     padding: 20px;
+    background-color: #141414;
+    color: #ffffff;
+  }
+  
+  .hero {
+    position: relative;
+    height: 60vh;
+    margin-bottom: 40px;
+  }
+  
+  .hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.6);
+  }
+  
+  .hero-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
+  }
+  
+  .hero-content h2 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+  
+  .hero-content p {
+    font-size: 1.2em;
+    max-width: 50%;
+  }
+  
+  .hero-content button {
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #e50914;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .movie-category {
+    margin-bottom: 20px;
+  }
+  
+  .movie-category h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
   }
   
   .movie-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 10px;
   }
   
   .movie-card {
-    width: 200px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 5px;
-    text-align: center;
+    width: 150px;
+    flex-shrink: 0;
   }
   
   .movie-poster {
     width: 100%;
     border-radius: 5px;
-  }
-  
-  .movie-title {
-    font-size: 1.2em;
-    margin: 10px 0;
-  }
-  
-  .movie-overview {
-    font-size: 0.9em;
-    color: #666;
-  }
-  
-  .movie-rating,
-  .movie-release-date {
-    font-size: 0.8em;
-    color: #444;
   }
   </style>
   

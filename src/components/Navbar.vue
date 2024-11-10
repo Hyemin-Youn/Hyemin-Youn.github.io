@@ -1,79 +1,49 @@
 <template>
-  <nav class="navbar">
-    <div
-      class="logo"
-      @click="goHome"
-    >
-      <img
-        src="@/assets/logo.png"
-        alt="Logo"
-        class="logo-image"
-      >
-      <span>홈</span>
-    </div>
-    <ul class="nav-links">
-      <li
-        v-for="item in menuItems"
-        :key="item.text"
-        @click="navigate(item.route)"
-      >
-        <span>{{ item.text }}</span>
-      </li>
-    </ul>
-    <div
-      class="user-icon"
-      @click="goProfile"
-    >
-      <i class="fas fa-user" />
-    </div>
-  </nav>
-</template>
+    <nav class="navbar">
+      <div class="navbar-left">
+        <!-- 로고 -->
+        <img src="@/assets/logo.png" alt="Logo" class="logo" />
+        
+        <!-- 메뉴 -->
+        <ul class="nav-links">
+          <li><router-link to="/">홈</router-link></li>
+          <li><router-link to="/genres">대세 콘텐츠</router-link></li>
+          <li><router-link to="/explore">찾아보기</router-link></li>
+          <li><router-link to="/my-list">내가 찜한 리스트</router-link></li>
+        </ul>
+      </div>
+      
+      <!-- 프로필 아이콘 -->
+      <div class="navbar-right">
+        <img src="@/assets/profile-icon.png" alt="Profile" class="profile-icon" />
+      </div>
+    </nav>
+  </template>
   
   <script>
   export default {
-    name: 'Navbar',
-    data() {
-      return {
-        menuItems: [
-          { text: '대세 콘텐츠', route: '/trending' },
-          { text: '찾아보기', route: '/search' },
-          { text: '내가 찜한 리스트', route: '/mylist' }
-        ]
-      };
-    },
-    methods: {
-      goHome() {
-        this.$router.push('/');
-      },
-      navigate(route) {
-        this.$router.push(route);
-      },
-      goProfile() {
-        this.$router.push('/profile');
-      }
-    }
+    name: "Navbar"
   };
   </script>
   
   <style scoped>
   .navbar {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding: 10px 20px;
+    align-items: center;
     background-color: #141414;
+    padding: 10px 20px;
     color: #ffffff;
   }
   
-  .logo {
+  .navbar-left {
     display: flex;
     align-items: center;
-    cursor: pointer;
   }
   
-  .logo-image {
-    height: 24px;
-    margin-right: 8px;
+  .logo {
+    width: 40px;
+    margin-right: 20px;
   }
   
   .nav-links {
@@ -83,12 +53,24 @@
   
   .nav-links li {
     list-style: none;
-    cursor: pointer;
-    font-size: 1em;
   }
   
-  .user-icon {
-    font-size: 1.5em;
+  .nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+  
+  .nav-links a:hover {
+    color: #e50914; /* 빨간색 강조 효과 */
+  }
+  
+  .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .profile-icon {
+    width: 30px;
     cursor: pointer;
   }
   </style>

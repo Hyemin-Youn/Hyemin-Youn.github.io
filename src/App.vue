@@ -7,6 +7,18 @@
 <script>
 
 
+<<<<<<< HEAD
+=======
+
+
+/* eslint-disable */
+export default {
+  components: {
+
+  }
+};
+
+>>>>>>> feature/Home
 </script>
 
 <style>

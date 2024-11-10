@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # netflix-clone
+=======
+# Hyemin-Youn.github.io
+>>>>>>> feature/Home
 
 ## Project setup
 ```

@@ -20,7 +20,7 @@
             :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
             :alt="movie.title"
             class="movie-poster"
-          >
+          />
         </div>
       </div>
     </div>

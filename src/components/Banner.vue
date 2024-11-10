@@ -1,30 +1,14 @@
 <template>
-  <div class="hero">
-    <img
-      :src="heroImage"
-      alt="Hero Movie"
-      class="hero-image"
-    >
-    <div class="hero-content">
-      <h2>{{ heroMovie.title }}</h2>
-      <p>{{ heroMovie.overview }}</p>
-      <div class="button-group">
-        <button
-          class="play-button"
-          @click="playMovie"
-        >
-          재생
-        </button>
-        <button
-          class="detail-button"
-          @click="goToDetail(heroMovie.id)"
-        >
-          상세 정보
-        </button>
+    <div class="banner">
+      <img :src="bannerImage" alt="Hero Movie" class="banner-image" />
+      <div class="banner-content">
+        <h2>{{ heroMovie.title }}</h2>
+        <p>{{ heroMovie.overview }}</p>
+        <button @click="playMovie">재생</button>
+        <button @click="showDetails">상세 정보</button>
       </div>
     </div>
-  </div>
-</template>
+  </template>
   
   <script>
   export default {
@@ -36,85 +20,64 @@
       }
     },
     computed: {
-      heroImage() {
+      bannerImage() {
         return this.heroMovie.backdrop_path
           ? `https://image.tmdb.org/t/p/original${this.heroMovie.backdrop_path}`
           : '';
       }
     },
     methods: {
-      goToDetail(movieId) {
-        this.$router.push(`/movie/${movieId}`);
-      },
       playMovie() {
-        // 재생 기능 구현 (예: 팝업, 플레이어로 이동 등)
-        console.log("영화 재생");
+        console.log('Play movie:', this.heroMovie.title);
+      },
+      showDetails() {
+        this.$router.push(`/movie/${this.heroMovie.id}`);
       }
     }
   };
   </script>
   
   <style scoped>
-  .hero {
+  .banner {
     position: relative;
     height: 60vh;
-    margin-bottom: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: #fff;
+    margin-bottom: 20px;
   }
   
-  .hero-image {
+  .banner-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(0.4);
+    filter: brightness(0.6);
+  }
+  
+  .banner-content {
     position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-  }
-  
-  .hero-content {
-    position: relative;
-    max-width: 800px;
+    bottom: 20px;
+    left: 20px;
     color: #fff;
-    text-align: left;
-    padding: 20px;
   }
   
-  .hero-content h2 {
+  .banner-content h2 {
     font-size: 2.5em;
     margin-bottom: 10px;
   }
   
-  .hero-content p {
+  .banner-content p {
     font-size: 1.2em;
-    line-height: 1.4;
-    margin-bottom: 20px;
+    max-width: 50%;
   }
   
-  .button-group {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .play-button,
-  .detail-button {
+  .banner-content button {
     padding: 10px 20px;
     font-size: 1em;
+    background-color: #e50914;
     border: none;
     color: #fff;
     cursor: pointer;
-    border-radius: 5px;
-  }
-  
-  .play-button {
-    background-color: #e50914;
-  }
-  
-  .detail-button {
-    background-color: rgba(109, 109, 110, 0.7);
+    margin-top: 10px;
+    margin-right: 10px;
   }
   </style>
   

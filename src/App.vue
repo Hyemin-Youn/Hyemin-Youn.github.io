@@ -11,7 +11,10 @@
 
 /* eslint-disable */
 export default {
-  name: 'Home',
+  components: {
+    Navbar,
+    Footer
+  }
 };
 </script>
 

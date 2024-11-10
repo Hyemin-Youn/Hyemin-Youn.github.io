@@ -1,11 +1,11 @@
 module.exports = {
-    rules: {
-      'vue/multi-word-component-names': 'off'
-    }
-  };
-
-  module.exports = {
-    parser: '@babel/eslint-parser',
-    // 나머지 설정들
-  };
-  
+  extends: [
+    "plugin:vue/recommended",
+    // 다른 규칙들
+  ],
+  parser: "vue-eslint-parser",
+  parserOptions: {
+    parser: "@babel/eslint-parser",
+    sourceType: "module",
+  },
+};

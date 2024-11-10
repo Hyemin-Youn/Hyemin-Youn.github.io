@@ -1,20 +1,7 @@
 <template>
   <div class="home">
-    <!-- Hero Section -->
-    <div class="hero">
-      <img
-        :src="heroImage"
-        alt="Hero Movie"
-        class="hero-image"
-      >
-      <div class="hero-content">
-        <h2>{{ heroMovie.title }}</h2>
-        <p>{{ heroMovie.overview }}</p>
-        <button @click="goToDetail(heroMovie.id)">
-          상세 보기
-        </button>
-      </div>
-    </div>
+    <!-- Banner Component -->
+    <Banner :heroMovie="heroMovie" />
 
     <!-- Movie Categories -->
     <div
@@ -42,9 +29,13 @@
 
 <script>
 import axios from 'axios';
+import Banner from '@/components/Banner.vue';
 
 export default {
   name: 'Home',
+  components: {
+    Banner
+  },
   data() {
     return {
       heroMovie: {},
@@ -55,13 +46,6 @@ export default {
         { name: 'upcoming', title: '개봉 예정 영화', movies: [] }
       ]
     };
-  },
-  computed: {
-    heroImage() {
-      return this.heroMovie.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${this.heroMovie.backdrop_path}`
-        : '';
-    }
   },
   created() {
     this.fetchHeroMovie();
@@ -88,9 +72,6 @@ export default {
         category.movies = response.data.results;
       });
       await Promise.all(requests);
-    },
-    goToDetail(movieId) {
-      this.$router.push(`/movie/${movieId}`);
     }
   }
 };
@@ -101,46 +82,6 @@ export default {
   padding: 20px;
   background-color: #141414;
   color: #ffffff;
-}
-
-.hero {
-  position: relative;
-  height: 60vh;
-  margin-bottom: 40px;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.6);
-}
-
-.hero-content {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  color: #fff;
-}
-
-.hero-content h2 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
-
-.hero-content p {
-  font-size: 1.2em;
-  max-width: 50%;
-}
-
-.hero-content button {
-  padding: 10px 20px;
-  font-size: 1em;
-  background-color: #e50914;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  margin-top: 10px;
 }
 
 .movie-category {

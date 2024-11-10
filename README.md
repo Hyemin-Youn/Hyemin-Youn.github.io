@@ -1,4 +1,4 @@
-# Hyemin-Youn.github.io
+# netflix-clone
 
 ## Project setup
 ```

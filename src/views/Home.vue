@@ -2,24 +2,38 @@
   <div class="home">
     <!-- Hero Section -->
     <div class="hero">
-      <img :src="heroImage" alt="Hero Movie" class="hero-image" />
+      <img
+        :src="heroImage"
+        alt="Hero Movie"
+        class="hero-image"
+      >
       <div class="hero-content">
         <h2>{{ heroMovie.title }}</h2>
         <p>{{ heroMovie.overview }}</p>
-        <button @click="goToDetail(heroMovie.id)">상세 보기</button>
+        <button @click="goToDetail(heroMovie.id)">
+          상세 보기
+        </button>
       </div>
     </div>
 
     <!-- Movie Categories -->
-    <div class="movie-category" v-for="category in movieCategories" :key="category.name">
+    <div
+      v-for="category in movieCategories"
+      :key="category.name"
+      class="movie-category"
+    >
       <h3>{{ category.title }}</h3>
       <div class="movie-list">
-        <div v-for="movie in category.movies" :key="movie.id" class="movie-card">
+        <div
+          v-for="movie in category.movies"
+          :key="movie.id"
+          class="movie-card"
+        >
           <img
             :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
             :alt="movie.title"
             class="movie-poster"
-          />
+          >
         </div>
       </div>
     </div>

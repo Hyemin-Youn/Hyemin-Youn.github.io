@@ -1,28 +1,28 @@
 <template>
   <div>
-    <h1>Popular Movies</h1>
-    <ul>
-      <li v-for="movie in movies" :key="movie.id">{{ movie.title }}</li>
-    </ul>
+    <h1>Featured Movie</h1>
+    <div v-if="featuredMovie">
+      <h2>{{ featuredMovie.title }}</h2>
+      <p>{{ featuredMovie.overview }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import { fetchPopularMovies } from '@/URL';
+import URL from '@/URL';
 
 export default {
   name: 'HomePage',
   data() {
     return {
-      movies: []
+      featuredMovie: null
     };
   },
   async created() {
     try {
-      const response = await fetchPopularMovies();
-      this.movies = response.data.results;
+      this.featuredMovie = await URL.fetchFeaturedMovie();
     } catch (error) {
-      console.error('Error fetching movies:', error);
+      console.error('Error fetching featured movie:', error);
     }
   }
 };

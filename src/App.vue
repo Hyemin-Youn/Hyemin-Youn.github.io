@@ -7,8 +7,6 @@
 <script>
 
 
-<<<<<<< HEAD
-=======
 
 
 /* eslint-disable */
@@ -18,7 +16,6 @@ export default {
   }
 };
 
->>>>>>> feature/Home
 </script>
 
 <style>

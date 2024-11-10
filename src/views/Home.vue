@@ -55,7 +55,7 @@
     },
     methods: {
       async fetchHeroMovie() {
-        const API_KEY = 'YOUR_TMDB_API_KEY';
+        const API_KEY = '75b7c972001662bd9d37622e0e222947';
         try {
           const response = await axios.get(
             `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
@@ -66,7 +66,7 @@
         }
       },
       async fetchMovies() {
-        const API_KEY = 'YOUR_TMDB_API_KEY';
+        const API_KEY = '75b7c972001662bd9d37622e0e222947';
         const requests = this.movieCategories.map(async (category) => {
           const response = await axios.get(
             `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`

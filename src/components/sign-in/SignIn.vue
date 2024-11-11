@@ -91,6 +91,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex';
+
 export default {
   data() {
     return {
@@ -112,17 +114,20 @@ export default {
     if (rememberMe && savedEmail && savedPassword) {
       this.email = savedEmail;
       this.password = savedPassword;
-      this.rememberMe = rememberMe;
       this.autoLogin();
     }
   },
   methods: {
+    ...mapActions(['login']), // Vuex의 login 액션 사용
+
     flipCard() {
       this.isFlipped = !this.isFlipped;
     },
     handleLogin() {
       if (this.email && this.password) {
         alert("Login successful!");
+
+        // 로그인 정보 저장
         if (this.rememberMe) {
           localStorage.setItem("email", this.email);
           localStorage.setItem("password", this.password);
@@ -132,6 +137,11 @@ export default {
           localStorage.removeItem("password");
           localStorage.removeItem("rememberMe");
         }
+
+        // Vuex에 사용자 설정
+        this.login({ email: this.email });
+
+        // 로그인 후 /home 페이지로 이동
         this.$router.push("/home");
       } else {
         alert("Login failed. Please try again.");
@@ -158,6 +168,8 @@ export default {
   },
 };
 </script>
+
+
 
 <style scoped>
 .wrapper {

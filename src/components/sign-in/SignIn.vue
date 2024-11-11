@@ -7,32 +7,30 @@
         <form @submit.prevent="handleLogin">
           <label for="email">Email</label>
           <input
+            id="email"
             v-model="email"
             type="email"
-            id="email"
             required
-          />
+          >
 
           <label for="password">Password</label>
           <input
+            id="password"
             v-model="password"
             type="password"
-            id="password"
             required
-          />
+          >
 
           <div class="remember-me">
             <input
+              id="rememberMe"
               v-model="rememberMe"
               type="checkbox"
-              id="rememberMe"
-            />
+            >
             <label for="rememberMe">Remember Me</label>
           </div>
 
-          <button type="submit">
-            Sign In
-          </button>
+          <button type="submit">Sign In</button>
         </form>
         <p class="switch" @click="flipCard">
           Don't have an account? Sign up
@@ -45,34 +43,34 @@
         <form @submit.prevent="handleRegister">
           <label for="newEmail">Email</label>
           <input
+            id="newEmail"
             v-model="newEmail"
             type="email"
-            id="newEmail"
             required
-          />
+          >
 
           <label for="newPassword">Password</label>
           <input
+            id="newPassword"
             v-model="newPassword"
             type="password"
-            id="newPassword"
             required
-          />
+          >
 
           <label for="confirmPassword">Confirm Password</label>
           <input
+            id="confirmPassword"
             v-model="confirmPassword"
             type="password"
-            id="confirmPassword"
             required
-          />
+          >
 
           <div class="terms">
             <input
+              id="terms"
               v-model="termsAccepted"
               type="checkbox"
-              id="terms"
-            />
+            >
             <label for="terms">I have read the Terms and Conditions</label>
           </div>
 
@@ -82,9 +80,7 @@
           >
             Register
           </button>
-          <p v-if="passwordError" class="error">
-            {{ passwordError }}
-          </p>
+          <p v-if="passwordError" class="error">{{ passwordError }}</p>
         </form>
         <p class="switch" @click="flipCard">
           Already have an account? Sign in
@@ -112,9 +108,11 @@ export default {
   mounted() {
     const savedEmail = localStorage.getItem("email");
     const savedPassword = localStorage.getItem("password");
-    if (this.rememberMe && savedEmail && savedPassword) {
+    const rememberMe = localStorage.getItem("rememberMe") === "true";
+    if (rememberMe && savedEmail && savedPassword) {
       this.email = savedEmail;
       this.password = savedPassword;
+      this.rememberMe = rememberMe;
       this.autoLogin();
     }
   },
@@ -128,9 +126,11 @@ export default {
         if (this.rememberMe) {
           localStorage.setItem("email", this.email);
           localStorage.setItem("password", this.password);
+          localStorage.setItem("rememberMe", this.rememberMe);
         } else {
           localStorage.removeItem("email");
           localStorage.removeItem("password");
+          localStorage.removeItem("rememberMe");
         }
         this.$router.push("/home");
       } else {
@@ -141,7 +141,10 @@ export default {
       if (this.newPassword !== this.confirmPassword) {
         this.passwordError = "Passwords do not match.";
         return;
+      } else {
+        this.passwordError = "";
       }
+
       if (this.newEmail && this.newPassword && this.termsAccepted) {
         alert("Registration successful!");
         this.isFlipped = false;
@@ -165,6 +168,7 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   perspective: 1000px;
+  backdrop-filter: blur(5px);
 }
 
 .card {
@@ -185,10 +189,21 @@ export default {
   height: 100%;
   padding: 40px 20px;
   text-align: center;
-  background: #e50914;
+  background: rgba(212, 0, 255, 0.26);
   color: #fff;
   border-radius: 10px;
   backface-visibility: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  z-index: 10;
+}
+
+.front {
+  background: #e50914;
+}
+
+.back {
+  background: #e50914;
+  transform: rotateY(180deg);
 }
 
 h2 {
@@ -228,11 +243,18 @@ button {
   margin: 10px 0;
 }
 
+.remember-me input[type="checkbox"],
+.terms input[type="checkbox"] {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
 .switch {
   margin-top: 15px;
   color: #fff;
   cursor: pointer;
   text-decoration: underline;
+  z-index: 20;
 }
 
 .error {

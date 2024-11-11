@@ -6,10 +6,10 @@
         <h2>Login</h2>
         <form @submit.prevent="handleLogin">
           <label for="email">Email</label>
-          <input type="email" v-model="email" required />
+          <input id="email" type="email" v-model="email" required />
 
           <label for="password">Password</label>
-          <input type="password" v-model="password" required />
+          <input id="password" type="password" v-model="password" required />
 
           <div class="remember-me">
             <input type="checkbox" id="rememberMe" v-model="rememberMe" />
@@ -26,13 +26,13 @@
         <h2>Sign Up</h2>
         <form @submit.prevent="handleRegister">
           <label for="newEmail">Email</label>
-          <input type="email" v-model="newEmail" required />
+          <input id="newEmail" type="email" v-model="newEmail" required />
 
           <label for="newPassword">Password</label>
-          <input type="password" v-model="newPassword" required />
+          <input id="newPassword" type="password" v-model="newPassword" required />
 
           <label for="confirmPassword">Confirm Password</label>
-          <input type="password" v-model="confirmPassword" required />
+          <input id="confirmPassword" type="password" v-model="confirmPassword" required />
 
           <div class="terms">
             <input type="checkbox" id="terms" v-model="termsAccepted" />
@@ -66,11 +66,9 @@ export default {
   mounted() {
     const savedEmail = localStorage.getItem("email");
     const savedPassword = localStorage.getItem("password");
-    const rememberMe = localStorage.getItem("rememberMe") === "true";
-    if (rememberMe && savedEmail && savedPassword) {
+    if (this.rememberMe && savedEmail && savedPassword) {
       this.email = savedEmail;
       this.password = savedPassword;
-      this.rememberMe = rememberMe;
       this.autoLogin();
     }
   },
@@ -84,11 +82,9 @@ export default {
         if (this.rememberMe) {
           localStorage.setItem("email", this.email);
           localStorage.setItem("password", this.password);
-          localStorage.setItem("rememberMe", this.rememberMe);
         } else {
           localStorage.removeItem("email");
           localStorage.removeItem("password");
-          localStorage.removeItem("rememberMe");
         }
         this.$router.push("/home");
       } else {
@@ -99,10 +95,7 @@ export default {
       if (this.newPassword !== this.confirmPassword) {
         this.passwordError = "Passwords do not match.";
         return;
-      } else {
-        this.passwordError = "";
       }
-
       if (this.newEmail && this.newPassword && this.termsAccepted) {
         alert("Registration successful!");
         this.isFlipped = false;
@@ -126,7 +119,6 @@ export default {
   left: 50%;
   transform: translate(-50%, -50%);
   perspective: 1000px;
-  backdrop-filter: blur(5px);
 }
 
 .card {
@@ -147,21 +139,10 @@ export default {
   height: 100%;
   padding: 40px 20px;
   text-align: center;
-  background: rgba(212, 0, 255, 0.26);
+  background: #e50914;
   color: #fff;
   border-radius: 10px;
   backface-visibility: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  z-index: 10;
-}
-
-.front {
-  background: #e50914;
-}
-
-.back {
-  background: #e50914;
-  transform: rotateY(180deg);
 }
 
 h2 {
@@ -201,18 +182,11 @@ button {
   margin: 10px 0;
 }
 
-.remember-me input[type="checkbox"],
-.terms input[type="checkbox"] {
-  margin-right: 5px;
-  cursor: pointer;
-}
-
 .switch {
   margin-top: 15px;
   color: #fff;
   cursor: pointer;
   text-decoration: underline;
-  z-index: 20;
 }
 
 .error {

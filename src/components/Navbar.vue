@@ -2,7 +2,10 @@
     <nav class="navbar">
       <div class="navbar-left">
         <!-- 로고 -->
-        <img src="@/assets/logo.png" alt="Logo" class="logo" />
+        <img 
+        src="@/assets/logo.png" 
+        alt="Logo" 
+        class="logo" >
         
         <!-- 메뉴 -->
         <ul class="nav-links">
@@ -15,7 +18,9 @@
       
       <!-- 프로필 아이콘 -->
       <div class="navbar-right">
-        <img src="@/assets/profile-icon.png" alt="Profile" class="profile-icon" />
+        <img src="@/assets/profile-icon.png" 
+        alt="Profile" 
+        class="profile-icon" >
       </div>
     </nav>
   </template>

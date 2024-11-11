@@ -1,7 +1,6 @@
 module.exports = {
   extends: [
     "plugin:vue/recommended",
-    // 다른 규칙들
   ],
   parser: "vue-eslint-parser",
   parserOptions: {
@@ -10,6 +9,7 @@ module.exports = {
   },
   rules: {
     'vue/multi-word-component-names': 'off',
-    'vue/attribute-hyphenation': 'off'
+    'vue/attribute-hyphenation': 'off',
+    "vue/html-indent": "off"
   }
 };

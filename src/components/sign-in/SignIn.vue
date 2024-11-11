@@ -6,19 +6,37 @@
         <h2>Login</h2>
         <form @submit.prevent="handleLogin">
           <label for="email">Email</label>
-          <input id="email" type="email" v-model="email" required />
+          <input
+            v-model="email"
+            type="email"
+            id="email"
+            required
+          />
 
           <label for="password">Password</label>
-          <input id="password" type="password" v-model="password" required />
+          <input
+            v-model="password"
+            type="password"
+            id="password"
+            required
+          />
 
           <div class="remember-me">
-            <input type="checkbox" id="rememberMe" v-model="rememberMe" />
+            <input
+              v-model="rememberMe"
+              type="checkbox"
+              id="rememberMe"
+            />
             <label for="rememberMe">Remember Me</label>
           </div>
 
-          <button type="submit">Sign In</button>
+          <button type="submit">
+            Sign In
+          </button>
         </form>
-        <p class="switch" @click="flipCard">Don't have an account? Sign up</p>
+        <p class="switch" @click="flipCard">
+          Don't have an account? Sign up
+        </p>
       </div>
 
       <!-- 회원가입 화면 -->
@@ -26,23 +44,51 @@
         <h2>Sign Up</h2>
         <form @submit.prevent="handleRegister">
           <label for="newEmail">Email</label>
-          <input id="newEmail" type="email" v-model="newEmail" required />
+          <input
+            v-model="newEmail"
+            type="email"
+            id="newEmail"
+            required
+          />
 
           <label for="newPassword">Password</label>
-          <input id="newPassword" type="password" v-model="newPassword" required />
+          <input
+            v-model="newPassword"
+            type="password"
+            id="newPassword"
+            required
+          />
 
           <label for="confirmPassword">Confirm Password</label>
-          <input id="confirmPassword" type="password" v-model="confirmPassword" required />
+          <input
+            v-model="confirmPassword"
+            type="password"
+            id="confirmPassword"
+            required
+          />
 
           <div class="terms">
-            <input type="checkbox" id="terms" v-model="termsAccepted" />
+            <input
+              v-model="termsAccepted"
+              type="checkbox"
+              id="terms"
+            />
             <label for="terms">I have read the Terms and Conditions</label>
           </div>
 
-          <button type="submit" :disabled="!termsAccepted">Register</button>
-          <p v-if="passwordError" class="error">{{ passwordError }}</p>
+          <button
+            type="submit"
+            :disabled="!termsAccepted"
+          >
+            Register
+          </button>
+          <p v-if="passwordError" class="error">
+            {{ passwordError }}
+          </p>
         </form>
-        <p class="switch" @click="flipCard">Already have an account? Sign in</p>
+        <p class="switch" @click="flipCard">
+          Already have an account? Sign in
+        </p>
       </div>
     </div>
   </div>

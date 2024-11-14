@@ -5,6 +5,6 @@ module.exports = defineConfig({
 
 module.exports = {
   publicPath: process.env.NODE_ENV === 'production'
-    ? '/https://hyemin-youn.github.io//'
+    ? '/hyemin-youn.github.io/'
     : '/'
 }

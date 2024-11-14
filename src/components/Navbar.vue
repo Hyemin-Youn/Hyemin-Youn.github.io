@@ -97,5 +97,14 @@ src="@/assets/profile-icon.png"
     width: 30px;
     cursor: pointer;
   }
+
+  .navbar[data-v-41458b80] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #7d1010;
+    padding: 10px 20px;
+    color: #ffffff;
+  }
   </style>
   

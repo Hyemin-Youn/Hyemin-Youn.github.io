@@ -31,7 +31,7 @@
         src="@/assets/profile-icon.png" 
         alt="Profile" 
         class="profile-icon"
-        @click="logout" <!-- 클릭 시 로그아웃 메서드 호출 -->
+        @click="logout"  
       >
     </div>
   </nav>

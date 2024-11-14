@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
 import store from '../store';
-import Signin from '@/views/Signin.vue';
+
 
 const routes = [
   { 

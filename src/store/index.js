@@ -52,4 +52,30 @@ const store = createStore({
   },
 });
 
-export default store;
+
+export default {
+  state: {
+    user: null,
+  },
+  getters: {
+    isAuthenticated(state) {
+      return !!state.user;
+    }
+  },
+  mutations: {
+    setUser(state, user) {
+      state.user = user;
+    },
+    clearUser(state) {
+      state.user = null;
+    }
+  },
+  actions: {
+    login({ commit }, user) {
+      commit('setUser', user);
+    },
+    logout({ commit }) {
+      commit('clearUser'); // 로그아웃 시 사용자 정보 제거
+    }
+  }
+};

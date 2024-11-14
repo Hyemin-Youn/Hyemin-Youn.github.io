@@ -1,14 +1,12 @@
 <template>
   <nav class="navbar">
     <div class="navbar-left">
-      <!-- 로고 -->
       <img 
         src="@/assets/logo.png" 
         alt="Logo" 
         class="logo"
       />
 
-      <!-- 메뉴 -->
       <ul class="nav-links">
         <li>
           <router-link to="/">홈</router-link>
@@ -25,7 +23,6 @@
       </ul>
     </div>
 
-    <!-- 프로필 아이콘 -->
     <div class="navbar-right">
       <img
         src="@/assets/profile-icon.png" 
@@ -42,9 +39,7 @@ export default {
   name: "Navbar",
   methods: {
     logout() {
-      // localStorage에서 사용자 정보 제거
       localStorage.removeItem('user');
-      // 로그인 페이지로 리디렉션
       this.$router.push('/signin');
     }
   }
@@ -86,7 +81,7 @@ export default {
 }
 
 .nav-links a:hover {
-  color: #e50914; /* 빨간색 강조 효과 */
+  color: #e50914; 
 }
 
 .navbar-right {

@@ -1,6 +1,9 @@
 <template>
   <div class="wrapper">
-    <div class="card" :class="{ flipped: isFlipped }">
+    <div
+class="card"
+:class="{ flipped: isFlipped }"
+>
       <!-- 로그인 화면 -->
       <div class="content front">
         <h2>Login</h2>
@@ -30,9 +33,14 @@
             <label for="rememberMe">Remember Me</label>
           </div>
 
-          <button type="submit">Sign In</button>
+          <button type="submit">
+Sign In
+</button>
         </form>
-        <p class="switch" @click="flipCard">
+        <p
+class="switch"
+@click="flipCard"
+>
           Don't have an account? Sign up
         </p>
       </div>
@@ -80,9 +88,17 @@
           >
             Register
           </button>
-          <p v-if="passwordError" class="error">{{ passwordError }}</p>
+          <p
+v-if="passwordError"
+class="error"
+>
+{{ passwordError }}
+</p>
         </form>
-        <p class="switch" @click="flipCard">
+        <p
+class="switch"
+@click="flipCard"
+>
           Already have an account? Sign in
         </p>
       </div>

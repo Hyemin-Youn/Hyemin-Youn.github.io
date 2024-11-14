@@ -5,22 +5,41 @@
         <img 
         src="@/assets/logo.png" 
         alt="Logo" 
-        class="logo" >
+        class="logo"
+>
         
         <!-- 메뉴 -->
         <ul class="nav-links">
-          <li><router-link to="/">홈</router-link></li>
-          <li><router-link to="/genres">대세 콘텐츠</router-link></li>
-          <li><router-link to="/explore">찾아보기</router-link></li>
-          <li><router-link to="/my-list">내가 찜한 리스트</router-link></li>
+          <li>
+<router-link to="/">
+홈
+</router-link>
+</li>
+          <li>
+<router-link to="/genres">
+대세 콘텐츠
+</router-link>
+</li>
+          <li>
+<router-link to="/explore">
+찾아보기
+</router-link>
+</li>
+          <li>
+<router-link to="/my-list">
+내가 찜한 리스트
+</router-link>
+</li>
         </ul>
       </div>
       
       <!-- 프로필 아이콘 -->
       <div class="navbar-right">
-        <img src="@/assets/profile-icon.png" 
+        <img
+src="@/assets/profile-icon.png" 
         alt="Profile" 
-        class="profile-icon" >
+        class="profile-icon"
+>
       </div>
     </nav>
   </template>

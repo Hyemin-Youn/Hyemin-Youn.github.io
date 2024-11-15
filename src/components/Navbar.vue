@@ -30,6 +30,12 @@
         class="profile-icon"
         @click="logout"  
       >
+
+      <ul class="nav-links">
+        <li>
+          <router-link to="/SignIn">👤</router-link>
+        </li>
+      </ul>
     </div>
   </nav>
 </template>
@@ -91,6 +97,10 @@ export default {
 
 .nav-links a:hover {
   color: #e50914; 
+}
+
+.navbar-right .nav-links a {
+  font-size: 24px; /* 원하는 크기로 설정 */
 }
 
 .navbar-right {

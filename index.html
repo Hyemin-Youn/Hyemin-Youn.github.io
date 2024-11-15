@@ -1,14 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyemin Youn's GitHub Page : Netflix-clone coding</title>
-    <base href="/">
-    <link rel="icon" type="image/png" href="/favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Clone</title>
+  <link rel="stylesheet" href="style.css"> <!-- 스타일 파일을 연결합니다 -->
 </head>
 <body>
-  <Navbar></Navbar>
-  <router-view></router-view>
+  <header>
+    <nav>
+      <img src="netflix-logo.png" alt="Netflix Logo" id="logo">
+      <ul>
+        <li><a href="#home">홈</a></li>
+        <li><a href="#content">대세 콘텐츠</a></li>
+        <li><a href="#browse">찾아보기</a></li>
+        <li><a href="#my-list">내가 찜한 리스트</a></li>
+      </ul>
+      <div id="profile-icon">👤</div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- 배너 섹션 -->
+    <section id="banner">
+      <img src="venom.jpg" alt="베놈 포스터">
+      <div id="banner-content">
+        <h1>베놈: 라스트 댄스</h1>
+        <p>환상의 케미스트리의 에디 브록과 그의 심비오트 베놈은...</p>
+        <div class="banner-buttons">
+          <button>재생</button>
+          <button>상세 정보</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 인기 영화 섹션 -->
+    <section id="popular-movies">
+      <h2>인기 영화</h2>
+      <div class="movie-thumbnails">
+        <img src="movie1.jpg" alt="Movie 1">
+        <img src="movie2.jpg" alt="Movie 2">
+        <img src="movie3.jpg" alt="Movie 3">
+        <!-- 영화 썸네일을 추가로 넣습니다 -->
+      </div>
+    </section>
+  </main>
+
+  <script src="app.js"></script> <!-- 스크립트 파일을 연결합니다 -->
 </body>
 </html>

@@ -4,5 +4,7 @@ module.exports = defineConfig({
 })
 
 module.exports = {
-  publicPath: '/vue'
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/hyemin-youn.github.io/'
+    : '/'
 }

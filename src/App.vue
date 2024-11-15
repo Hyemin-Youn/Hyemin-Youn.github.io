@@ -7,6 +7,8 @@
 
 <script>
 import Navbar from './components/Navbar.vue';
+import '@fortawesome/fontawesome-free/css/all.css';
+import SignIn from './components/sign-in/SignIn.vue';
 
 
 
@@ -14,7 +16,10 @@ import Navbar from './components/Navbar.vue';
 /* eslint-disable */
 export default {
   components: {
-    Navbar
+    Navbar,
+    SignIn,
+    Banner,
+    Home
   }
 };
 

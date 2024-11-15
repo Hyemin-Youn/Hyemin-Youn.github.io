@@ -39,12 +39,21 @@ export default {
   name: "Navbar",
   methods: {
     logout() {
-      localStorage.removeItem('user');
+      // 사용자 인증 상태 초기화
+      localStorage.removeItem('user'); // localStorage에서 사용자 정보 제거
+      
+      // Vuex 상태가 있는 경우
+      if (this.$store) {
+        this.$store.dispatch('logout'); // Vuex의 logout 액션 호출
+      }
+      
+      // 로그인 페이지로 리디렉션
       this.$router.push('/signin');
     }
   }
 };
 </script>
+
 
 <style scoped>
 .navbar {

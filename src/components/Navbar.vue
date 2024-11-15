@@ -30,12 +30,6 @@
         class="profile-icon"
         @click="logout"  
       >
-
-      <ul class="nav-links">
-        <li>
-          <router-link to="/SignIn">👤</router-link>
-        </li>
-      </ul>
     </div>
   </nav>
 </template>

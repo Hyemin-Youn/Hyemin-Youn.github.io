@@ -23,7 +23,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(/hyemin-youn.github.io/),
+  history: createWebHistory("/hyemin-youn/"),
   routes,
 });
 

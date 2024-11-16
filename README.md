@@ -1,4 +1,4 @@
-# Hyemin-Youn.github.io
+# Hyemin-Youn
 
 ## Project setup
 ```

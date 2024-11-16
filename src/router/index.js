@@ -1,8 +1,7 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
 import store from '../store';
-
 
 const routes = [
   { 
@@ -23,7 +22,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory("/hyemin-youn.github.io/"),
+  history: createWebHashHistory(), // Hash 모드로 변경
   routes,
 });
 
@@ -41,5 +40,3 @@ router.beforeEach((to, from, next) => {
 });
 
 export default router;
-
-

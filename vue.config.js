@@ -4,5 +4,5 @@ module.exports = defineConfig({
 })
 
 module.exports = {
-  publicPath: '/hyemin-youn/',
+  publicPath: '/hyemin-youn.github.io/',
 }

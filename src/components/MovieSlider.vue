@@ -41,7 +41,7 @@
   </template>
   
   <script>
-  import { ref, computed } from 'vue';
+  import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
   import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
   import { library } from '@fortawesome/fontawesome-svg-core';
   import {
@@ -68,6 +68,7 @@
     setup(props) {
       const index = ref(0);
       const offset = 6;
+      let sliderInterval;
   
       // 현재 보여줄 영화 리스트 계산
       const displayedMovies = computed(() => {
@@ -89,6 +90,17 @@
         index.value = index.value === 0 ? maxIndex - 1 : index.value - 1;
       };
   
+      // 자동 슬라이더 설정
+      const startAutoSlider = () => {
+        sliderInterval = setInterval(() => {
+          increaseRight();
+        }, 3000); // 3초 간격으로 이동
+      };
+  
+      const stopAutoSlider = () => {
+        clearInterval(sliderInterval);
+      };
+  
       // 영화 상세 보기
       const onBoxClicked = (movieId) => {
         console.log(`Navigating to movie with ID: ${movieId}`);
@@ -99,6 +111,14 @@
       // 이미지 경로 생성
       const makeImagePath = (path, size) => `https://image.tmdb.org/t/p/${size}${path}`;
   
+      onMounted(() => {
+        startAutoSlider();
+      });
+  
+      onBeforeUnmount(() => {
+        stopAutoSlider();
+      });
+  
       return {
         index,
         displayedMovies,
@@ -106,6 +126,8 @@
         increaseLeft,
         onBoxClicked,
         makeImagePath,
+        startAutoSlider,
+        stopAutoSlider,
       };
     },
   };

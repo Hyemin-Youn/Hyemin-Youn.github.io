@@ -82,16 +82,22 @@ export default {
     this.isFlipped = !this.isFlipped;
   },
   handleLogin() {
-    if (this.password.length !== 32) {
-      this.loginError = "Password must be exactly 32 characters long.";
-      return;
-    }
+  if (this.password.length !== 32) {
+    this.loginError = "Password must be exactly 32 characters long.";
+    return;
+  }
 
-    // 로그인 성공 처리
-    alert("Login successful!");
-    localStorage.setItem("isAuthenticated", "true"); // 인증 상태 저장
-    this.$router.push("#/home"); // 홈 화면으로 이동
-  },
+  alert("Login successful!");
+
+  // Vuex에 로그인 상태 저장
+  this.$store.dispatch('login', { email: this.email });
+
+  // 중복된 URL 방지
+  if (this.$route.path !== '/home') {
+    this.$router.push('/home');
+  }
+}
+,
   handleRegister() {
     if (this.newPassword.length !== 32) {
       this.signupError = "Password must be exactly 32 characters long.";

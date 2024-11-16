@@ -13,26 +13,27 @@ const routes = [
     path: '/home', 
     name: 'Home', 
     component: Home,
-    meta: { requiresAuth: true } // 인증이 필요한 경로 표시
+    meta: { requiresAuth: true },
   },
   { 
     path: '/', 
-    redirect: '/signin' // 기본 경로로 접근 시 로그인 페이지로 리다이렉트
-  }
+    redirect: '/signin', // 기본 경로 리다이렉트
+  },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // Hash 모드로 변경
+  history: createWebHashHistory(), // Hash 모드
   routes,
 });
 
-// 라우트 가드 설정
 router.beforeEach((to, from, next) => {
+  console.log('From:', from.path, 'To:', to.path);
+
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
-    // 인증이 필요한 경로에 접근하려고 하지만 로그인되지 않은 경우 /signin으로 리다이렉트
+    console.log('Redirect to /signin');
     next('/signin');
   } else if (to.path === '/signin' && store.getters.isAuthenticated) {
-    // 로그인된 상태에서 /signin으로 접근하려고 하면 홈으로 리다이렉트
+    console.log('Redirect to /home');
     next('/home');
   } else {
     next();

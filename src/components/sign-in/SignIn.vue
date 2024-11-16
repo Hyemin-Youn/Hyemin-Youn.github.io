@@ -213,7 +213,10 @@ button:hover {
   background-color: #a10610;
 }
 
-.remember-me,
+.remember-me {
+  text-align: center;
+}
+
 .terms {
   display: flex;
   justify-content: center;

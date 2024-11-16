@@ -13,7 +13,7 @@ const routes = [
     path: '/home', 
     name: 'Home', 
     component: Home,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true }, // 인증이 필요한 경로
   },
   { 
     path: '/', 
@@ -26,14 +26,15 @@ const router = createRouter({
   routes,
 });
 
+// 라우트 가드 설정
 router.beforeEach((to, from, next) => {
   console.log('From:', from.path, 'To:', to.path);
 
   if (to.meta.requiresAuth && !store.getters.isAuthenticated) {
-    console.log('Redirect to /signin');
+    console.log('Redirecting to /signin');
     next('/signin');
   } else if (to.path === '/signin' && store.getters.isAuthenticated) {
-    console.log('Redirect to /home');
+    console.log('Redirecting to /home');
     next('/home');
   } else {
     next();

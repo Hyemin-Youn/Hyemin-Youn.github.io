@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="bg-image"/> <!-- 배경 이미지 -->
+    <div class="bg-image" /> <!-- 배경 이미지 -->
     <div class="wrapper">
       <div
 class="card"

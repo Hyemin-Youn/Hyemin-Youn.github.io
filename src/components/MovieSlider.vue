@@ -1,16 +1,19 @@
 <template>
   <div class="slider-content">
     <!-- 왼쪽 화살표 -->
-    <button class="arrow left" @click="increaseLeft">
+    <button
+class="arrow left"
+@click="increaseLeft"
+>
       <font-awesome-icon :icon="['fas', 'angle-left']" />
     </button>
 
     <!-- 영화 리스트 -->
     <transition-group
+      :key="index"
       name="slide"
       class="row"
       tag="div"
-      :key="index"
     >
       <div
         v-for="movie in displayedMovies"
@@ -34,7 +37,10 @@
     </transition-group>
 
     <!-- 오른쪽 화살표 -->
-    <button class="arrow right" @click="increaseRight">
+    <button
+class="arrow right"
+@click="increaseRight"
+>
       <font-awesome-icon :icon="['fas', 'angle-right']" />
     </button>
   </div>

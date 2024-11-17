@@ -5,20 +5,28 @@
         src="@/assets/logo.png" 
         alt="Logo" 
         class="logo"
-      />
+      >
 
       <ul class="nav-links">
         <li>
-          <router-link to="/">홈</router-link>
+          <router-link to="/">
+홈
+</router-link>
         </li>
         <li>
-          <router-link to="/genres">대세 콘텐츠</router-link>
+          <router-link to="/genres">
+대세 콘텐츠
+</router-link>
         </li>
         <li>
-          <router-link to="/explore">찾아보기</router-link>
+          <router-link to="/explore">
+찾아보기
+</router-link>
         </li>
         <li>
-          <router-link to="/my-list">내가 찜한 리스트</router-link>
+          <router-link to="/my-list">
+내가 찜한 리스트
+</router-link>
         </li>
       </ul>
     </div>

@@ -1,98 +1,121 @@
 <template>
-  <div class="wrapper">
-    <div class="card" :class="{ flipped: isFlipped }">
-      <!-- 로그인 화면 -->
-      <div class="content front">
-        <h2>Login</h2>
-        <form @submit.prevent="handleLogin">
-          <label for="email">Email</label>
-          <input
-            id="email"
-            v-model="email"
-            type="email"
-            required
-          >
-
-          <label for="password">Password</label>
-          <input
-            id="password"
-            v-model="password"
-            type="password"
-            required
-          >
-
-          <div class="remember-me">
+  <div>
+    <div class="bg-image"/> <!-- 배경 이미지 -->
+    <div class="wrapper">
+      <div
+class="card"
+:class="{ flipped: isFlipped }"
+>
+        <!-- 로그인 화면 -->
+        <div class="content front">
+          <h2>Login</h2>
+          <form @submit.prevent="handleLogin">
+            <label for="email">Email</label>
             <input
-              id="rememberMe"
-              v-model="rememberMe"
-              type="checkbox"
-            >
-            <label for="rememberMe">Remember Me</label>
-          </div>
+id="email"
+v-model="email"
+type="email"
+required
+>
 
-          <button type="submit">Sign In</button>
-        </form>
-        <p class="switch" @click="flipCard">
-          Don't have an account? Sign up
-        </p>
-      </div>
-
-      <!-- 회원가입 화면 -->
-      <div class="content back">
-        <h2>Sign Up</h2>
-        <form @submit.prevent="handleRegister">
-          <label for="newEmail">Email</label>
-          <input
-            id="newEmail"
-            v-model="newEmail"
-            type="email"
-            required
-          >
-
-          <label for="newPassword">Password</label>
-          <input
-            id="newPassword"
-            v-model="newPassword"
-            type="password"
-            required
-          >
-
-          <label for="confirmPassword">Confirm Password</label>
-          <input
-            id="confirmPassword"
-            v-model="confirmPassword"
-            type="password"
-            required
-          >
-
-          <div class="terms">
+            <label for="password">Password</label>
             <input
-              id="terms"
-              v-model="termsAccepted"
-              type="checkbox"
-            >
-            <label for="terms">I have read the Terms and Conditions</label>
-          </div>
+id="password"
+v-model="password"
+type="password"
+required
+>
+            <p
+v-if="loginError"
+class="error"
+>
+{{ loginError }}
+</p>
 
-          <button
-            type="submit"
-            :disabled="!termsAccepted"
-          >
-            Register
-          </button>
-          <p v-if="passwordError" class="error">{{ passwordError }}</p>
-        </form>
-        <p class="switch" @click="flipCard">
-          Already have an account? Sign in
-        </p>
+            <div class="remember-me">
+              <input
+id="rememberMe"
+v-model="rememberMe"
+type="checkbox"
+>
+              <label for="rememberMe">Remember Me</label>
+            </div>
+
+            <button type="submit">
+Sign In
+</button>
+          </form>
+          <p
+class="switch"
+@click="flipCard"
+>
+            Don't have an account? <b>Sign up</b>
+          </p>
+        </div>
+
+        <!-- 회원가입 화면 -->
+        <div class="content back">
+          <h2>Sign Up</h2>
+          <form @submit.prevent="handleRegister">
+            <label for="newEmail">Email</label>
+            <input
+id="newEmail"
+v-model="newEmail"
+type="email"
+required
+>
+
+            <label for="newPassword">Password</label>
+            <input
+id="newPassword"
+v-model="newPassword"
+type="password"
+required
+>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              v-model="confirmPassword"
+              type="password"
+              required
+            >
+            <p
+v-if="signupError"
+class="error"
+>
+{{ signupError }}
+</p>
+
+            <div class="terms">
+              <input
+id="terms"
+v-model="termsAccepted"
+type="checkbox"
+>
+              <label for="terms">I have read the <b>Terms and Conditions</b></label>
+            </div>
+
+            <button
+type="submit"
+:disabled="!termsAccepted"
+>
+Register
+</button>
+          </form>
+          <p
+class="switch"
+@click="flipCard"
+>
+            Already have an account? <b>Sign in</b>
+          </p>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-
 export default {
   data() {
     return {
@@ -100,87 +123,71 @@ export default {
       email: "",
       password: "",
       rememberMe: false,
+      loginError: "",
       newEmail: "",
       newPassword: "",
       confirmPassword: "",
       termsAccepted: false,
-      passwordError: "",
+      signupError: "",
     };
   },
-  mounted() {
-    const savedEmail = localStorage.getItem("email");
-    const savedPassword = localStorage.getItem("password");
-    const rememberMe = localStorage.getItem("rememberMe") === "true";
-    if (rememberMe && savedEmail && savedPassword) {
-      this.email = savedEmail;
-      this.password = savedPassword;
-      this.autoLogin();
-    }
-  },
   methods: {
-    ...mapActions(['login']), // Vuex의 login 액션 사용
-
-    flipCard() {
-      this.isFlipped = !this.isFlipped;
-    },
-    handleLogin() {
-      const registeredEmail = localStorage.getItem("registeredEmail");
-      const registeredPassword = localStorage.getItem("registeredPassword");
-
-      // 등록된 이메일과 비밀번호가 입력한 것과 일치하는지 확인
-      if (this.email === registeredEmail && this.password === registeredPassword) {
-        alert("Login successful!");
-
-        // 로그인 정보 저장
-        if (this.rememberMe) {
-          localStorage.setItem("email", this.email);
-          localStorage.setItem("password", this.password);
-          localStorage.setItem("rememberMe", this.rememberMe);
-        } else {
-          localStorage.removeItem("email");
-          localStorage.removeItem("password");
-          localStorage.removeItem("rememberMe");
-        }
-
-        // Vuex에 사용자 설정
-        this.login({ email: this.email });
-
-        // 로그인 후 /home 페이지로 이동
-        this.$router.push("/home");
-      } else {
-        alert("Login failed. Please check your credentials.");
-      }
-    },
-    handleRegister() {
-      if (this.newPassword !== this.confirmPassword) {
-        this.passwordError = "Passwords do not match.";
-        return;
-      } else {
-        this.passwordError = "";
-      }
-
-      if (this.newEmail && this.newPassword && this.termsAccepted) {
-        // 회원가입 성공 시 이메일과 비밀번호를 로컬 저장소에 저장
-        localStorage.setItem("registeredEmail", this.newEmail);
-        localStorage.setItem("registeredPassword", this.newPassword);
-        
-        alert("Registration successful!");
-        this.isFlipped = false; // 로그인 화면으로 돌아가기
-      } else {
-        alert("Registration failed. Please try again.");
-      }
-    },
-    autoLogin() {
-      this.$router.push("/home");
-    },
+  flipCard() {
+    this.isFlipped = !this.isFlipped;
   },
+  handleLogin() {
+  if (this.password.length !== 32) {
+    this.loginError = "Password must be exactly 32 characters long.";
+    return;
+  }
+
+  alert("Login successful!");
+
+  // Vuex에 로그인 상태 저장
+  this.$store.dispatch('login', { email: this.email });
+
+  // 중복된 URL 방지
+  if (this.$route.path !== '/home') {
+    this.$router.push('/home');
+  }
+}
+,
+  handleRegister() {
+    if (this.newPassword.length !== 32) {
+      this.signupError = "Password must be exactly 32 characters long.";
+      return;
+    }
+    if (this.newPassword !== this.confirmPassword) {
+      this.signupError = "Passwords do not match.";
+      return;
+    }
+    alert("Registration successful!");
+    this.flipCard(); // 회원가입 후 로그인 화면으로 전환
+  },
+},
+
 };
 </script>
 
 <style scoped>
+/* 배경 이미지 스타일 */
+.bg-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* 배경이 뒤에 위치하도록 설정 */
+}
+
+/* 로그인/회원가입 창 스타일 */
 .wrapper {
-  height: 460px;
-  width: 320px;
+  width: 400px;
+  height: 520px;
+  margin: 0 auto;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -205,11 +212,11 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  padding: 40px 20px;
+  padding: 30px 20px;
   text-align: center;
   background: rgba(212, 0, 255, 0.26);
   color: #fff;
-  border-radius: 10px;
+  border-radius: 15px;
   backface-visibility: hidden;
   border: 1px solid rgba(255, 255, 255, 0.15);
   z-index: 10;
@@ -226,20 +233,23 @@ export default {
 
 h2 {
   margin-bottom: 20px;
+  font-size: 1.5rem;
 }
 
 label {
   display: block;
   margin-top: 10px;
+  font-size: 0.9rem;
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  margin-top: 5px;
-  margin-bottom: 10px;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 12px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
+  font-size: 0.9rem;
 }
 
 button {
@@ -248,22 +258,31 @@ button {
   background-color: #bf0812;
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 0.9rem;
 }
 
-.remember-me,
+button:hover {
+  background-color: #a10610;
+}
+
+.remember-me {
+  text-align: center;
+}
+
 .terms {
   display: flex;
+  justify-content: center;
   align-items: center;
-  font-size: 14px;
+  font-size: 12px;
   margin: 10px 0;
+  text-align: center;
 }
 
 .remember-me input[type="checkbox"],
 .terms input[type="checkbox"] {
-  margin-right: 5px;
+  margin-right: 6px;
   cursor: pointer;
 }
 
@@ -272,12 +291,63 @@ button {
   color: #fff;
   cursor: pointer;
   text-decoration: underline;
-  z-index: 20;
+  font-size: 0.8rem;
 }
 
 .error {
-  color: red;
-  font-size: 0.9rem;
-  margin-top: 10px;
+  color: yellow;
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+
+/* 반응형 스타일 */
+@media screen and (max-width: 768px) {
+  .wrapper {
+    width: 320px;
+    height: 500px;
+  }
+
+  h2 {
+    font-size: 1.4rem;
+  }
+
+  input {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 0.8rem;
+  }
+
+  .switch {
+    font-size: 0.7rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .wrapper {
+    width: 280px;
+    height: 450px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  input {
+    padding: 6px;
+    font-size: 0.7rem;
+  }
+
+  button {
+    padding: 6px;
+    font-size: 0.7rem;
+  }
+
+  .switch {
+    font-size: 0.6rem;
+  }
 }
 </style>

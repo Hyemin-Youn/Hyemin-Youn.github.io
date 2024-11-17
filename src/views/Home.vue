@@ -3,6 +3,7 @@
     <!-- Navbar -->
     <Navbar />
     <WishList />
+    <MovieSlider/>
 
     <div class="home">
       <!-- Banner Component -->

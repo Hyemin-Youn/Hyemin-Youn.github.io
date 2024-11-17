@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <router-view />
+    <router-view/>
   </div>
 </template>
 
@@ -17,7 +17,6 @@ import Home from './views/Home.vue';
 export default {
   components: {
     Navbar,
-    SignIn,
     Banner,
     Home,
   }

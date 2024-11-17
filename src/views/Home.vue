@@ -1,26 +1,31 @@
 <template>
-    <div class="home">
-    <!-- Banner Component -->
-    <Banner :heroMovie="heroMovie" />
+  <div>
+    <!-- Navbar -->
+    <Navbar />
 
-    <!-- Movie Categories -->
-    <div
-      v-for="category in movieCategories"
-      :key="category.name"
-      class="movie-category"
-    >
-      <h3>{{ category.title }}</h3>
-      <div class="movie-list">
-        <div
-          v-for="movie in category.movies"
-          :key="movie.id"
-          class="movie-card"
-        >
-          <img
-            :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
-            :alt="movie.title"
-            class="movie-poster"
+    <div class="home">
+      <!-- Banner Component -->
+      <Banner :heroMovie="heroMovie" />
+
+      <!-- Movie Categories -->
+      <div
+        v-for="category in movieCategories"
+        :key="category.name"
+        class="movie-category"
+      >
+        <h3>{{ category.title }}</h3>
+        <div class="movie-list">
+          <div
+            v-for="movie in category.movies"
+            :key="movie.id"
+            class="movie-card"
           >
+            <img
+              :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+              :alt="movie.title"
+              class="movie-poster"
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -28,23 +33,25 @@
 </template>
 
 <script>
-import axios from 'axios';
-import Banner from '@/components/Banner.vue';
+import axios from "axios";
+import Banner from "@/components/Banner.vue";
+import Navbar from "@/components/Navbar.vue";
 
 export default {
-  name: 'Home',
+  name: "Home",
   components: {
-    Banner
+    Banner,
+    Navbar,
   },
   data() {
     return {
       heroMovie: {},
       movieCategories: [
-        { name: 'popular', title: '인기 영화', movies: [] },
-        { name: 'now_playing', title: '최신 영화', movies: [] },
-        { name: 'top_rated', title: '높은 평점 영화', movies: [] },
-        { name: 'upcoming', title: '개봉 예정 영화', movies: [] }
-      ]
+        { name: "popular", title: "인기 영화", movies: [] },
+        { name: "now_playing", title: "최신 영화", movies: [] },
+        { name: "top_rated", title: "높은 평점 영화", movies: [] },
+        { name: "upcoming", title: "개봉 예정 영화", movies: [] },
+      ],
     };
   },
   created() {
@@ -60,7 +67,7 @@ export default {
         );
         this.heroMovie = response.data.results[0];
       } catch (error) {
-        console.error('Error fetching hero movie:', error);
+        console.error("Error fetching hero movie:", error);
       }
     },
     async fetchMovies() {
@@ -72,8 +79,8 @@ export default {
         category.movies = response.data.results;
       });
       await Promise.all(requests);
-    }
-  }
+    },
+  },
 };
 </script>
 

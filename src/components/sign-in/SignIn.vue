@@ -1,27 +1,54 @@
 <template>
   <div>
-    <div class="bg-image"></div> <!-- 배경 이미지 -->
+    <div class="bg-image" /> <!-- 배경 이미지 -->
     <div class="wrapper">
-      <div class="card" :class="{ flipped: isFlipped }">
+      <div
+class="card"
+:class="{ flipped: isFlipped }"
+>
         <!-- 로그인 화면 -->
         <div class="content front">
           <h2>Login</h2>
           <form @submit.prevent="handleLogin">
             <label for="email">Email</label>
-            <input id="email" v-model="email" type="email" required />
+            <input
+id="email"
+v-model="email"
+type="email"
+required
+>
 
             <label for="password">Password</label>
-            <input id="password" v-model="password" type="password" required />
-            <p v-if="loginError" class="error">{{ loginError }}</p>
+            <input
+id="password"
+v-model="password"
+type="password"
+required
+>
+            <p
+v-if="loginError"
+class="error"
+>
+{{ loginError }}
+</p>
 
             <div class="remember-me">
-              <input id="rememberMe" v-model="rememberMe" type="checkbox" />
+              <input
+id="rememberMe"
+v-model="rememberMe"
+type="checkbox"
+>
               <label for="rememberMe">Remember Me</label>
             </div>
 
-            <button type="submit">Sign In</button>
+            <button type="submit">
+Sign In
+</button>
           </form>
-          <p class="switch" @click="flipCard">
+          <p
+class="switch"
+@click="flipCard"
+>
             Don't have an account? <b>Sign up</b>
           </p>
         </div>
@@ -31,10 +58,20 @@
           <h2>Sign Up</h2>
           <form @submit.prevent="handleRegister">
             <label for="newEmail">Email</label>
-            <input id="newEmail" v-model="newEmail" type="email" required />
+            <input
+id="newEmail"
+v-model="newEmail"
+type="email"
+required
+>
 
             <label for="newPassword">Password</label>
-            <input id="newPassword" v-model="newPassword" type="password" required />
+            <input
+id="newPassword"
+v-model="newPassword"
+type="password"
+required
+>
 
             <label for="confirmPassword">Confirm Password</label>
             <input
@@ -42,17 +79,34 @@
               v-model="confirmPassword"
               type="password"
               required
-            />
-            <p v-if="signupError" class="error">{{ signupError }}</p>
+            >
+            <p
+v-if="signupError"
+class="error"
+>
+{{ signupError }}
+</p>
 
             <div class="terms">
-              <input id="terms" v-model="termsAccepted" type="checkbox" />
+              <input
+id="terms"
+v-model="termsAccepted"
+type="checkbox"
+>
               <label for="terms">I have read the <b>Terms and Conditions</b></label>
             </div>
 
-            <button type="submit" :disabled="!termsAccepted">Register</button>
+            <button
+type="submit"
+:disabled="!termsAccepted"
+>
+Register
+</button>
           </form>
-          <p class="switch" @click="flipCard">
+          <p
+class="switch"
+@click="flipCard"
+>
             Already have an account? <b>Sign in</b>
           </p>
         </div>

@@ -20,6 +20,7 @@ export default {
     Navbar,
     Banner,
     Home,
+    SignIn,
   }
 };
 

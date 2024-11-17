@@ -2,6 +2,7 @@
   <div>
     <!-- Navbar -->
     <Navbar />
+    <WishList />
 
     <div class="home">
       <!-- Banner Component -->

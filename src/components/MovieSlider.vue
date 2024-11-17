@@ -1,5 +1,5 @@
 <template>
-  <div class="slider-content">
+  <div class="movieslider">
     <!-- 왼쪽 화살표 -->
     <button
 class="arrow left"

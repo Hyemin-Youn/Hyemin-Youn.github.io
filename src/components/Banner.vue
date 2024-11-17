@@ -73,7 +73,7 @@ export default {
 }
 
 .banner-content p {
-    font-size: 1em;
+    font-size: 1.2em;
     max-width: 50%;
 }
 
@@ -85,5 +85,6 @@ export default {
     color: #fff;
     cursor: pointer;
     margin-top: 10px;
+    margin-right: 10px;
 }
 </style>

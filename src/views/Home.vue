@@ -2,8 +2,8 @@
   <div>
     <!-- Navbar -->
     <Navbar />
-    <WishList />
-    <MovieSlider/>
+    <!-- <WishList />
+    <MovieSlider/> -->
 
     <div class="home">
       <!-- Banner Component -->
@@ -38,16 +38,16 @@
 import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
-import WishList from "@/components/WishList.vue"; 
-import MovieSlider from "@/components/MovieSlider.vue"; 
+// import WishList from "@/components/WishList.vue"; 
+// import MovieSlider from "@/components/MovieSlider.vue"; 
 
 export default {
   name: "Home",
   components: {
     Banner,
     Navbar,
-    WishList,
-    MovieSlider, 
+    // WishList,
+    // MovieSlider, 
   },
   data() {
     return {

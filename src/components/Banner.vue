@@ -68,12 +68,12 @@ export default {
 }
 
 .banner-content h2 {
-    font-size: 2.5em;
+    font-size: 1em;
     margin-bottom: 10px;
 }
 
 .banner-content p {
-    font-size: 1.2em;
+    font-size: 1em;
     max-width: 50%;
 }
 
@@ -85,6 +85,5 @@ export default {
     color: #fff;
     cursor: pointer;
     margin-top: 10px;
-    margin-right: 10px;
 }
 </style>

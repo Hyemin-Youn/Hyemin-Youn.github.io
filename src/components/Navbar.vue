@@ -9,24 +9,16 @@
 
       <ul class="nav-links">
         <li>
-          <router-link to="/">
-홈
-</router-link>
+          <router-link to="/">홈</router-link>
         </li>
         <li>
-          <router-link to="/genres">
-대세 콘텐츠
-</router-link>
+          <router-link to="/genres">대세 콘텐츠</router-link>
         </li>
         <li>
-          <router-link to="/explore">
-찾아보기
-</router-link>
+          <router-link to="/explore">찾아보기</router-link>
         </li>
         <li>
-          <router-link to="/my-list">
-내가 찜한 리스트
-</router-link>
+          <router-link to="/my-list">내가 찜한 리스트</router-link>
         </li>
       </ul>
     </div>
@@ -62,13 +54,12 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #141414;
+  background-color: #7d1010; /* 원하는 색상 */
   padding: 10px 20px;
   color: #ffffff;
 }
@@ -113,14 +104,5 @@ export default {
 .profile-icon {
   width: 30px;
   cursor: pointer;
-}
-
-.navbar[data-v-41458b80] {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #7d1010;
-  padding: 10px 20px;
-  color: #ffffff;
 }
 </style>

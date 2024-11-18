@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="bg-image" /> <!-- 배경 이미지 -->
+    <div class="bg-image" />
     <div class="wrapper">
+      <!-- 로그인 카드 -->
       <div
-class="card"
-:class="{ flipped: isFlipped }"
->
-        <!-- 로그인 화면 -->
-        <div class="content front">
+        class="card"
+        :class="{ active: activeCard === 'login', backward: activeCard === 'signup' }"
+      >
+        <div class="content">
           <h2>Login</h2>
           <form @submit.prevent="handleLogin">
             <label for="email">Email</label>
@@ -47,14 +47,19 @@ Sign In
           </form>
           <p
 class="switch"
-@click="flipCard"
+@click="switchToSignup"
 >
             Don't have an account? <b>Sign up</b>
           </p>
         </div>
+      </div>
 
-        <!-- 회원가입 화면 -->
-        <div class="content back">
+      <!-- 회원가입 카드 -->
+      <div
+        class="card"
+        :class="{ active: activeCard === 'signup', backward: activeCard === 'login' }"
+      >
+        <div class="content">
           <h2>Sign Up</h2>
           <form @submit.prevent="handleRegister">
             <label for="newEmail">Email</label>
@@ -97,15 +102,15 @@ type="checkbox"
             </div>
 
             <button
-type="submit"
-:disabled="!termsAccepted"
->
-Register
-</button>
+              type="submit"
+              :disabled="!termsAccepted"
+            >
+              Register
+            </button>
           </form>
           <p
 class="switch"
-@click="flipCard"
+@click="switchToLogin"
 >
             Already have an account? <b>Sign in</b>
           </p>
@@ -119,7 +124,7 @@ class="switch"
 export default {
   data() {
     return {
-      isFlipped: false,
+      activeCard: "login", // 현재 활성 카드 (login or signup)
       email: "",
       password: "",
       rememberMe: false,
@@ -132,45 +137,41 @@ export default {
     };
   },
   methods: {
-  flipCard() {
-    this.isFlipped = !this.isFlipped;
+    switchToSignup() {
+      this.activeCard = "signup";
+    },
+    switchToLogin() {
+      this.activeCard = "login";
+    },
+    handleLogin() {
+      if (this.password.length < 6) {
+        this.loginError = "Password must be at least 6 characters long.";
+        return;
+      }
+      alert("Login successful!");
+      this.$store.dispatch("login", { email: this.email });
+      if (this.$route.path !== "/home") {
+        this.$router.push("/home");
+      }
+    },
+    handleRegister() {
+      if (this.newPassword.length < 6) {
+        this.signupError = "Password must be at least 6 characters long.";
+        return;
+      }
+      if (this.newPassword !== this.confirmPassword) {
+        this.signupError = "Passwords do not match.";
+        return;
+      }
+      alert("Registration successful!");
+      this.switchToLogin();
+    },
   },
-  handleLogin() {
-  if (this.password.length !== 32) {
-    this.loginError = "Password must be exactly 32 characters long.";
-    return;
-  }
-
-  alert("Login successful!");
-
-  // Vuex에 로그인 상태 저장
-  this.$store.dispatch('login', { email: this.email });
-
-  // 중복된 URL 방지
-  if (this.$route.path !== '/home') {
-    this.$router.push('/home');
-  }
-}
-,
-  handleRegister() {
-    if (this.newPassword.length !== 32) {
-      this.signupError = "Password must be exactly 32 characters long.";
-      return;
-    }
-    if (this.newPassword !== this.confirmPassword) {
-      this.signupError = "Passwords do not match.";
-      return;
-    }
-    alert("Registration successful!");
-    this.flipCard(); // 회원가입 후 로그인 화면으로 전환
-  },
-},
-
 };
 </script>
 
 <style scoped>
-/* 배경 이미지 스타일 */
+/* 배경 이미지 */
 .bg-image {
   position: fixed;
   top: 0;
@@ -180,46 +181,54 @@ export default {
   background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
   background-size: cover;
   background-position: center;
-  z-index: -1; /* 배경이 뒤에 위치하도록 설정 */
+  z-index: -1;
 }
 
-/* 로그인/회원가입 창 스타일 */
+/* 전체 카드 컨테이너 */
 .wrapper {
-  width: 400px;
+  width: 700px; /* 카드 간격을 좁히기 위해 너비 조정 */
   height: 520px;
-  margin: 0 auto;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  perspective: 1000px;
-  backdrop-filter: blur(5px);
-}
-
-.card {
-  width: 100%;
-  height: 100%;
   position: relative;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: 1000px;
+}
+
+/* 카드 기본 스타일 */
+.card {
+  width: 360px;
+  height: 480px;
+  position: absolute;
   transform-style: preserve-3d;
-  transition: transform 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, z-index 0.6s ease-in-out;
+  opacity: 0;
+  z-index: 0;
 }
 
-.card.flipped {
-  transform: rotateY(180deg);
+.card.active {
+  opacity: 1;
+  z-index: 1;
+  transform: translateX(0) scale(1);
 }
 
+.card.backward {
+  transform: translateX(130%) scale(0.9); /* 간격 줄이기 */
+  opacity: 0.5;
+}
+
+/* 카드 콘텐츠 */
 .content {
   position: absolute;
   width: 100%;
   height: 100%;
-  padding: 30px 20px;
+  padding: 30px;
   text-align: center;
-  background: rgba(212, 0, 255, 0.26);
+  background: #e50914;
   color: #fff;
   border-radius: 15px;
-  backface-visibility: hidden;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  z-index: 10;
 }
 
 .front {
@@ -227,7 +236,7 @@ export default {
 }
 
 .back {
-  background: #e50914;
+  background: #bf0812;
   transform: rotateY(180deg);
 }
 
@@ -267,25 +276,6 @@ button:hover {
   background-color: #a10610;
 }
 
-.remember-me {
-  text-align: center;
-}
-
-.terms {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
-  margin: 10px 0;
-  text-align: center;
-}
-
-.remember-me input[type="checkbox"],
-.terms input[type="checkbox"] {
-  margin-right: 6px;
-  cursor: pointer;
-}
-
 .switch {
   margin-top: 15px;
   color: #fff;
@@ -298,56 +288,5 @@ button:hover {
   color: yellow;
   font-size: 0.8rem;
   margin-top: 8px;
-}
-
-/* 반응형 스타일 */
-@media screen and (max-width: 768px) {
-  .wrapper {
-    width: 320px;
-    height: 500px;
-  }
-
-  h2 {
-    font-size: 1.4rem;
-  }
-
-  input {
-    padding: 8px;
-    font-size: 0.8rem;
-  }
-
-  button {
-    padding: 8px;
-    font-size: 0.8rem;
-  }
-
-  .switch {
-    font-size: 0.7rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .wrapper {
-    width: 280px;
-    height: 450px;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  input {
-    padding: 6px;
-    font-size: 0.7rem;
-  }
-
-  button {
-    padding: 6px;
-    font-size: 0.7rem;
-  }
-
-  .switch {
-    font-size: 0.6rem;
-  }
 }
 </style>

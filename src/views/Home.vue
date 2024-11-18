@@ -4,31 +4,39 @@
     <Navbar />
 
     <div class="home">
-      <!-- Banner Component -->
-      <Banner :heroMovie="heroMovie" />
+      <!-- 로딩 중 표시 -->
+      <div v-if="isLoading" class="loading-overlay">
+        <p>로딩중 ...</p>
+      </div>
 
-      <!-- Movie Categories -->
-      <div
-        v-for="category in movieCategories"
-        :key="category.name"
-        class="movie-category"
-      >
-        <h3>{{ category.title }}</h3>
-        <div class="movie-list">
-          <div
-            v-for="movie in category.movies"
-            :key="movie.id"
-            class="movie-card"
-          >
-            <img
-              :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
-              :alt="movie.title"
-              class="movie-poster"
+      <!-- 메인 콘텐츠 (로딩 완료 후 표시) -->
+      <div v-else>
+        <!-- Banner Component -->
+        <Banner :heroMovie="heroMovie" />
+
+        <!-- Movie Categories -->
+        <div
+          v-for="category in movieCategories"
+          :key="category.name"
+          class="movie-category"
+        >
+          <h3>{{ category.title }}</h3>
+          <div class="movie-list">
+            <div
+              v-for="movie in category.movies"
+              :key="movie.id"
+              class="movie-card"
             >
-            <div class="movie-info">
-              <h4>{{ movie.title }}</h4>
-              <p>평점: ⭐ {{ movie.vote_average }}</p>
-              <p>개봉일: {{ movie.release_date }}</p>
+              <img
+                :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+                :alt="movie.title"
+                class="movie-poster"
+              >
+              <div class="movie-info">
+                <h4>{{ movie.title }}</h4>
+                <p>평점: ⭐ {{ movie.vote_average }}</p>
+                <p>개봉일: {{ movie.release_date }}</p>
+              </div>
             </div>
           </div>
         </div>
@@ -50,6 +58,7 @@ export default {
   },
   data() {
     return {
+      isLoading: true, // 로딩 상태
       heroMovie: {},
       movieCategories: [
         { name: "popular", title: "인기 영화", movies: [] },
@@ -60,10 +69,18 @@ export default {
     };
   },
   created() {
-    this.fetchHeroMovie();
-    this.fetchMovies();
+    this.loadData();
   },
   methods: {
+    async loadData() {
+      try {
+        await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        this.isLoading = false; // 로딩 완료
+      }
+    },
     async fetchHeroMovie() {
       const API_KEY = process.env.VUE_APP_API_KEY;
       try {
@@ -94,6 +111,23 @@ export default {
   padding: 20px;
   background-color: #141414;
   color: #ffffff;
+  position: relative;
+}
+
+/* 로딩 오버레이 */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 1.5em;
+  z-index: 10;
 }
 
 .movie-category {

@@ -30,7 +30,7 @@ router.beforeEach((to, from, next) => {
   const isAuthenticated = store.getters.isAuthenticated;
   console.log('From:', from.path, 'To:', to.path, 'isAuthenticated:', isAuthenticated);
 
-  if (to.path === '/' && isAuthenticated) {
+  if (to.path === '/signin' && isAuthenticated) {
     console.log('Redirecting to /home');
     next('/home');
   } else {

@@ -12,32 +12,32 @@
           <form @submit.prevent="handleLogin">
             <label for="email">Email</label>
             <input
-id="email"
-v-model="email"
-type="email"
-required
->
+              id="email"
+              v-model="email"
+              type="email"
+              required
+            >
 
             <label for="password">Password</label>
             <input
-id="password"
-v-model="password"
-type="password"
-required
->
+              id="password"
+              v-model="password"
+              type="password"
+              required
+            >
             <p
-v-if="loginError"
-class="error"
->
-{{ loginError }}
-</p>
+              v-if="loginError"
+              class="error"
+            >
+              {{ loginError }}
+            </p>
 
             <div class="remember-me">
               <input
-id="rememberMe"
-v-model="rememberMe"
-type="checkbox"
->
+                id="rememberMe"
+                v-model="rememberMe"
+                type="checkbox"
+              >
               <label for="rememberMe">Remember Me</label>
             </div>
 
@@ -46,9 +46,9 @@ Sign In
 </button>
           </form>
           <p
-class="switch"
-@click="switchToSignup"
->
+            class="switch"
+            @click="switchToSignup"
+          >
             Don't have an account? <b>Sign up</b>
           </p>
         </div>
@@ -64,19 +64,19 @@ class="switch"
           <form @submit.prevent="handleRegister">
             <label for="newEmail">Email</label>
             <input
-id="newEmail"
-v-model="newEmail"
-type="email"
-required
->
+              id="newEmail"
+              v-model="newEmail"
+              type="email"
+              required
+            >
 
             <label for="newPassword">Password</label>
             <input
-id="newPassword"
-v-model="newPassword"
-type="password"
-required
->
+              id="newPassword"
+              v-model="newPassword"
+              type="password"
+              required
+            >
 
             <label for="confirmPassword">Confirm Password</label>
             <input
@@ -86,18 +86,18 @@ required
               required
             >
             <p
-v-if="signupError"
-class="error"
->
-{{ signupError }}
-</p>
+              v-if="signupError"
+              class="error"
+            >
+              {{ signupError }}
+            </p>
 
             <div class="terms">
               <input
-id="terms"
-v-model="termsAccepted"
-type="checkbox"
->
+                id="terms"
+                v-model="termsAccepted"
+                type="checkbox"
+              >
               <label for="terms">I have read the <b>Terms and Conditions</b></label>
             </div>
 
@@ -109,9 +109,9 @@ type="checkbox"
             </button>
           </form>
           <p
-class="switch"
-@click="switchToLogin"
->
+            class="switch"
+            @click="switchToLogin"
+          >
             Already have an account? <b>Sign in</b>
           </p>
         </div>
@@ -145,7 +145,7 @@ export default {
     },
     handleLogin() {
       if (this.password.length < 6) {
-        this.loginError = "Password must be at least 6 characters long.";
+        this.loginError = "Password must be 32 letters long. Use your API key. ";
         return;
       }
       alert("Login successful!");
@@ -186,10 +186,12 @@ export default {
 
 /* 전체 카드 컨테이너 */
 .wrapper {
-  width: 700px; /* 카드 간격을 좁히기 위해 너비 조정 */
+  width: 700px;
   height: 520px;
-  position: relative;
-  margin: 0 auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55%, -50%); /* 화면 중앙에서 약간 왼쪽으로 이동 */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -202,19 +204,20 @@ export default {
   height: 480px;
   position: absolute;
   transform-style: preserve-3d;
-  transition: transform 0.6s ease-in-out, z-index 0.6s ease-in-out;
+  transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
   opacity: 0;
   z-index: 0;
 }
 
 .card.active {
   opacity: 1;
-  z-index: 1;
-  transform: translateX(0) scale(1);
+  z-index: 2; /* 활성 카드 위로 오게 설정 */
+  transform: translateX(-20px) scale(1); /* 중앙에서 약간 겹치게 */
 }
 
 .card.backward {
-  transform: translateX(130%) scale(0.9); /* 간격 줄이기 */
+  z-index: 1; /* 비활성 카드 아래로 설정 */
+  transform: translateX(30px) scale(0.95); /* 약간 오른쪽으로 밀려나게 설정 */
   opacity: 0.5;
 }
 
@@ -231,15 +234,7 @@ export default {
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.front {
-  background: #e50914;
-}
-
-.back {
-  background: #bf0812;
-  transform: rotateY(180deg);
-}
-
+/* 텍스트 스타일 */
 h2 {
   margin-bottom: 20px;
   font-size: 1.5rem;

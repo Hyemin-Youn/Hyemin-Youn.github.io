@@ -5,7 +5,7 @@ import store from '../store';
 
 const routes = [
   { 
-    path: '/signin', 
+    path: '/', 
     name: 'SignIn', 
     component: SignIn 
   },
@@ -15,14 +15,14 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
   },
-  { 
-    path: '/', 
-    redirect: '/signin',
-  },
+  // { 
+  //   path: '/', 
+  //   redirect: '/signin',
+  // },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),//HAsh
+  history: createWebHashHistory(),//hash
   routes,
 });
 

@@ -5,7 +5,7 @@ import store from '../store';
 
 const routes = [
   { 
-    path: '/', 
+    path: '/signin', 
     name: 'SignIn', 
     component: SignIn 
   },

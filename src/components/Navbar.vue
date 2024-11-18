@@ -5,6 +5,7 @@
         src="@/assets/logo.png" 
         alt="Logo" 
         class="logo"
+        @click="home"
       >
 
       <ul class="nav-links">

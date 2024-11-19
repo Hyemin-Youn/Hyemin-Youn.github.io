@@ -3,6 +3,7 @@ import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
 import store from '../store';
 
+
 const routes = [
   { 
     path: '/signin', 

@@ -9,7 +9,7 @@
         <p>로딩중 ...</p>
       </div>
 
-      <!-- 메인 콘텐츠 (로딩 완료 후 표시) -->
+      <!-- 메인 콘텐츠 -->
       <div v-else>
         <!-- Banner Component -->
         <Banner :heroMovie="heroMovie" />
@@ -36,6 +36,13 @@
                 <h4>{{ movie.title }}</h4>
                 <p>평점: ⭐ {{ movie.vote_average }}</p>
                 <p>개봉일: {{ movie.release_date }}</p>
+                <!-- 하트 버튼 -->
+                <button
+                  class="heart-btn"
+                  @click="toggleWishList(movie)"
+                >
+                  ♥
+                </button>
               </div>
             </div>
           </div>
@@ -49,6 +56,7 @@
 import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
+import { mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -72,6 +80,8 @@ export default {
     this.loadData();
   },
   methods: {
+    ...mapActions(["addToWishList", "removeFromWishList"]), // Vuex 액션 매핑
+
     async loadData() {
       try {
         await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
@@ -102,84 +112,23 @@ export default {
       });
       await Promise.all(requests);
     },
+    toggleWishList(movie) {
+      this.addToWishList(movie); // Vuex를 사용하여 찜 리스트에 추가
+    },
   },
 };
 </script>
 
 <style scoped>
-.home {
-  padding: 20px;
-  background-color: #141414;
-  color: #ffffff;
-  position: relative;
+.heart-btn {
+  background: none;
+  border: none;
+  color: red;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-top: 10px;
 }
-
-/* 로딩 오버레이 */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  font-size: 1.5em;
-  z-index: 10;
-}
-
-.movie-category {
-  margin-bottom: 20px;
-}
-
-.movie-category h3 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-.movie-list {
-  display: flex;
-  overflow-x: auto;
-  gap: 10px;
-  padding-bottom: 10px;
-}
-
-.movie-card {
-  width: 150px;
-  flex-shrink: 0;
-  position: relative;
-  transition: transform 0.3s ease, z-index 0.3s ease;
-  z-index: 1;
-}
-
-.movie-card:hover {
+.heart-btn:hover {
   transform: scale(1.2);
-  z-index: 10;
-}
-
-.movie-poster {
-  width: 100%;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.movie-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  text-align: center;
-  border-radius: 0 0 5px 5px;
-}
-
-.movie-card:hover .movie-info {
-  opacity: 1;
 }
 </style>

@@ -79,9 +79,9 @@ export default {
       ],
     };
   },
-  created() {
-    this.loadData();
-  },
+  // created() {
+  //   this.loadData();
+  // },
   // methods: {
   //   ...mapActions(["addToWishList", "removeFromWishList"]), // Vuex 액션 매핑
 

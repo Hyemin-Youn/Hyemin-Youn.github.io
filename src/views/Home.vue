@@ -122,7 +122,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<!-- <style scoped>
 .heart-btn {
   background: none;
   border: none;
@@ -134,4 +134,4 @@ export default {
 .heart-btn:hover {
   transform: scale(1.2);
 }
-</style>
+</style> -->

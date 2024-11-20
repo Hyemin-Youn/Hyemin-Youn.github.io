@@ -1,23 +1,13 @@
 <template>
   <div>
-    <!-- Navbar -->
     <Navbar />
 
     <div class="home">
-      <!-- 로딩 중 표시 -->
-      <div
-v-if="isLoading"
-class="loading-overlay"
->
+      <div v-if="isLoading" class="loading-overlay">
         <p>로딩중 ...</p>
       </div>
-
-      <!-- 메인 콘텐츠 -->
       <div v-else>
-        <!-- Banner Component -->
         <Banner :heroMovie="heroMovie" />
-
-        <!-- Movie Categories -->
         <div
           v-for="category in movieCategories"
           :key="category.name"
@@ -37,11 +27,9 @@ class="loading-overlay"
               >
               <div class="movie-info">
                 <h4>{{ movie.title }}</h4>
-                <p>평점: ⭐ {{ movie.vote_average }}</p>
-                <p>개봉일: {{ movie.release_date }}</p>
-                하트 버튼
                 <button
                   class="heart-btn"
+                  :class="{ active: isInWishList(movie) }"
                   @click="toggleWishList(movie)"
                 >
                   ♥
@@ -59,7 +47,7 @@ class="loading-overlay"
 import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Home",
@@ -69,7 +57,7 @@ export default {
   },
   data() {
     return {
-      isLoading: true, // 로딩 상태
+      isLoading: true,
       heroMovie: {},
       movieCategories: [
         { name: "popular", title: "인기 영화", movies: [] },
@@ -79,44 +67,20 @@ export default {
       ],
     };
   },
-  created() {
-    this.loadData();
+  computed: {
+    ...mapGetters(["wishlist"]),
   },
   methods: {
-    ...mapActions(["addToWishList", "removeFromWishList"]), // Vuex 액션 매핑
-
-    async loadData() {
-      try {
-        await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
-      } catch (error) {
-        console.error("Error loading data:", error);
-      } finally {
-        this.isLoading = false; // 로딩 완료
-      }
-    },
-    async fetchHeroMovie() {
-      const API_KEY = process.env.VUE_APP_API_KEY;
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
-        );
-        this.heroMovie = response.data.results[0];
-      } catch (error) {
-        console.error("Error fetching hero movie:", error);
-      }
-    },
-    async fetchMovies() {
-      const API_KEY = process.env.VUE_APP_API_KEY;
-      const requests = this.movieCategories.map(async (category) => {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
-        );
-        category.movies = response.data.results;
-      });
-      await Promise.all(requests);
-    },
+    ...mapActions(["addToWishList", "removeFromWishList"]),
     toggleWishList(movie) {
-      this.addToWishList(movie); // Vuex를 사용하여 찜 리스트에 추가
+      if (this.isInWishList(movie)) {
+        this.removeFromWishList(movie.id);
+      } else {
+        this.addToWishList(movie);
+      }
+    },
+    isInWishList(movie) {
+      return this.wishlist.some((item) => item.id === movie.id);
     },
   },
 };
@@ -126,12 +90,11 @@ export default {
 .heart-btn {
   background: none;
   border: none;
-  color: red;
+  color: gray;
   font-size: 1.5rem;
   cursor: pointer;
-  margin-top: 10px;
 }
-.heart-btn:hover {
-  transform: scale(1.2);
+.heart-btn.active {
+  color: red;
 }
 </style>

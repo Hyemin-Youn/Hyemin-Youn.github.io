@@ -15,10 +15,10 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
   },
-  { 
-    path: '/', 
-    redirect: '/signin', // 기본 경로를 로그인 페이지로 리다이렉트
-  },
+  // { 
+  //   path: '/', 
+  //   redirect: '/signin', // 기본 경로를 로그인 페이지로 리다이렉트
+  // },
 ];
 
 const router = createRouter({

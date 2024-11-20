@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # 필요한 Node.js 버전 설정
+          node-version: '20'  # 필요한 Node.js 버전 설정
 
       - name: Install dependencies
         run: npm install
@@ -29,4 +29,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist  # 빌드된 파일의 경로 (Vue 프로젝트에서는 기본적으로 'dist' 폴더)
-          # publish_branch: develop
+          publish_branch: gh-pages

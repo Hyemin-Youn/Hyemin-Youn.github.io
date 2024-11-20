@@ -79,50 +79,50 @@ export default {
       ],
     };
   },
-  // created() {
-  //   this.loadData();
-  // },
-  // methods: {
-  //   ...mapActions(["addToWishList", "removeFromWishList"]), // Vuex 액션 매핑
+  created() {
+    this.loadData();
+  },
+  methods: {
+    ...mapActions(["addToWishList", "removeFromWishList"]), // Vuex 액션 매핑
 
-  //   async loadData() {
-  //     try {
-  //       await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
-  //     } catch (error) {
-  //       console.error("Error loading data:", error);
-  //     } finally {
-  //       this.isLoading = false; // 로딩 완료
-  //     }
-  //   },
-  //   async fetchHeroMovie() {
-  //     const API_KEY = process.env.VUE_APP_API_KEY;
-  //     try {
-  //       const response = await axios.get(
-  //         `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
-  //       );
-  //       this.heroMovie = response.data.results[0];
-  //     } catch (error) {
-  //       console.error("Error fetching hero movie:", error);
-  //     }
-  //   },
-  //   async fetchMovies() {
-  //     const API_KEY = process.env.VUE_APP_API_KEY;
-  //     const requests = this.movieCategories.map(async (category) => {
-  //       const response = await axios.get(
-  //         `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
-  //       );
-  //       category.movies = response.data.results;
-  //     });
-  //     await Promise.all(requests);
-  //   },
-  //   toggleWishList(movie) {
-  //     this.addToWishList(movie); // Vuex를 사용하여 찜 리스트에 추가
-  //   },
-  // },
+    async loadData() {
+      try {
+        await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        this.isLoading = false; // 로딩 완료
+      }
+    },
+    async fetchHeroMovie() {
+      const API_KEY = process.env.VUE_APP_API_KEY;
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
+        );
+        this.heroMovie = response.data.results[0];
+      } catch (error) {
+        console.error("Error fetching hero movie:", error);
+      }
+    },
+    async fetchMovies() {
+      const API_KEY = process.env.VUE_APP_API_KEY;
+      const requests = this.movieCategories.map(async (category) => {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
+        );
+        category.movies = response.data.results;
+      });
+      await Promise.all(requests);
+    },
+    toggleWishList(movie) {
+      this.addToWishList(movie); // Vuex를 사용하여 찜 리스트에 추가
+    },
+  },
 };
 </script>
 
-<!-- <style scoped>
+<style scoped>
 .heart-btn {
   background: none;
   border: none;
@@ -134,4 +134,4 @@ export default {
 .heart-btn:hover {
   transform: scale(1.2);
 }
-</style> -->
+</style>

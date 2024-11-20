@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
+import Wishlist from '../views/WishList.vue'; // Wishlist 컴포넌트 추가
 import store from '../store';
 
 const routes = [
@@ -14,6 +15,12 @@ const routes = [
     name: 'Home', 
     component: Home,
     meta: { requiresAuth: true },
+  },
+  { 
+    path: '/wishlist', 
+    name: 'WishList', 
+    component: Wishlist,
+    meta: { requiresAuth: true }, // 인증 필요
   },
   { 
     path: '/', 

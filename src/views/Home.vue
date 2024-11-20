@@ -39,13 +39,13 @@ class="loading-overlay"
                 <h4>{{ movie.title }}</h4>
                 <p>평점: ⭐ {{ movie.vote_average }}</p>
                 <p>개봉일: {{ movie.release_date }}</p>
-                <!-- 하트 버튼 -->
+                <!-- 하트 버튼
                 <button
                   class="heart-btn"
                   @click="toggleWishList(movie)"
                 >
                   ♥
-                </button>
+                </button> -->
               </div>
             </div>
           </div>

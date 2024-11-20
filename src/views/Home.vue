@@ -5,7 +5,10 @@
 
     <div class="home">
       <!-- 로딩 중 표시 -->
-      <div v-if="isLoading" class="loading-overlay">
+      <div
+v-if="isLoading"
+class="loading-overlay"
+>
         <p>로딩중 ...</p>
       </div>
 

@@ -16,10 +16,10 @@ const routes = [
     component: Home,
     meta: { requiresAuth: true },
   },
-  { 
-    path: '/', 
-    redirect: '/signin',
-  },
+  // { 
+  //   path: '/', 
+  //   redirect: '/signin',
+  // },
 ];
 
 const router = createRouter({

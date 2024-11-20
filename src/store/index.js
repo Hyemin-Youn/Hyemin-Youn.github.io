@@ -31,9 +31,9 @@ const store = createStore({
         credentials.password === registeredPassword
       ) {
         commit('setUser', { email: credentials.email });
-        return true;
+        return true; // 로그인 성공
       } else {
-        return false;
+        return false; // 로그인 실패
       }
     },
     register(_, newUser) {

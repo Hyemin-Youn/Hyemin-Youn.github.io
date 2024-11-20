@@ -3,12 +3,11 @@ import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
 import store from '../store';
 
-
 const routes = [
   { 
     path: '/signin', 
     name: 'SignIn', 
-    component: SignIn 
+    component: SignIn,
   },
   { 
     path: '/home', 
@@ -18,17 +17,19 @@ const routes = [
   },
   { 
     path: '/', 
-    redirect: '/signin',
+    redirect: '/signin', // 기본 경로를 로그인 페이지로 리다이렉트
   },
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),//hash
+  history: createWebHashHistory(), // hash 모드 라우터
   routes,
 });
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = store.getters.isAuthenticated;
+
+  console.log('From:', from.path, 'To:', to.path, 'isAuthenticated:', isAuthenticated);
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     // 인증이 필요한 경로인데 인증되지 않은 경우
@@ -42,6 +43,5 @@ router.beforeEach((to, from, next) => {
     next(); // 나머지 경우는 통과
   }
 });
-
 
 export default router;

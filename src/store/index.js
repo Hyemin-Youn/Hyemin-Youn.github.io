@@ -33,7 +33,7 @@ const store = createStore({
         commit('setUser', { email: credentials.email });
         return true;
       } else {
-        return true;
+        return false;
       }
     },
     register(_, newUser) {

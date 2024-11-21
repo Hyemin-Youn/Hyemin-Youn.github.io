@@ -26,6 +26,11 @@ const routes = [
     path: "/movies/:id",
     component: MovieDetail 
   },
+  {
+    path: '/wishlist',
+    name: 'Wishlist',
+    component: Wishlist 
+  },
 ];
 
 const router = createRouter({

@@ -1,58 +1,36 @@
 <template>
-    <div>
-      <Navbar />
-      <div class="wishlist">
-        <h1>내가 찜한 영화</h1>
-        <div v-if="wishlist.length === 0">
-          <p>찜한 영화가 없습니다.</p>
-        </div>
-        <div
-v-else
-class="wishlist-movies"
->
-          <div
-            v-for="movie in wishlist"
-            :key="movie.id"
-            class="movie-card"
-          >
-            <img
-              :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
-              :alt="movie.title"
-              class="movie-poster"
-            >
-            <div class="movie-info">
-              <h4>{{ movie.title }}</h4>
-              <p>평점: ⭐ {{ movie.vote_average }}</p>
-              <button
-                class="remove-btn"
-                @click="removeFromWishList(movie.id)"
-              >
-                삭제
-              </button>
-            </div>
-          </div>
-        </div>
+  <div class="wishlist">
+    <h2>내가 찜한 리스트</h2>
+    <div class="movie-list">
+      <div v-for="movie in wishlist" :key="movie.id" class="movie-card">
+        <img
+          :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+          :alt="movie.title"
+          class="movie-poster"
+        />
+        <button @click="removeFromWishlist(movie.id)" class="remove-btn">
+          ✖
+        </button>
       </div>
     </div>
-  </template>
-  
-  <script>
-  import Navbar from "@/components/Navbar.vue";
-  import { mapGetters, mapActions } from "vuex";
-  
-  export default {
-    name: "WishList",
-    components: {
-      Navbar,
-    },
-    computed: {
-      ...mapGetters(["wishlist"]),
-    },
-    methods: {
-      ...mapActions(["removeFromWishList"]),
-    },
-  };
-  </script>
+  </div>
+</template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex';
+
+export default {
+  name: 'Wishlist',
+  computed: {
+    ...mapGetters(['wishlist']),
+  },
+  methods: {
+    ...mapActions(['removeFromWishList']),
+  },
+};
+</script>
+
+
   
   <style scoped>
   .wishlist {

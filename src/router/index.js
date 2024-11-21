@@ -3,6 +3,7 @@ import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
 import Wishlist from '../views/WishList.vue';
 import store from '../store';
+import MovieDetail from "@/views/MovieDetail.vue";
 
 const routes = [
   { 
@@ -21,6 +22,10 @@ const routes = [
     path: '/', 
     redirect: '/signin',
   },  
+  {
+    path: "/movies/:id",
+    component: MovieDetail 
+  },
 ];
 
 const router = createRouter({

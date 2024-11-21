@@ -10,7 +10,7 @@
 
       <ul class="nav-links">
         <li>
-          <router-link to="/">
+          <router-link to="/home">
 홈
 </router-link>
         </li>

@@ -4,7 +4,7 @@ const store = createStore({
   state: {
     user: JSON.parse(localStorage.getItem('user')) || null,
     isAuthenticated: !!localStorage.getItem('user'),
-    wishlist: [], // 찜한 영화 리스트
+    wishlist: JSON.parse(localStorage.getItem('wishlist')) || [], // wishlist 동기화
   },
   mutations: {
     setUser(state, user) {
@@ -23,10 +23,14 @@ const store = createStore({
     },
     ADD_TO_WISHLIST(state, movie) {
       const exists = state.wishlist.find((item) => item.id === movie.id);
-      if (!exists) state.wishlist.push(movie); // 중복 방지
+      if (!exists) {
+        state.wishlist.push(movie);
+        localStorage.setItem('wishlist', JSON.stringify(state.wishlist)); // 동기화
+      }
     },
     REMOVE_FROM_WISHLIST(state, movieId) {
       state.wishlist = state.wishlist.filter((item) => item.id !== movieId);
+      localStorage.setItem('wishlist', JSON.stringify(state.wishlist)); // 동기화
     },
   },
   actions: {
@@ -61,7 +65,7 @@ const store = createStore({
   getters: {
     isAuthenticated: (state) => state.isAuthenticated,
     user: (state) => state.user,
-    wishlist: (state) => state.wishlist, // Wishlist 상태 반환
+    wishlist: (state) => state.wishlist,
   },
 });
 

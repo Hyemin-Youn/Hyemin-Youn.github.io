@@ -155,8 +155,8 @@ export default {
       }
     },
     handleRegister() {
-      if (this.newPassword.length < 6) {
-        this.signupError = "Password must be at least 6 characters long.";
+      if (this.newPassword.length < 32) {
+        this.signupError = "Password must be at least 32 letters long.";
         return;
       }
       if (this.newPassword !== this.confirmPassword) {

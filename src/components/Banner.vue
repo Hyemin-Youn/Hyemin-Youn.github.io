@@ -39,8 +39,12 @@ export default {
             console.log('Play movie:', this.heroMovie.title);
         },
         showDetails() {
-            this.$router.push(`/movie/${this.heroMovie.id}`);
+        if (this.heroMovie.id) {
+        this.$router.push(`/movie/${this.heroMovie.id}`); // 상세 정보 페이지로 이동
+        } else {
+        console.error('Movie ID is not available');
         }
+    },
     }
 };
 </script>

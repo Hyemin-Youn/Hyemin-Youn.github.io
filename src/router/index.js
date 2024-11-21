@@ -26,6 +26,12 @@ const routes = [
     path: '/', 
     redirect: '/signin', // 기본 경로를 로그인 페이지로 리다이렉트
   },
+  {
+    path: '/movie/:id',
+    name: 'MovieDetails',
+    component: MovieDetails, // MovieDetails.vue 생성 필요
+  },
+  
 ];
 
 const router = createRouter({

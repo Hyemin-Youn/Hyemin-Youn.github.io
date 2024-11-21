@@ -45,11 +45,12 @@ router.beforeEach((to, from, next) => {
 
   console.log('From:', from.path, 'To:', to.path, 'isAuthenticated:', isAuthenticated);
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    // 인증이 필요한 페이지로 비인증 사용자가 접근하려는 경우
-    console.log('Redirecting to /signin');
-    next('/signin');
-  } else if (to.name === 'SignIn' && isAuthenticated) {
+  // if (to.meta.requiresAuth && !isAuthenticated) {
+  //   // 인증이 필요한 페이지로 비인증 사용자가 접근하려는 경우
+  //   console.log('Redirecting to /signin');
+  //   next('/signin');
+  // } else 
+  if (to.name === 'SignIn' && isAuthenticated) {
     // 인증된 사용자가 /signin으로 접근하려는 경우
     console.log('Redirecting to /home');
     next('/home');

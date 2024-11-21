@@ -30,9 +30,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = store.getters.isAuthenticated;
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next('/signin'); // 인증이 필요한 경로에 접근할 때
-  } else if (to.name === 'SignIn' && isAuthenticated) {
+  if (to.name === 'SignIn' && isAuthenticated) {
     next('/home'); // 인증된 사용자가 로그인 페이지로 접근할 때
   } else {
     next(); // 나머지 경우는 통과

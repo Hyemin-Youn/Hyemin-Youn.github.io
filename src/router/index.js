@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import SignIn from '../components/sign-in/SignIn.vue';
-import Wishlist from '../views/WishList.vue'; // Wishlist 컴포넌트 추가
+import Wishlist from '../views/WishList.vue';
+import MovieDetails from '../views/MovieDetails.vue'; // MovieDetails 추가
 import store from '../store';
 
 const routes = [
@@ -20,21 +21,21 @@ const routes = [
     path: '/wishlist', 
     name: 'WishList', 
     component: Wishlist,
-    meta: { requiresAuth: true }, // 인증 필요
+    meta: { requiresAuth: true },
   },
   {
     path: '/movie/:id',
     name: 'MovieDetails',
-    component: MovieDetails, // MovieDetails.vue 생성 필요
+    component: MovieDetails,
   },
   { 
     path: '/', 
-    redirect: '/signin', // 기본 경로를 로그인 페이지로 리다이렉트
+    redirect: '/signin',
   },  
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(), // hash 모드 라우터
+  history: createWebHashHistory(),
   routes,
 });
 
@@ -43,13 +44,14 @@ router.beforeEach((to, from, next) => {
 
   console.log('From:', from.path, 'To:', to.path, 'isAuthenticated:', isAuthenticated);
 
-  // 
-  if (to.path === '/signin' && isAuthenticated) {
-    // 인증된 사용자가 /signin으로 이동하려 할 때
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    console.log('Redirecting to /signin');
+    next('/signin');
+  } else if (to.path === '/signin' && isAuthenticated) {
     console.log('Redirecting to /home');
     next('/home');
   } else {
-    next(); // 나머지 경우는 통과
+    next();
   }
 });
 

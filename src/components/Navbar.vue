@@ -15,17 +15,17 @@
 </router-link>
         </li>
         <li>
-          <router-link to="/genres">
+          <router-link to="/popular">
 대세 콘텐츠
 </router-link>
         </li>
         <li>
-          <router-link to="/explore">
+          <router-link to="/search">
 찾아보기
 </router-link>
         </li>
         <li>
-          <router-link to="/my-list">
+          <router-link to="/wishlist">
 내가 찜한 리스트
 </router-link>
         </li>

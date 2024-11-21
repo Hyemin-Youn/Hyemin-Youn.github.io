@@ -1,25 +1,27 @@
 <template>
     <div class="slider-wrapper">
-      <!-- 왼쪽 버튼 -->
+      <!-- 왼쪽 화살표 버튼 -->
       <button class="arrow-btn left" @click="increaseLeft">
         <font-awesome-icon :icon="['fas', 'angle-left']" />
       </button>
   
       <!-- 슬라이더 행 -->
-      <div class="row">
+      <div class="row" :style="{ transform: `translateX(-${index * 100}%)` }">
         <div
-          v-for="movie in visibleMovies"
+          v-for="movie in movies"
           :key="movie.id"
           class="box"
           :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
           @click="onBoxClicked(movie.id)"
         >
           <div class="info">
-            <h4>{{ movie.title }}</h4>
-            <p>
-              <span><font-awesome-icon :icon="['fas', 'heart']" /></span>
-              <span><font-awesome-icon :icon="['fas', 'share-nodes']" /></span>
-            </p>
+            <div>
+              <h4>{{ movie.title }}</h4>
+              <p>
+                <span><font-awesome-icon :icon="['fas', 'heart']" /></span>
+                <span><font-awesome-icon :icon="['fas', 'share-nodes']" /></span>
+              </p>
+            </div>
             <p>
               <span class="mini">개봉일</span> {{ movie.release_date }}
               <span class="mini">평점</span> ⭐ {{ movie.vote_average }} 점
@@ -28,7 +30,7 @@
         </div>
       </div>
   
-      <!-- 오른쪽 버튼 -->
+      <!-- 오른쪽 화살표 버튼 -->
       <button class="arrow-btn right" @click="increaseRight">
         <font-awesome-icon :icon="['fas', 'angle-right']" />
       </button>
@@ -36,11 +38,10 @@
   </template>
   
   <script>
-  import { ref, computed } from "vue";
+  import { ref } from "vue";
   import { useRouter } from "vue-router";
   
-  const makeImagePath = (path, size) =>
-    `https://image.tmdb.org/t/p/${size}${path}`;
+  const makeImagePath = (path, size) => `https://image.tmdb.org/t/p/${size}${path}`;
   
   export default {
     props: {
@@ -51,44 +52,30 @@
     },
     setup(props) {
       const router = useRouter();
-      const index = ref(0); // 슬라이더의 현재 인덱스
-      const offset = 6; // 한 번에 보여줄 영화 수
+      const index = ref(0); // 슬라이더 인덱스
+      const offset = 6; // 한 번에 보여줄 영화 개수
   
-      // 현재 보여질 영화 계산
-      const visibleMovies = computed(() => {
-        return props.movies.slice(
-          offset * index.value,
-          offset * index.value + offset
-        );
-      });
-  
-      // 슬라이더 왼쪽 이동
       const increaseLeft = () => {
-        index.value =
-          index.value === 0
-            ? Math.floor((props.movies.length - 1) / offset)
-            : index.value - 1;
+        if (index.value === 0) return;
+        index.value -= 1;
       };
   
-      // 슬라이더 오른쪽 이동
       const increaseRight = () => {
-        index.value =
-          index.value === Math.floor((props.movies.length - 1) / offset)
-            ? 0
-            : index.value + 1;
+        const maxIndex = Math.floor(props.movies.length / offset) - 1;
+        if (index.value === maxIndex) return;
+        index.value += 1;
       };
   
-      // 영화 클릭 시 상세 페이지 이동
       const onBoxClicked = (movieId) => {
         router.push(`/movies/${movieId}`);
       };
   
       return {
-        visibleMovies,
+        index,
         increaseLeft,
         increaseRight,
-        onBoxClicked,
         makeImagePath,
+        onBoxClicked,
       };
     },
   };
@@ -104,16 +91,16 @@
   
   .row {
     display: flex;
-    gap: 10px;
     transition: transform 0.5s ease;
   }
   
   .box {
-    flex: 0 0 calc(100% / 6 - 10px); /* 한 행에 6개의 박스 */
-    height: 300px;
+    flex: 0 0 calc(100% / 6 - 10px); /* 한 행에 6개씩 */
+    height: 350px;
     background-size: cover;
     background-position: center;
     border-radius: 6px;
+    margin: 0 5px;
     cursor: pointer;
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -150,17 +137,19 @@
     border: none;
     cursor: pointer;
     font-size: 24px;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
     z-index: 10;
   }
   
   .arrow-btn:hover {
     background-color: rgba(0, 0, 0, 0.7);
+    transform: scale(1.2);
   }
   
   .arrow-btn.left {

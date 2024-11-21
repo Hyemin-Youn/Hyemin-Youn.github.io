@@ -111,80 +111,83 @@
   </script>
   
   <style scoped>
-.slider-wrapper {
-  position: relative;
-  overflow: hidden;
-  width: 100%;
-}
-
-.row {
-  display: flex;
-  gap: 10px;
-  transition: transform 1s ease;
-}
-
-.box {
-  flex: 0 0 calc(100% / 6 - 10px); /* 한 행에 6개의 박스 */
-  height: 450px;
-  background-size: cover;
-  background-position: center;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.box:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
-}
-
-.info {
-  position: absolute;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  width: 100%;
-  padding: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-}
-
-.box:hover .info {
-  opacity: 1;
-}
-
-/* 슬라이더 화살표 버튼 */
-.arrow-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0); /* 기본적으로 투명 */
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-size: 30px;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.arrow-btn:hover {
-  background-color: rgba(0, 0, 0, 0.5); /* 마우스 올렸을 때만 표시 */
-  transform: scale(1.2);
-}
-
-.arrow-btn.left {
-  left: 5px;
-}
-
-.arrow-btn.right {
-  right: 5px;
-}
-</style>
+  .slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 20px 0;
+  }
+  
+  .row {
+    display: flex;
+    gap: 10px;
+    transition: transform 1s ease;
+  }
+  
+  .box {
+    flex: 0 0 calc(100% / 6 - 10px); /* 한 행에 6개의 박스 */
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .box:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.5);
+  }
+  
+  .info {
+    position: absolute;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    width: 100%;
+    padding: 10px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+  
+  .box:hover .info {
+    opacity: 1;
+  }
+  
+  /* 슬라이더 화살표 버튼 */
+  .arrow-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3); /* 기본 투명 배경 */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 24px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    z-index: 10;
+  }
+  
+  .arrow-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* 마우스 올렸을 때 진해짐 */
+    transform: scale(1.2);
+  }
+  
+  .arrow-btn.left {
+    left: -20px; /* 왼쪽 버튼 위치 */
+  }
+  
+  .arrow-btn.right {
+    right: -20px; /* 오른쪽 버튼 위치 */
+  }
+  </style>
+  

@@ -2,7 +2,7 @@
   <div class="home">
     <!-- Hero Section -->
     <div class="hero">
-      <img :src="makeImagePath(heroMovie.backdrop_path, 'w1280')" alt="Hero Movie" />
+      <img :src="heroImage" alt="Hero Movie" class="hero-image" />
       <div class="hero-content">
         <h2>{{ heroMovie.title }}</h2>
         <p>{{ heroMovie.overview }}</p>
@@ -11,7 +11,7 @@
     </div>
 
     <!-- Movie Categories -->
-    <div v-for="category in movieCategories" :key="category.name" class="movie-category">
+    <div class="movie-category" v-for="category in movieCategories" :key="category.name">
       <h3>{{ category.title }}</h3>
       <SliderContent :movies="category.movies" />
     </div>
@@ -19,15 +19,15 @@
 </template>
 
 <script>
-import SliderContent from "@/views/SliderContent.vue";
 import axios from "axios";
+import SliderContent from "@/views/SliderContent.vue"; // 슬라이더 컴포넌트 임포트
 
 export default {
   name: "Home",
-  components: { SliderContent },
+  components: { SliderContent }, // SliderContent 컴포넌트 등록
   data() {
     return {
-      heroMovie: {}, // Hero Section의 메인 영화
+      heroMovie: {},
       movieCategories: [
         { name: "popular", title: "인기 영화", movies: [] },
         { name: "now_playing", title: "최신 영화", movies: [] },
@@ -36,40 +36,41 @@ export default {
       ],
     };
   },
+  computed: {
+    heroImage() {
+      return this.heroMovie.backdrop_path
+        ? `https://image.tmdb.org/t/p/original${this.heroMovie.backdrop_path}`
+        : "";
+    },
+  },
   created() {
     this.fetchHeroMovie();
     this.fetchMovies();
   },
   methods: {
     async fetchHeroMovie() {
-      const API_KEY = process.env.VUE_APP_API_KEY; // .env에 API 키 저장
+      const API_KEY = process.env.VUE_APP_API_KEY;
       try {
         const response = await axios.get(
           `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
         );
-        this.heroMovie = response.data.results[0]; // 첫 번째 영화 가져오기
+        this.heroMovie = response.data.results[0];
       } catch (error) {
         console.error("Error fetching hero movie:", error);
       }
     },
     async fetchMovies() {
       const API_KEY = process.env.VUE_APP_API_KEY;
-      try {
-        for (const category of this.movieCategories) {
-          const response = await axios.get(
-            `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
-          );
-          category.movies = response.data.results;
-        }
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
+      const requests = this.movieCategories.map(async (category) => {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
+        );
+        category.movies = response.data.results;
+      });
+      await Promise.all(requests);
     },
     goToDetail(movieId) {
-      this.$router.push(`/movies/${movieId}`);
-    },
-    makeImagePath(path, size) {
-      return `https://image.tmdb.org/t/p/${size}${path}`;
+      this.$router.push(`/movie/${movieId}`);
     },
   },
 };
@@ -79,20 +80,20 @@ export default {
 .home {
   padding: 20px;
   background-color: #141414;
-  color: #fff;
+  color: #ffffff;
 }
 
 .hero {
   position: relative;
-  width: 100%;
-  height: 500px;
-  margin-bottom: 20px;
+  height: 60vh;
+  margin-bottom: 40px;
 }
 
-.hero img {
+.hero-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  filter: brightness(0.6);
   border-radius: 10px;
 }
 
@@ -100,31 +101,31 @@ export default {
   position: absolute;
   bottom: 20px;
   left: 20px;
-  color: white;
-  background: rgba(0, 0, 0, 0.6);
-  padding: 20px;
-  border-radius: 10px;
+  color: #fff;
 }
 
 .hero-content h2 {
-  font-size: 2em;
+  font-size: 2.5em;
   margin-bottom: 10px;
 }
 
 .hero-content p {
   font-size: 1.2em;
+  max-width: 50%;
 }
 
-button {
-  background-color: #e50914;
-  color: white;
-  border: none;
+.hero-content button {
   padding: 10px 20px;
-  border-radius: 5px;
+  font-size: 1em;
+  background-color: #e50914;
+  border: none;
+  color: #fff;
   cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
 }
 
-button:hover {
+.hero-content button:hover {
   background-color: #bf0812;
 }
 
@@ -135,5 +136,26 @@ button:hover {
 .movie-category h3 {
   font-size: 1.5em;
   margin-bottom: 20px;
+}
+
+.slider-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.movie-list {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+}
+
+.movie-card {
+  width: 150px;
+  flex-shrink: 0;
+}
+
+.movie-poster {
+  width: 100%;
+  border-radius: 5px;
 }
 </style>

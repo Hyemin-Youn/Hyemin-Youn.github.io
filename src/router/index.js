@@ -9,6 +9,7 @@ const routes = [
     path: '/signin', 
     name: 'SignIn', 
     component: SignIn,
+    meta: { hideNavbar: true }, // Navbar를 숨기기 위한 메타 데이터
   },
   { 
     path: '/home', 

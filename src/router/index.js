@@ -17,12 +17,6 @@ const routes = [
     meta: { requiresAuth: true },
   },
   { 
-    path: '/wishlist', 
-    name: 'WishList', 
-    component: Wishlist,
-    meta: { requiresAuth: true },
-  },
-  { 
     path: '/', 
     redirect: '/signin',
   },  

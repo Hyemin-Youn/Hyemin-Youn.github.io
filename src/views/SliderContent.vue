@@ -6,13 +6,7 @@
       </button>
   
       <!-- 슬라이더 행 -->
-      <transition-group
-        name="slider"
-        tag="div"
-        class="row"
-        @before-enter="onEnter"
-        @after-leave="toggleLeaving"
-      >
+      <div class="row">
         <div
           v-for="movie in visibleMovies"
           :key="movie.id"
@@ -21,20 +15,18 @@
           @click="onBoxClicked(movie.id)"
         >
           <div class="info">
-            <div>
-              <h4>{{ movie.title }}</h4>
-              <p>
-                <span><font-awesome-icon :icon="['fas', 'heart']" /></span>
-                <span><font-awesome-icon :icon="['fas', 'share-nodes']" /></span>
-              </p>
-            </div>
+            <h4>{{ movie.title }}</h4>
+            <p>
+              <span><font-awesome-icon :icon="['fas', 'heart']" /></span>
+              <span><font-awesome-icon :icon="['fas', 'share-nodes']" /></span>
+            </p>
             <p>
               <span class="mini">개봉일</span> {{ movie.release_date }}
               <span class="mini">평점</span> ⭐ {{ movie.vote_average }} 점
             </p>
           </div>
         </div>
-      </transition-group>
+      </div>
   
       <!-- 오른쪽 버튼 -->
       <button class="arrow-btn right" @click="increaseRight">
@@ -44,11 +36,11 @@
   </template>
   
   <script>
-  import { ref, computed } from 'vue';
-  import { useRouter } from 'vue-router';
+  import { ref, computed } from "vue";
+  import { useRouter } from "vue-router";
   
-  // 이미지 경로 함수
-  const makeImagePath = (path, size) => `https://image.tmdb.org/t/p/${size}${path}`;
+  const makeImagePath = (path, size) =>
+    `https://image.tmdb.org/t/p/${size}${path}`;
   
   export default {
     props: {
@@ -59,52 +51,44 @@
     },
     setup(props) {
       const router = useRouter();
-      const index = ref(0); // 슬라이더 인덱스
-      const leaving = ref(false); // 슬라이더 이동 중인지
+      const index = ref(0); // 슬라이더의 현재 인덱스
       const offset = 6; // 한 번에 보여줄 영화 수
   
-      // 슬라이더 왼쪽으로 이동
-      const increaseLeft = () => {
-        if (leaving.value) return;
-        toggleLeaving();
-        const totalMovies = props.movies.length - 1;
-        const maxIndex = Math.floor(totalMovies / offset) - 1;
-        index.value = index.value === 0 ? maxIndex : index.value - 1;
-      };
-  
-      // 슬라이더 오른쪽으로 이동
-      const increaseRight = () => {
-        if (leaving.value) return;
-        toggleLeaving();
-        const totalMovies = props.movies.length - 1;
-        const maxIndex = Math.floor(totalMovies / offset) - 1;
-        index.value = index.value === maxIndex ? 0 : index.value + 1;
-      };
-  
-      // 현재 보이는 영화 계산
+      // 현재 보여질 영화 계산
       const visibleMovies = computed(() => {
-        return props.movies.slice(offset * index.value, offset * index.value + offset);
+        return props.movies.slice(
+          offset * index.value,
+          offset * index.value + offset
+        );
       });
   
-      // 슬라이더 이동 중 상태 토글
-      const toggleLeaving = () => {
-        leaving.value = !leaving.value;
+      // 슬라이더 왼쪽 이동
+      const increaseLeft = () => {
+        index.value =
+          index.value === 0
+            ? Math.floor((props.movies.length - 1) / offset)
+            : index.value - 1;
       };
   
-      // 박스 클릭 시 상세 페이지 이동
+      // 슬라이더 오른쪽 이동
+      const increaseRight = () => {
+        index.value =
+          index.value === Math.floor((props.movies.length - 1) / offset)
+            ? 0
+            : index.value + 1;
+      };
+  
+      // 영화 클릭 시 상세 페이지 이동
       const onBoxClicked = (movieId) => {
         router.push(`/movies/${movieId}`);
       };
   
       return {
-        index,
-        leaving,
+        visibleMovies,
         increaseLeft,
         increaseRight,
-        visibleMovies,
-        makeImagePath,
         onBoxClicked,
-        toggleLeaving,
+        makeImagePath,
       };
     },
   };
@@ -121,12 +105,12 @@
   .row {
     display: flex;
     gap: 10px;
-    transition: transform 1s ease;
+    transition: transform 0.5s ease;
   }
   
   .box {
     flex: 0 0 calc(100% / 6 - 10px); /* 한 행에 6개의 박스 */
-    height: 350px;
+    height: 300px;
     background-size: cover;
     background-position: center;
     border-radius: 6px;
@@ -157,37 +141,34 @@
     opacity: 1;
   }
   
-  /* 슬라이더 화살표 버튼 */
   .arrow-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.3); /* 기본 투명 배경 */
+    background-color: rgba(0, 0, 0, 0.3);
     color: white;
     border: none;
     cursor: pointer;
     font-size: 24px;
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
-    transition: background-color 0.3s ease, transform 0.3s ease;
     z-index: 10;
   }
   
   .arrow-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7); /* 마우스 올렸을 때 진해짐 */
-    transform: scale(1.2);
+    background-color: rgba(0, 0, 0, 0.7);
   }
   
   .arrow-btn.left {
-    left: -20px; /* 왼쪽 버튼 위치 */
+    left: 10px;
   }
   
   .arrow-btn.right {
-    right: -20px; /* 오른쪽 버튼 위치 */
+    right: 10px;
   }
   </style>
   

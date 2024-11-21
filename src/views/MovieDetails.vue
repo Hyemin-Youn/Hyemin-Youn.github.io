@@ -6,7 +6,7 @@
           :src="'https://image.tmdb.org/t/p/original' + movie.backdrop_path"
           alt="Movie Poster"
           class="movie-banner"
-        />
+        >
         <div class="movie-content">
           <h1>{{ movie.title }}</h1>
           <p>{{ movie.overview }}</p>

@@ -6,7 +6,10 @@
         <div v-if="wishlist.length === 0">
           <p>찜한 영화가 없습니다.</p>
         </div>
-        <div v-else class="wishlist-movies">
+        <div
+v-else
+class="wishlist-movies"
+>
           <div
             v-for="movie in wishlist"
             :key="movie.id"
@@ -16,7 +19,7 @@
               :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
               :alt="movie.title"
               class="movie-poster"
-            />
+            >
             <div class="movie-info">
               <h4>{{ movie.title }}</h4>
               <p>평점: ⭐ {{ movie.vote_average }}</p>

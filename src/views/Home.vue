@@ -2,7 +2,9 @@
   <div>
     <Navbar />
     <Banner :heroMovie="heroMovie" />
-    <div v-if="isLoading">로딩중...</div>
+    <div v-if="isLoading">
+      로딩중...
+    </div>
     <div v-else>
       <div
         v-for="category in movieCategories"
@@ -10,11 +12,14 @@
         class="movie-category"
       >
         <h3>{{ category.title }}</h3>
-        <vue-slick-carousel class="movie-slider" :settings="sliderSettings">
+        <vue-slick-carousel
+          class="movie-slider"
+          :settings="sliderSettings"
+        >
           <div
-            class="movie-card"
             v-for="movie in category.movies"
             :key="movie.id"
+            class="movie-card"
             @click="toggleWishList(movie)"
           >
             <img

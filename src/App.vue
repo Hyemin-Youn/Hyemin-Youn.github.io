@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Navbar/>
     <router-view />
   </div>
 </template>
@@ -34,4 +35,10 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
 </style>

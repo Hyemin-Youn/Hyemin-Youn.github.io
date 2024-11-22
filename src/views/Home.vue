@@ -2,6 +2,8 @@
   <div>
     <!-- Navbar -->
     <Navbar />
+    <MovieSlider :movies="movieList" />
+
 
     <div class="home">
       <!-- 로딩 중 표시 -->

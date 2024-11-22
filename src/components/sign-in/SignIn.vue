@@ -286,27 +286,31 @@ button:hover {
 }
 
 @media (max-width: 768px) {
+  /* 전체 컨테이너 조정 */
   .wrapper {
-    width: 90%; /* 화면 너비의 90% */
+    width: 90%; /* 모바일 화면에 맞게 너비 조정 */
     height: auto;
+    padding: 10px; /* 상하 여백 추가 */
     transform: translate(-50%, -50%);
   }
 
+  /* 카드 너비 조정 */
   .card {
-    width: 100%; /* 카드가 컨테이너에 딱 맞게 */
-    height: auto;
-    margin-bottom: 20px; /* 카드 사이 간격 추가 */
+    width: 100%; /* 카드가 화면 너비에 맞도록 설정 */
+    height: auto; /* 높이를 자동으로 설정 */
+    margin-bottom: 20px; /* 카드 간의 여백 추가 */
     transform: none; /* 애니메이션 효과 제거 */
-    opacity: 1; /* 항상 보이도록 설정 */
+    opacity: 1; /* 항상 보이도록 */
   }
 
+  /* 내부 콘텐츠 여백 및 텍스트 크기 조정 */
   .content {
-    padding: 15px; /* 내부 여백 줄임 */
-    text-align: center; /* 텍스트 중앙 정렬 */
+    padding: 15px;
+    text-align: center; /* 모든 텍스트 중앙 정렬 */
   }
 
   h2 {
-    font-size: 1.2rem; /* 헤더 크기 줄임 */
+    font-size: 1.5rem; /* 제목 크기 */
   }
 
   label {
@@ -314,44 +318,58 @@ button:hover {
   }
 
   input {
-    font-size: 0.9rem;
+    font-size: 1rem; /* 입력 필드 크기 */
     padding: 10px;
   }
 
   button {
-    font-size: 0.9rem;
+    font-size: 1rem; /* 버튼 크기 */
     padding: 10px;
+    width: 100%; /* 버튼 너비를 100%로 설정 */
   }
 
   .switch {
-    font-size: 0.8rem;
+    font-size: 0.9rem; /* 하단 스위치 크기 */
+  }
+
+  .bg-image {
+    background-position: center; /* 배경 이미지 중앙 정렬 */
+    background-size: cover; /* 배경 이미지 화면 꽉 채우기 */
   }
 }
 
 @media (max-width: 480px) {
-  /* 스마트폰 화면 크기용 */
+  /* 작은 화면(스마트폰)에서의 추가 스타일 */
   .wrapper {
-    width: 100%; /* 화면 전체를 사용 */
-    padding: 10px;
+    width: 95%; /* 화면 가장자리 여백 최소화 */
+    height: auto;
   }
 
-  .card {
-    width: 100%; /* 카드 너비 전체로 */
-    margin-bottom: 15px;
+  .content {
+    padding: 10px; /* 여백 축소 */
+  }
+
+  h2 {
+    font-size: 1.3rem; /* 제목 크기 줄임 */
+  }
+
+  label {
+    font-size: 0.85rem; /* 라벨 크기 줄임 */
   }
 
   input {
+    font-size: 0.9rem; /* 입력 필드 크기 줄임 */
     padding: 8px;
-    font-size: 0.85rem; /* 입력 필드 크기 줄임 */
   }
 
   button {
+    font-size: 0.9rem; /* 버튼 크기 축소 */
     padding: 8px;
-    font-size: 0.85rem;
   }
 
   .switch {
-    font-size: 0.7rem; /* 하단 스위치 크기 줄임 */
+    font-size: 0.8rem; /* 하단 스위치 크기 축소 */
   }
 }
+
 </style>

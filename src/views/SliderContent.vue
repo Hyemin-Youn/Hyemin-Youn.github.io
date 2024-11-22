@@ -1,44 +1,36 @@
 <template>
   <div class="slider-wrapper">
     <!-- 왼쪽 화살표 버튼 -->
-    <button class="arrow-btn left" @click="increaseLeft">
+    <button class="arrow-btn left" @click="slideLeft">
       <font-awesome-icon :icon="['fas', 'angle-left']" />
     </button>
 
-    <!-- 슬라이더 -->
-    <div class="row" :style="{ transform: `translateX(-${index * 100}%)` }">
+    <!-- 영화 슬라이더 -->
+    <div class="slider" :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
       <div
-        v-for="movie in movies"
-        :key="movie.id"
-        class="box"
+        v-for="(movie, index) in movies"
+        :key="index"
+        class="movie"
         :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
-        @mouseover="hoverMovie(movie)"
-        @mouseleave="hoverMovie(null)"
-        @click="addToWishlist(movie)"
       >
-        <!-- 정보 표시 -->
-        <div class="info" v-if="hoveredMovie && hoveredMovie.id === movie.id">
+        <div class="info">
           <h4>{{ movie.title }}</h4>
-          <p>개봉일: {{ movie.release_date }}</p>
-          <p>평점: ⭐ {{ movie.vote_average }}</p>
+          <p>
+            <span><font-awesome-icon :icon="['fas', 'heart']" /></span>
+            <span><font-awesome-icon :icon="['fas', 'share-nodes']" /></span>
+          </p>
         </div>
       </div>
     </div>
 
     <!-- 오른쪽 화살표 버튼 -->
-    <button class="arrow-btn right" @click="increaseRight">
+    <button class="arrow-btn right" @click="slideRight">
       <font-awesome-icon :icon="['fas', 'angle-right']" />
     </button>
   </div>
 </template>
 
 <script>
-import { ref } from "vue";
-import { useStore } from "vuex";
-
-const makeImagePath = (path, size) =>
-  `https://image.tmdb.org/t/p/${size}${path}`;
-
 export default {
   props: {
     movies: {
@@ -46,81 +38,88 @@ export default {
       required: true,
     },
   },
-  setup(props) {
-    const store = useStore();
-    const index = ref(0);
-    const hoveredMovie = ref(null);
-
-    const hoverMovie = (movie) => {
-      hoveredMovie.value = movie;
-    };
-
-    const addToWishlist = (movie) => {
-      store.dispatch("addToWishList", movie);
-    };
-
-    const increaseLeft = () => {
-      if (index.value > 0) index.value -= 1;
-    };
-
-    const increaseRight = () => {
-      const maxIndex = Math.floor(props.movies.length / 6) - 1;
-      if (index.value < maxIndex) index.value += 1;
-    };
-
+  data() {
     return {
-      index,
-      hoveredMovie,
-      hoverMovie,
-      addToWishlist,
-      increaseLeft,
-      increaseRight,
-      makeImagePath,
+      currentIndex: 0, // 현재 슬라이더 인덱스
+      visibleMovies: 6, // 한 번에 보여줄 영화 수
     };
+  },
+  methods: {
+    slideLeft() {
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      }
+    },
+    slideRight() {
+      const maxIndex = Math.ceil(this.movies.length / this.visibleMovies) - 1;
+      if (this.currentIndex < maxIndex) {
+        this.currentIndex++;
+      }
+    },
+    makeImagePath(path, size) {
+      return `https://image.tmdb.org/t/p/${size}${path}`;
+    },
   },
 };
 </script>
 
 <style scoped>
 .slider-wrapper {
+  position: relative;
   overflow: hidden;
   width: 100%;
-  position: relative;
+  height: 300px;
 }
 
-.row {
+.slider {
   display: flex;
-  transition: transform 0.5s ease;
+  transition: transform 0.5s ease-in-out;
 }
 
-.box {
-  flex: 0 0 calc(100% / 6 - 10px); /* 한 줄에 6개 */
-  margin: 0 5px;
+.movie {
+  flex: 0 0 calc(100% / 6);
   height: 300px;
   background-size: cover;
   background-position: center;
+  margin: 0 5px;
+  border-radius: 5px;
   position: relative;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.box:hover {
-  transform: scale(1.1);
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+.arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.arrow-btn.left {
+  left: 10px;
+}
+
+.arrow-btn.right {
+  right: 10px;
 }
 
 .info {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
   padding: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: #fff;
-  font-size: 14px;
-  border-bottom-left-radius: 6px;
-  border-bottom-right-radius: 6px;
-  opacity: 0.9;
+  width: calc(100% - 20px);
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.movie:hover .info {
+  opacity: 1;
 }
 </style>

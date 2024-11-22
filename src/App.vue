@@ -12,7 +12,6 @@ import '@fortawesome/fontawesome-free/css/all.css';
 // import SignIn from './components/sign-in/SignIn.vue';
 import Banner from './components/Banner.vue'; // 예시
 import Home from './views/Home.vue';
-import SliderContent from '../views/SliderContent.vue';
 
 
 
@@ -21,9 +20,8 @@ export default {
   components: {
     Navbar,
     Banner,
-    Home,
-    SliderContent,
-  }
+    Home
+    }
 };
 
 </script>

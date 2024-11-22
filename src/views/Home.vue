@@ -1,32 +1,44 @@
 <template>
-  <div class="home">
-    <!-- Hero Section -->
-    <div class="hero">
-      <img :src="heroImage" alt="Hero Movie" class="hero-image" />
-      <div class="hero-content">
-        <h2>{{ heroMovie.title }}</h2>
-        <p>{{ heroMovie.overview }}</p>
-        <button @click="goToDetail(heroMovie.id)">상세 보기</button>
-      </div>
-    </div>
+  <div>
+    <!-- Navbar -->
+    <Navbar />
 
-    <!-- Movie Categories -->
-    <div
-      class="movie-category"
-      v-for="category in movieCategories"
-      :key="category.name"
-    >
-      <h3>{{ category.title }}</h3>
-      <div class="movie-list">
-        <div v-for="movie in category.movies" :key="movie.id" class="movie-card">
-          <img
-            :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
-            :alt="movie.title"
-            class="movie-poster"
-          />
-          <button class="wishlist-btn" @click="addToWishlist(movie)">
-            ❤️
-          </button>
+    <div class="home">
+      <!-- 로딩 중 표시 -->
+      <div v-if="isLoading" class="loading-overlay">
+        <p>로딩중 ...</p>
+      </div>
+
+      <!-- 메인 콘텐츠 (로딩 완료 후 표시) -->
+      <div v-else>
+        <!-- Banner Component -->
+        <Banner :heroMovie="heroMovie" />
+
+        <!-- Movie Categories -->
+        <div
+          v-for="category in movieCategories"
+          :key="category.name"
+          class="movie-category"
+        >
+          <h3>{{ category.title }}</h3>
+          <div class="movie-list">
+            <div
+              v-for="movie in category.movies"
+              :key="movie.id"
+              class="movie-card"
+            >
+              <img
+                :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+                :alt="movie.title"
+                class="movie-poster"
+              >
+              <div class="movie-info">
+                <h4>{{ movie.title }}</h4>
+                <p>평점: ⭐ {{ movie.vote_average }}</p>
+                <p>개봉일: {{ movie.release_date }}</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -34,37 +46,41 @@
 </template>
 
 <script>
-import axios from 'axios';
-import { mapActions } from 'vuex';
-import SliderContent from "../components/SliderContent.vue";
+import axios from "axios";
+import Banner from "@/components/Banner.vue";
+import Navbar from "@/components/Navbar.vue";
 
 export default {
-  name: 'Home',
-  components: {SliderContent},
+  name: "Home",
+  components: {
+    Banner,
+    Navbar,
+  },
   data() {
     return {
+      isLoading: true, // 로딩 상태
       heroMovie: {},
       movieCategories: [
-        { name: 'popular', title: '인기 영화', movies: [] },
-        { name: 'now_playing', title: '최신 영화', movies: [] },
-        { name: 'top_rated', title: '높은 평점 영화', movies: [] },
-        { name: 'upcoming', title: '개봉 예정 영화', movies: [] },
+        { name: "popular", title: "인기 영화", movies: [] },
+        { name: "now_playing", title: "최신 영화", movies: [] },
+        { name: "top_rated", title: "높은 평점 영화", movies: [] },
+        { name: "upcoming", title: "개봉 예정 영화", movies: [] },
       ],
     };
   },
-  computed: {
-    heroImage() {
-      return this.heroMovie.backdrop_path
-        ? `https://image.tmdb.org/t/p/original${this.heroMovie.backdrop_path}`
-        : '';
-    },
-  },
   created() {
-    this.fetchHeroMovie();
-    this.fetchMovies();
+    this.loadData();
   },
   methods: {
-    ...mapActions(['addToWishList']),
+    async loadData() {
+      try {
+        await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      } finally {
+        this.isLoading = false; // 로딩 완료
+      }
+    },
     async fetchHeroMovie() {
       const API_KEY = process.env.VUE_APP_API_KEY;
       try {
@@ -73,7 +89,7 @@ export default {
         );
         this.heroMovie = response.data.results[0];
       } catch (error) {
-        console.error('Error fetching hero movie:', error);
+        console.error("Error fetching hero movie:", error);
       }
     },
     async fetchMovies() {
@@ -86,12 +102,6 @@ export default {
       });
       await Promise.all(requests);
     },
-    addToWishlist(movie) {
-      this.addToWishList(movie);
-    },
-    goToDetail(movieId) {
-      this.$router.push(`/movies/${movieId}`);
-    },
   },
 };
 </script>
@@ -101,81 +111,75 @@ export default {
   padding: 20px;
   background-color: #141414;
   color: #ffffff;
-}
-
-.hero {
   position: relative;
-  height: 60vh;
-  margin-bottom: 40px;
 }
 
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  filter: brightness(0.6);
-  border-radius: 10px;
-}
-
-.hero-content {
+/* 로딩 오버레이 */
+.loading-overlay {
   position: absolute;
-  bottom: 20px;
-  left: 20px;
-  color: #fff;
-}
-
-.hero-content h2 {
-  font-size: 2.5em;
-  margin-bottom: 10px;
-}
-
-.hero-content p {
-  font-size: 1.2em;
-  max-width: 50%;
-}
-
-.hero-content button {
-  padding: 10px 20px;
-  font-size: 1em;
-  background-color: #e50914;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  margin-top: 10px;
-  border-radius: 5px;
-}
-
-.hero-content button:hover {
-  background-color: #bf0812;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 1.5em;
+  z-index: 10;
 }
 
 .movie-category {
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .movie-category h3 {
   font-size: 1.5em;
-  margin-bottom: 20px;
-}
-
-.slider-wrapper {
-  position: relative;
-  overflow: hidden;
+  margin-bottom: 10px;
 }
 
 .movie-list {
   display: flex;
   overflow-x: auto;
   gap: 10px;
+  padding-bottom: 10px;
 }
 
 .movie-card {
   width: 150px;
   flex-shrink: 0;
+  position: relative;
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  z-index: 1;
+}
+
+.movie-card:hover {
+  transform: scale(1.2);
+  z-index: 10;
 }
 
 .movie-poster {
   width: 100%;
   border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  border-radius: 0 0 5px 5px;
+}
+
+.movie-card:hover .movie-info {
+  opacity: 1;
 }
 </style>

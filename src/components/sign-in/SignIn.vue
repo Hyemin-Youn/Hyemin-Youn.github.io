@@ -171,6 +171,8 @@ export default {
 </script>
 
 <style scoped>
+/* 기존 스타일 유지 */
+
 /* 배경 이미지 */
 .bg-image {
   position: fixed;
@@ -191,7 +193,7 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-55%, -50%); /* 화면 중앙에서 약간 왼쪽으로 이동 */
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,13 +213,13 @@ export default {
 
 .card.active {
   opacity: 1;
-  z-index: 2; /* 활성 카드 위로 오게 설정 */
-  transform: translateX(-20px) scale(1); /* 중앙에서 약간 겹치게 */
+  z-index: 2;
+  transform: translateX(0) scale(1);
 }
 
 .card.backward {
-  z-index: 1; /* 비활성 카드 아래로 설정 */
-  transform: translateX(30px) scale(0.95); /* 약간 오른쪽으로 밀려나게 설정 */
+  z-index: 1;
+  transform: translateX(30px) scale(0.95);
   opacity: 0.5;
 }
 
@@ -283,5 +285,37 @@ button:hover {
   color: yellow;
   font-size: 0.8rem;
   margin-top: 8px;
+}
+
+/* 반응형 스타일 추가 */
+@media (max-width: 768px) {
+  .wrapper {
+    width: 90%; /* 모바일 화면에서 wrapper의 너비 줄이기 */
+    height: auto;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 300px; /* 모바일 카드 너비 축소 */
+    height: auto;
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 1.3rem; /* 모바일 헤더 폰트 크기 축소 */
+  }
+
+  input {
+    font-size: 0.85rem; /* 모바일 입력 필드 폰트 크기 축소 */
+  }
+
+  button {
+    font-size: 0.85rem; /* 버튼 폰트 크기 축소 */
+    padding: 8px 15px; /* 모바일 버튼 패딩 조정 */
+  }
+
+  .switch {
+    font-size: 0.75rem; /* 전환 링크 크기 축소 */
+  }
 }
 </style>

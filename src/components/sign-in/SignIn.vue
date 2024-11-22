@@ -62,7 +62,7 @@
 export default {
   data() {
     return {
-      activeCard: "login",
+      activeCard: "login", // 초기 활성 카드
       email: "",
       password: "",
       rememberMe: false,
@@ -108,25 +108,42 @@ export default {
 
 /* 전체 카드 컨테이너 */
 .wrapper {
+  position: relative;
   width: 100%;
   max-width: 700px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  overflow: hidden;
+  height: 400px; /* 고정 높이 */
 }
 
-/* 카드 기본 스타일 */
+/* 카드 스타일 */
 .card {
   width: 100%;
   max-width: 400px;
+  position: absolute;
   background: #e50914;
   padding: 20px;
   border-radius: 10px;
   color: white;
-  margin-bottom: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.card.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 10;
+}
+
+.card.backward {
+  opacity: 0;
+  transform: translateX(-100%);
+  z-index: 5;
 }
 
 /* 카드 콘텐츠 */

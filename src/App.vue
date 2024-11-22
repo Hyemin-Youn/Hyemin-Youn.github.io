@@ -2,6 +2,7 @@
   <div id="app">
     <Navbar v-if="!$route.meta.hideNavbar" />
     <router-view />
+    <SliderContent/>
   </div>
 </template>
 
@@ -11,6 +12,7 @@ import '@fortawesome/fontawesome-free/css/all.css';
 // import SignIn from './components/sign-in/SignIn.vue';
 import Banner from './components/Banner.vue'; // 예시
 import Home from './views/Home.vue';
+import SliderContent from '../components/SliderContent.vue';
 
 
 
@@ -20,7 +22,7 @@ export default {
     Navbar,
     Banner,
     Home,
-    // SignIn,
+    SliderContent,
   }
 };
 

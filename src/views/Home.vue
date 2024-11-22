@@ -11,27 +11,43 @@
     </div>
 
     <!-- Movie Categories -->
-    <div class="movie-category" v-for="category in movieCategories" :key="category.name">
+    <div
+      class="movie-category"
+      v-for="category in movieCategories"
+      :key="category.name"
+    >
       <h3>{{ category.title }}</h3>
-      <SliderContent :movies="category.movies" />
+      <div class="movie-list">
+        <div v-for="movie in category.movies" :key="movie.id" class="movie-card">
+          <img
+            :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+            :alt="movie.title"
+            class="movie-poster"
+          />
+          <button class="wishlist-btn" @click="addToWishlist(movie)">
+            ❤️
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-import SliderContent from "../components/SliderContent.vue";
+import axios from 'axios';
+import { mapActions } from 'vuex';
+import SliderContent from '../components/SliderContent.vue';
 
 export default {
-  name: "Home",
-  components: { SliderContent },
+  name: 'Home',
   data() {
     return {
       heroMovie: {},
       movieCategories: [
-        { name: "popular", title: "인기 영화", movies: [] },
-        { name: "now_playing", title: "최신 영화", movies: [] },
-        { name: "top_rated", title: "높은 평점 영화", movies: [] },
+        { name: 'popular', title: '인기 영화', movies: [] },
+        { name: 'now_playing', title: '최신 영화', movies: [] },
+        { name: 'top_rated', title: '높은 평점 영화', movies: [] },
+        { name: 'upcoming', title: '개봉 예정 영화', movies: [] },
       ],
     };
   },
@@ -39,7 +55,7 @@ export default {
     heroImage() {
       return this.heroMovie.backdrop_path
         ? `https://image.tmdb.org/t/p/original${this.heroMovie.backdrop_path}`
-        : "";
+        : '';
     },
   },
   created() {
@@ -47,12 +63,17 @@ export default {
     this.fetchMovies();
   },
   methods: {
+    ...mapActions(['addToWishList']),
     async fetchHeroMovie() {
       const API_KEY = process.env.VUE_APP_API_KEY;
-      const response = await axios.get(
-        `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
-      );
-      this.heroMovie = response.data.results[0];
+      try {
+        const response = await axios.get(
+          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
+        );
+        this.heroMovie = response.data.results[0];
+      } catch (error) {
+        console.error('Error fetching hero movie:', error);
+      }
     },
     async fetchMovies() {
       const API_KEY = process.env.VUE_APP_API_KEY;
@@ -64,13 +85,15 @@ export default {
       });
       await Promise.all(requests);
     },
+    addToWishlist(movie) {
+      this.addToWishList(movie);
+    },
     goToDetail(movieId) {
       this.$router.push(`/movies/${movieId}`);
     },
   },
 };
 </script>
-
 
 <style scoped>
 .home {

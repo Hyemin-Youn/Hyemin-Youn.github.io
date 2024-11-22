@@ -184,4 +184,34 @@ export default {
 .movie-card:hover .movie-info {
   opacity: 1;
 }
+
+/* 반응형 스타일 추가 */
+@media (max-width: 768px) {
+  .box {
+    flex: 0 0 calc(100% / 2 - 10px); /* 한 화면에 2개씩 */
+    height: 200px;
+  }
+
+  .arrow-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .info {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .box {
+    flex: 0 0 calc(100% - 10px); /* 한 화면에 1개씩 */
+    height: 150px;
+  }
+
+  .info {
+    font-size: 0.7rem;
+  }
+}
+
 </style>

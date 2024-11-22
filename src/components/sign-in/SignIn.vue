@@ -284,4 +284,69 @@ button:hover {
   font-size: 0.8rem;
   margin-top: 8px;
 }
+
+@media (max-width: 768px) {
+  /* 모바일 및 태블릿 크기용 */
+  .wrapper {
+    width: 90%; /* 전체 화면 너비의 90% */
+    height: auto;
+    transform: translate(-50%, -50%); /* 완전히 중앙 정렬 */
+  }
+
+  .card {
+    width: 100%; /* 카드가 전체 컨테이너에 맞게 */
+    height: auto;
+    transform: none; /* 카드 이동 애니메이션 제거 */
+    opacity: 1; /* 항상 보이도록 */
+    z-index: 1; /* 모든 카드 동일한 z-index */
+    margin-bottom: 20px; /* 카드 간 간격 추가 */
+  }
+
+  .card.active {
+    z-index: 2;
+  }
+
+  .content {
+    padding: 20px; /* 내부 여백 줄임 */
+    text-align: left; /* 좌측 정렬로 변경 */
+  }
+
+  h2 {
+    font-size: 1.2rem; /* 헤더 크기 조정 */
+  }
+
+  label {
+    font-size: 0.8rem; /* 라벨 크기 조정 */
+  }
+
+  input {
+    padding: 8px; /* 인풋 박스 여백 줄임 */
+    font-size: 0.8rem;
+  }
+
+  button {
+    font-size: 0.8rem; /* 버튼 크기 조정 */
+    padding: 8px; /* 버튼 여백 줄임 */
+  }
+
+  .switch {
+    font-size: 0.7rem; /* 텍스트 크기 조정 */
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* 스마트폰 크기용 */
+  .content {
+    text-align: center; /* 텍스트 다시 중앙 정렬 */
+  }
+
+  input {
+    width: 100%; /* 입력 박스 너비 전체로 */
+  }
+
+  button {
+    width: 100%; /* 버튼도 너비 전체로 */
+  }
+}
 </style>

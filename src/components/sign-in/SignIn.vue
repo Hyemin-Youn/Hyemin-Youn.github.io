@@ -186,7 +186,7 @@ export default {
 
 /* 전체 카드 컨테이너 */
 .wrapper {
-  width: 700px;
+  width: 600px;
   height: 520px;
   position: absolute;
   top: 50%;

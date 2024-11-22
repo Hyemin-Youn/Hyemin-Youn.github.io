@@ -116,7 +116,7 @@ export default {
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  height: 400px; /* 고정 높이 */
+  height: 500px; /* 카드 컨테이너 높이 조정 */
 }
 
 /* 카드 스타일 */
@@ -125,13 +125,14 @@ export default {
   max-width: 400px;
   position: absolute;
   background: #e50914;
-  padding: 20px;
+  padding: 30px; /* 내부 여백 조정 */
   border-radius: 10px;
   color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.5s ease, opacity 0.5s ease;
   opacity: 0;
   transform: translateX(100%);
+  height: 450px; /* 카드 높이 증가 */
 }
 
 .card.active {
@@ -173,14 +174,14 @@ input {
 
 button {
   width: 100%;
-  padding: 10px;
+  padding: 12px; /* 버튼 크기 조정 */
   background: #bf0812;
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 10px;
+  margin-top: 15px; /* 버튼 간 간격 조정 */
 }
 
 button:disabled {
@@ -188,29 +189,9 @@ button:disabled {
 }
 
 .switch {
-  margin-top: 10px;
+  margin-top: 15px;
   font-size: 0.9rem;
   cursor: pointer;
   color: white;
-  text-decoration: underline;
-}
+  text-decoration: under
 
-@media (max-width: 768px) {
-  .wrapper {
-    padding: 10px;
-  }
-
-  .card {
-    padding: 15px;
-    width: 90%;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  button {
-    font-size: 0.9rem;
-  }
-}
-</style>

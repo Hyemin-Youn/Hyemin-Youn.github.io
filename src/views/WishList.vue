@@ -1,65 +1,54 @@
 <template>
   <div class="wishlist">
-    <h2>내가 찜한 리스트</h2>
-    <div class="movie-list">
-      <div v-for="movie in wishlist" :key="movie.id" class="movie-card">
-        <img
-          :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
-          :alt="movie.title"
-          class="movie-poster"
-        />
-        <button @click="removeFromWishlist(movie.id)" class="remove-btn">
-          ✖
-        </button>
+    <h2>내가 찜한 영화</h2>
+    <div class="wishlist-movies">
+      <div
+        v-for="movie in wishlist"
+        :key="movie.id"
+        class="wishlist-movie"
+        :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
+      >
+        <h4>{{ movie.title }}</h4>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex';
+import { computed } from "vue";
+import { useStore } from "vuex";
+
+const makeImagePath = (path, size) =>
+  `https://image.tmdb.org/t/p/${size}${path}`;
 
 export default {
-  name: 'Wishlist',
-  computed: {
-    ...mapGetters(['wishlist']),
-  },
-  methods: {
-    ...mapActions(['removeFromWishList']),
+  setup() {
+    const store = useStore();
+    const wishlist = computed(() => store.getters.wishlist);
+    return { wishlist, makeImagePath };
   },
 };
 </script>
 
+<style scoped>
+.wishlist {
+  padding: 20px;
+  color: #fff;
+}
 
-  
-  <style scoped>
-  .wishlist {
-    padding: 20px;
-  }
-  
-  .wishlist-movies {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  
-  .movie-card {
-    width: 150px;
-    text-align: center;
-  }
-  
-  .movie-poster {
-    width: 100%;
-    border-radius: 10px;
-  }
-  
-  .remove-btn {
-    background-color: #e50914;
-    color: white;
-    border: none;
-    padding: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  </style>
-  
+.wishlist-movies {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.wishlist-movie {
+  width: 200px;
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 6px;
+  position: relative;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+}
+</style>

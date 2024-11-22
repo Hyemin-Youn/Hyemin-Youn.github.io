@@ -36,10 +36,11 @@
 <script>
 import axios from 'axios';
 import { mapActions } from 'vuex';
-import SliderContent from '../components/SliderContent.vue';
+import SliderContent from "../components/SliderContent.vue";
 
 export default {
   name: 'Home',
+  components: {SliderContent},
   data() {
     return {
       heroMovie: {},

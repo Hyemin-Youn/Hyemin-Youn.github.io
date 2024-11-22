@@ -286,67 +286,72 @@ button:hover {
 }
 
 @media (max-width: 768px) {
-  /* 모바일 및 태블릿 크기용 */
   .wrapper {
-    width: 90%; /* 전체 화면 너비의 90% */
+    width: 90%; /* 화면 너비의 90% */
     height: auto;
-    transform: translate(-50%, -50%); /* 완전히 중앙 정렬 */
+    transform: translate(-50%, -50%);
   }
 
   .card {
-    width: 100%; /* 카드가 전체 컨테이너에 맞게 */
+    width: 100%; /* 카드가 컨테이너에 딱 맞게 */
     height: auto;
-    transform: none; /* 카드 이동 애니메이션 제거 */
-    opacity: 1; /* 항상 보이도록 */
-    z-index: 1; /* 모든 카드 동일한 z-index */
-    margin-bottom: 20px; /* 카드 간 간격 추가 */
-  }
-
-  .card.active {
-    z-index: 2;
+    margin-bottom: 20px; /* 카드 사이 간격 추가 */
+    transform: none; /* 애니메이션 효과 제거 */
+    opacity: 1; /* 항상 보이도록 설정 */
   }
 
   .content {
-    padding: 20px; /* 내부 여백 줄임 */
-    text-align: left; /* 좌측 정렬로 변경 */
+    padding: 15px; /* 내부 여백 줄임 */
+    text-align: center; /* 텍스트 중앙 정렬 */
   }
 
   h2 {
-    font-size: 1.2rem; /* 헤더 크기 조정 */
+    font-size: 1.2rem; /* 헤더 크기 줄임 */
   }
 
   label {
-    font-size: 0.8rem; /* 라벨 크기 조정 */
+    font-size: 0.9rem; /* 라벨 크기 조정 */
   }
 
   input {
-    padding: 8px; /* 인풋 박스 여백 줄임 */
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    padding: 10px;
   }
 
   button {
-    font-size: 0.8rem; /* 버튼 크기 조정 */
-    padding: 8px; /* 버튼 여백 줄임 */
+    font-size: 0.9rem;
+    padding: 10px;
   }
 
   .switch {
-    font-size: 0.7rem; /* 텍스트 크기 조정 */
-    text-align: center;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
-  /* 스마트폰 크기용 */
-  .content {
-    text-align: center; /* 텍스트 다시 중앙 정렬 */
+  /* 스마트폰 화면 크기용 */
+  .wrapper {
+    width: 100%; /* 화면 전체를 사용 */
+    padding: 10px;
+  }
+
+  .card {
+    width: 100%; /* 카드 너비 전체로 */
+    margin-bottom: 15px;
   }
 
   input {
-    width: 100%; /* 입력 박스 너비 전체로 */
+    padding: 8px;
+    font-size: 0.85rem; /* 입력 필드 크기 줄임 */
   }
 
   button {
-    width: 100%; /* 버튼도 너비 전체로 */
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+
+  .switch {
+    font-size: 0.7rem; /* 하단 스위치 크기 줄임 */
   }
 }
 </style>

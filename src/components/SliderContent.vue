@@ -171,8 +171,8 @@ export default {
   }
 
   .info {
-    font-size: 1rem; /* 정보 텍스트 크기 */
-    padding: 10px; /* 정보 영역의 여백 */
+    font-size: 0.5rem; /* 정보 텍스트 크기 */
+    padding: 8px; /* 정보 영역의 여백 */
   }
 }
 

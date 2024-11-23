@@ -80,11 +80,11 @@ export default {
 .poster-list {
   display: flex;
   gap: 10px;
-  overflow: hidden;
+  overflow: hidden; /* 스크롤 바 제거 */
 }
 
 .poster {
-  flex: 0 0 calc(100% / 6); /* 6개씩 표시 */
+  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
   height: 300px;
   background-size: cover;
   background-position: center;
@@ -148,3 +148,4 @@ export default {
   }
 }
 </style>
+

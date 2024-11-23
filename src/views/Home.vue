@@ -2,8 +2,10 @@
   <div>
     <!-- Navbar -->
     <Navbar />
+    <MovieSlider />
+    <SliderContent />
 
-    <!-- 메인 콘텐츠 -->
+
     <div class="home">
       <!-- 로딩 중 표시 -->
       <div v-if="isLoading" class="loading-overlay">
@@ -22,36 +24,23 @@
           class="movie-category"
         >
           <h3>{{ category.title }}</h3>
-          <div class="movie-slider">
-            <!-- 왼쪽 화살표 버튼 -->
-            <button class="arrow-btn left" @click="slideLeft(category.name)">
-              <font-awesome-icon :icon="['fas', 'angle-left']" />
-            </button>
-
-            <!-- 영화 리스트 -->
-            <div class="movie-list">
-              <div
-                v-for="movie in getDisplayedMovies(category.name)"
-                :key="movie.id"
-                class="movie-card"
+          <div class="movie-list">
+            <div
+              v-for="movie in category.movies"
+              :key="movie.id"
+              class="movie-card"
+            >
+              <img
+                :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+                :alt="movie.title"
+                class="movie-poster"
               >
-                <img
-                  :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
-                  :alt="movie.title"
-                  class="movie-poster"
-                />
-                <div class="movie-info">
-                  <h4>{{ movie.title }}</h4>
-                  <p>평점: ⭐ {{ movie.vote_average }}</p>
-                  <p>개봉일: {{ movie.release_date }}</p>
-                </div>
+              <div class="movie-info">
+                <h4>{{ movie.title }}</h4>
+                <p>평점: ⭐ {{ movie.vote_average }}</p>
+                <p>개봉일: {{ movie.release_date }}</p>
               </div>
             </div>
-
-            <!-- 오른쪽 화살표 버튼 -->
-            <button class="arrow-btn right" @click="slideRight(category.name)">
-              <font-awesome-icon :icon="['fas', 'angle-right']" />
-            </button>
           </div>
         </div>
       </div>
@@ -63,24 +52,26 @@
 import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
+import SliderContent from "@/components/SliderContent.vue"
 
 export default {
   name: "Home",
   components: {
     Banner,
     Navbar,
+    SliderContent,
+    
   },
   data() {
     return {
       isLoading: true, // 로딩 상태
       heroMovie: {},
       movieCategories: [
-        { name: "popular", title: "인기 영화", movies: [], currentIndex: 0 },
-        { name: "now_playing", title: "최신 영화", movies: [], currentIndex: 0 },
-        { name: "top_rated", title: "높은 평점 영화", movies: [], currentIndex: 0 },
-        { name: "upcoming", title: "개봉 예정 영화", movies: [], currentIndex: 0 },
+        { name: "popular", title: "인기 영화", movies: [] },
+        { name: "now_playing", title: "최신 영화", movies: [] },
+        { name: "top_rated", title: "높은 평점 영화", movies: [] },
+        { name: "upcoming", title: "개봉 예정 영화", movies: [] },
       ],
-      itemsPerPage: 6, // 한 번에 표시할 영화 수
     };
   },
   created() {
@@ -117,62 +108,114 @@ export default {
       });
       await Promise.all(requests);
     },
-    slideLeft(categoryName) {
-      const category = this.movieCategories.find((cat) => cat.name === categoryName);
-      if (category.currentIndex > 0) {
-        category.currentIndex--;
-      }
-    },
-    slideRight(categoryName) {
-      const category = this.movieCategories.find((cat) => cat.name === categoryName);
-      if (category.currentIndex + this.itemsPerPage < category.movies.length) {
-        category.currentIndex++;
-      }
-    },
-    getDisplayedMovies(categoryName) {
-      const category = this.movieCategories.find((cat) => cat.name === categoryName);
-      return category.movies.slice(
-        category.currentIndex,
-        category.currentIndex + this.itemsPerPage
-      );
-    },
   },
 };
 </script>
-.movie-slider {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+
+<style scoped>
+.home {
+  padding: 20px;
+  background-color: #141414;
+  color: #ffffff;
   position: relative;
+}
+
+/* 로딩 오버레이 */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 1.5em;
+  z-index: 10;
+}
+
+.movie-category {
+  margin-bottom: 20px;
+}
+
+.movie-category h3 {
+  font-size: 1.5em;
+  margin-bottom: 10px;
 }
 
 .movie-list {
   display: flex;
+  overflow-x: auto;
   gap: 10px;
-  overflow: hidden; /* 스크롤 바 제거 */
-  flex: 1;
+  padding-bottom: 10px;
 }
 
 .movie-card {
-  flex: 0 0 calc(100% / 6); /* 한 번에 6개 표시 */
-  height: 250px;
-  transition: transform 0.3s ease;
+  width: 150px;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform 0.3s ease, z-index 0.3s ease;
+  z-index: 1;
 }
 
-.arrow-btn {
-  background: rgba(0, 0, 0, 0.7);
-  border: none;
+.movie-card:hover {
+  transform: scale(1.2);
+  z-index: 10;
+}
+
+.movie-poster {
+  width: 100%;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
   color: white;
-  width: 40px;
-  height: 40px;
-  font-size: 1.2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  border-radius: 50%;
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  text-align: center;
+  border-radius: 0 0 5px 5px;
 }
 
-.arrow-btn:hover {
-  background: rgba(0, 0, 0, 0.9);
+.movie-card:hover .movie-info {
+  opacity: 1;
 }
+
+/* 반응형 스타일 추가 */
+@media (max-width: 768px) {
+  .box {
+    flex: 0 0 calc(100% / 2 - 10px); /* 한 화면에 2개씩 */
+    height: 200px;
+  }
+
+  .arrow-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .info {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .box {
+    flex: 0 0 calc(100% - 10px); /* 한 화면에 1개씩 */
+    height: 150px;
+  }
+
+  .info {
+    font-size: 0.7rem;
+  }
+}
+
+</style>

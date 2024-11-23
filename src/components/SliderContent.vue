@@ -5,12 +5,12 @@
       <font-awesome-icon :icon="['fas', 'angle-left']" />
     </button>
 
-    <!-- 슬라이더 -->
-    <div class="slider" :style="{ transform: `translateX(-${currentIndex * (100 / itemsPerPage)}%)` }">
+    <!-- 영화 포스터 리스트 -->
+    <div class="poster-list">
       <div
-        v-for="movie in movies"
+        v-for="(movie, index) in displayedMovies"
         :key="movie.id"
-        class="slide"
+        class="poster"
         :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
       >
         <div class="info">
@@ -38,88 +38,57 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0, // 현재 슬라이드 인덱스
+      currentIndex: 0, // 현재 표시되는 첫 영화의 인덱스
       itemsPerPage: 5, // 한 화면에 표시할 영화 개수
-      autoSlideTimer: null, // 자동 슬라이드 타이머
     };
   },
   computed: {
-    maxIndex() {
-      // 한 화면에 표시할 영화 수에 따른 최대 슬라이드 인덱스
-      return Math.ceil(this.movies.length / this.itemsPerPage) - 1;
+    displayedMovies() {
+      // 현재 인덱스부터 itemsPerPage만큼의 영화 표시
+      return this.movies.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
     },
   },
   methods: {
     slideLeft() {
       if (this.currentIndex > 0) {
         this.currentIndex--;
-      } else {
-        this.currentIndex = this.maxIndex; // 마지막 슬라이드로 이동
       }
     },
     slideRight() {
-      if (this.currentIndex < this.maxIndex) {
+      if (this.currentIndex + this.itemsPerPage < this.movies.length) {
         this.currentIndex++;
-      } else {
-        this.currentIndex = 0; // 첫 번째 슬라이드로 이동
       }
     },
     makeImagePath(path, size) {
       return `https://image.tmdb.org/t/p/${size}${path}`;
     },
-    updateItemsPerPage() {
-      if (window.innerWidth <= 480) {
-        this.itemsPerPage = 2; // 모바일
-      } else if (window.innerWidth <= 768) {
-        this.itemsPerPage = 3; // 태블릿
-      } else {
-        this.itemsPerPage = 5; // 데스크탑
-      }
-    },
-  },
-  mounted() {
-    this.updateItemsPerPage();
-    window.addEventListener("resize", this.updateItemsPerPage);
-
-    this.autoSlideTimer = setInterval(() => {
-      this.slideRight();
-    }, 3000);
-  },
-  beforeDestroy() {
-    clearInterval(this.autoSlideTimer);
-    window.removeEventListener("resize", this.updateItemsPerPage);
   },
 };
 </script>
 
 <style scoped>
-/* 전체 슬라이더 컨테이너 */
 .slider-wrapper {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
   margin: 20px 0;
 }
 
-.slider {
+.poster-list {
   display: flex;
-  transition: transform 0.6s ease;
+  overflow: hidden;
+  gap: 10px;
 }
 
-.slide {
-  flex: 0 0 calc(100% / 5); /* 기본: 5개씩 */
+.poster {
+  flex: 0 0 calc(100% / 5); /* 기본 5개씩 표시 */
   height: 300px;
   background-size: cover;
   background-position: center;
-  margin: 0 5px;
   border-radius: 8px;
   position: relative;
   cursor: pointer;
-  transition: transform 0.3s ease;
-}
-
-.slide:hover {
-  transform: scale(1.05);
 }
 
 .info {
@@ -133,14 +102,12 @@ export default {
   transition: opacity 0.3s ease;
 }
 
-.slide:hover .info {
+.poster:hover .info {
   opacity: 1;
 }
 
 .arrow-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  position: relative;
   background: rgba(0, 0, 0, 0.7);
   border: none;
   color: white;
@@ -156,26 +123,25 @@ export default {
 }
 
 .arrow-btn.left {
-  left: 10px;
+  margin-right: 10px;
 }
 
 .arrow-btn.right {
-  right: 10px;
+  margin-left: 10px;
 }
 
 .arrow-btn:hover {
   background: rgba(0, 0, 0, 0.9);
 }
 
-/* 반응형 스타일 */
 @media (max-width: 768px) {
-  .slide {
+  .poster {
     flex: 0 0 calc(100% / 3); /* 태블릿: 3개씩 */
   }
 }
 
 @media (max-width: 480px) {
-  .slide {
+  .poster {
     flex: 0 0 calc(100% / 2); /* 모바일: 2개씩 */
   }
 }

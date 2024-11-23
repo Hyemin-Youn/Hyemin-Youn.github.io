@@ -1,7 +1,7 @@
 <template>
   <div>
-    <navbar/>
-    
+    <navbar />
+
     <!-- 메인 콘텐츠 -->
     <div class="home">
       <!-- 로딩 중 표시 -->
@@ -21,7 +21,11 @@
           class="movie-category"
         >
           <h3>{{ category.title }}</h3>
-          <SliderContent :movies="category.movies" />
+          <SliderContent
+            :movies="category.movies"
+            @toggle-wishlist="toggleWishlist"
+            :wishlist="wishlist"
+          />
         </div>
       </div>
     </div>
@@ -33,6 +37,7 @@ import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
 import SliderContent from "@/components/SliderContent.vue";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -53,10 +58,11 @@ export default {
       ],
     };
   },
-  created() {
-    this.loadData();
+  computed: {
+    ...mapGetters(["wishlist"]), // Vuex에서 wishlist 상태 가져오기
   },
   methods: {
+    ...mapActions(["toggleWishlist"]), // Vuex의 toggleWishlist 액션 사용
     async loadData() {
       try {
         await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);

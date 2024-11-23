@@ -8,10 +8,14 @@
     <!-- 영화 포스터 리스트 -->
     <div class="poster-list">
       <div
-        v-for="movie in displayedMovies"
+        v-for="(movie, index) in displayedMovies"
         :key="movie.id"
         class="poster"
         :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
+        @mouseenter="hoverMovie(index)" <!-- 마우스 오버 -->
+        @mouseleave="unhoverMovie(index)" <!-- 마우스 아웃 -->
+        @click="toggleMovieHover(index)" <!-- 클릭 -->
+        :class="{ active: isHovered[index] }" <!-- 클릭된 상태를 반영 -->
       >
         <div class="info">
           <h4>{{ movie.title }}</h4>
@@ -40,6 +44,7 @@ export default {
     return {
       currentIndex: 0, // 현재 표시할 첫 영화의 인덱스
       itemsPerPage: 6, // 한 화면에 표시할 영화 개수
+      isHovered: {}, // hover 상태 저장
     };
   },
   computed: {
@@ -50,19 +55,26 @@ export default {
   },
   methods: {
     slideLeft() {
-      // 현재 인덱스가 0보다 크다면 왼쪽으로 이동
       if (this.currentIndex > 0) {
         this.currentIndex--;
       }
     },
     slideRight() {
-      // 현재 인덱스가 영화 목록의 끝에 도달하지 않았다면 오른쪽으로 이동
       if (this.currentIndex + this.itemsPerPage < this.movies.length) {
         this.currentIndex++;
       }
     },
     makeImagePath(path, size) {
       return `https://image.tmdb.org/t/p/${size}${path}`;
+    },
+    hoverMovie(index) {
+      this.$set(this.isHovered, index, true); // 마우스 오버 시 상태 변경
+    },
+    unhoverMovie(index) {
+      this.$set(this.isHovered, index, false); // 마우스 아웃 시 상태 변경
+    },
+    toggleMovieHover(index) {
+      this.$set(this.isHovered, index, !this.isHovered[index]); // 클릭 시 상태 토글
     },
   },
 };
@@ -74,40 +86,53 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 좌우 버튼 간격 자동 조정 */
+  justify-content: space-between;
   margin: 20px 0;
 }
 
 .poster-list {
   display: flex;
-  gap: 10px; /* 포스터 간의 간격 */
-  overflow: hidden; /* 스크롤 바 제거 */
-  flex: 1; /* 중앙 영역의 크기 확보 */
+  gap: 10px;
+  overflow: hidden;
+  flex: 1;
 }
 
 .poster {
-  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
+  flex: 0 0 calc(100% / 6);
   height: 300px;
   background-size: cover;
   background-position: center;
   border-radius: 8px;
   position: relative;
   cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.poster:hover {
+  transform: scale(1.1); /* hover 시 확대 효과 */
+  z-index: 2; /* 다른 포스터 위로 올라옴 */
+}
+
+.poster.active {
+  transform: scale(1.1); /* 클릭된 상태에서도 확대 유지 */
+  border: 3px solid #e50914; /* 강조 색상 추가 */
 }
 
 .info {
   position: absolute;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.8);
   color: white;
   width: 100%;
   padding: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  text-align: center;
 }
 
-.poster:hover .info {
-  opacity: 1;
+.poster:hover .info,
+.poster.active .info {
+  opacity: 1; /* hover와 클릭 시 정보 표시 */
 }
 
 .arrow-btn {
@@ -123,25 +148,24 @@ export default {
   cursor: pointer;
   border-radius: 50%;
   z-index: 10;
-  margin: 0 10px; /* 좌우 버튼 간격 추가 */
+  margin: 0 10px;
 }
 
 .arrow-btn:hover {
   background: rgba(0, 0, 0, 0.9);
 }
 
-/* 반응형 스타일 */
 @media (max-width: 768px) {
   .poster {
-    flex: 0 0 calc(100% / 4); /* 태블릿: 4개씩 */
-    height: 300px; /* 높이를 줄이기 */
+    flex: 0 0 calc(100% / 4);
+    height: 300px;
   }
 }
 
 @media (max-width: 480px) {
   .poster {
-    flex: 0 0 calc(100% / 3); /* 모바일: 2개씩 */
-    height: 250px; /* 모바일용 높이 설정 */
+    flex: 0 0 calc(100% / 3);
+    height: 250px;
   }
 }
 </style>

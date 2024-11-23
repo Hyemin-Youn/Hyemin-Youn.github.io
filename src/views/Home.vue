@@ -2,7 +2,6 @@
   <div>
     <!-- Navbar -->
     <Navbar />
-    <SliderContent :movies="movieCategories[0].movies" />
 
 
     <!-- 메인 콘텐츠 -->

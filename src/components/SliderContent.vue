@@ -12,16 +12,11 @@
         :key="movie.id"
         class="poster"
         :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
-        @click="toggleFavorite(movie)"
       >
         <div class="info">
           <h4>{{ movie.title }}</h4>
           <p>평점: ⭐ {{ movie.vote_average }}</p>
           <p>개봉일: {{ movie.release_date }}</p>
-        </div>
-        <!-- 찜 표시 -->
-        <div v-if="isFavorite(movie)" class="thumbs-up">
-          <font-awesome-icon :icon="['fas', 'thumbs-up']" />
         </div>
       </div>
     </div>
@@ -32,6 +27,7 @@
     </button>
   </div>
 </template>
+
 <script>
 export default {
   props: {
@@ -42,43 +38,36 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0,
-      itemsPerPage: 5,
-      favoriteMovies: [], // 내가 찜한 리스트
+      currentIndex: 0, // 현재 표시할 첫 영화의 인덱스
+      itemsPerPage: 6, // 한 화면에 표시할 영화 개수
     };
   },
   computed: {
     displayedMovies() {
+      // 현재 인덱스부터 itemsPerPage만큼의 영화 표시
       return this.movies.slice(this.currentIndex, this.currentIndex + this.itemsPerPage);
     },
   },
   methods: {
     slideLeft() {
-      if (this.currentIndex > 0) this.currentIndex--;
+      // 현재 인덱스가 0보다 크다면 왼쪽으로 이동
+      if (this.currentIndex > 0) {
+        this.currentIndex--;
+      }
     },
     slideRight() {
-      if (this.currentIndex + this.itemsPerPage < this.movies.length) this.currentIndex++;
+      // 현재 인덱스가 영화 목록의 끝에 도달하지 않았다면 오른쪽으로 이동
+      if (this.currentIndex + this.itemsPerPage < this.movies.length) {
+        this.currentIndex++;
+      }
     },
     makeImagePath(path, size) {
       return `https://image.tmdb.org/t/p/${size}${path}`;
     },
-    toggleFavorite(movie) {
-      const index = this.favoriteMovies.findIndex((m) => m.id === movie.id);
-      if (index !== -1) {
-        // 이미 찜한 경우 -> 제거
-        this.favoriteMovies.splice(index, 1);
-      } else {
-        // 찜하지 않은 경우 -> 추가
-        this.favoriteMovies.push(movie);
-      }
-    },
-    isFavorite(movie) {
-      // 현재 영화가 favoriteMovies에 있는지 확인
-      return this.favoriteMovies.some((m) => m.id === movie.id);
-    },
   },
 };
 </script>
+
 <style scoped>
 .slider-wrapper {
   position: relative;
@@ -91,13 +80,12 @@ export default {
 .poster-list {
   display: flex;
   gap: 10px;
-  overflow: hidden;
-  flex: 1;
+  overflow: hidden; /* 스크롤 바 제거 */
 }
 
 .poster {
-  flex: 0 0 calc(100% / 5);
-  height: 250px;
+  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
+  height: 300px;
   background-size: cover;
   background-position: center;
   border-radius: 8px;
@@ -120,35 +108,44 @@ export default {
   opacity: 1;
 }
 
-.thumbs-up {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .arrow-btn {
   background: rgba(0, 0, 0, 0.7);
   border: none;
   color: white;
+  font-size: 1.5rem;
   width: 40px;
   height: 40px;
-  font-size: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   border-radius: 50%;
+  z-index: 10;
+}
+
+.arrow-btn.left {
+  margin-right: 10px;
+}
+
+.arrow-btn.right {
+  margin-left: 10px;
 }
 
 .arrow-btn:hover {
   background: rgba(0, 0, 0, 0.9);
 }
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .poster {
+    flex: 0 0 calc(100% / 4); /* 태블릿: 4개씩 */
+  }
+}
+
+@media (max-width: 480px) {
+  .poster {
+    flex: 0 0 calc(100% / 2); /* 모바일: 2개씩 */
+  }
+}
 </style>
+

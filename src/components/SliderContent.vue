@@ -164,7 +164,7 @@ export default {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 500px) {
   .poster {
     flex: 0 0 calc(100% / 2); /* 모바일: 한 화면에 1.5개 표시 (더 넓게) */
     height: 280px; /* 높이를 유지 */
@@ -172,7 +172,7 @@ export default {
 
   .info {
     font-size: 0.5rem; /* 정보 텍스트 크기 */
-    padding: 8px; /* 정보 영역의 여백 */
+    padding: 6px; /* 정보 영역의 여백 */
   }
 }
 

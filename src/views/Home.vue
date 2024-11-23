@@ -1,7 +1,7 @@
 <template>
   <div>
-    <navbar />
-
+    <navbar/>
+    
     <!-- 메인 콘텐츠 -->
     <div class="home">
       <!-- 로딩 중 표시 -->
@@ -21,11 +21,7 @@
           class="movie-category"
         >
           <h3>{{ category.title }}</h3>
-          <SliderContent
-            :movies="category.movies"
-            @toggle-wishlist="toggleWishlist"
-            :wishlist="wishlist"
-          />
+          <SliderContent :movies="category.movies" />
         </div>
       </div>
     </div>
@@ -37,7 +33,6 @@ import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
 import SliderContent from "@/components/SliderContent.vue";
-import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Home",
@@ -58,41 +53,48 @@ export default {
       ],
     };
   },
-  computed: {
-    ...mapGetters(["wishlist"]), // Vuex에서 wishlist 상태 가져오기
+  created() {
+    this.loadData();
   },
   methods: {
-    ...mapActions(["toggleWishlist"]), // Vuex의 toggleWishlist 액션 사용
     async loadData() {
       try {
+        console.log("데이터 로드 시작");
         await Promise.all([this.fetchHeroMovie(), this.fetchMovies()]);
+        console.log("데이터 로드 성공");
       } catch (error) {
         console.error("Error loading data:", error);
       } finally {
         this.isLoading = false; // 로딩 완료
+        console.log("로딩 상태:", this.isLoading);
       }
     },
     async fetchHeroMovie() {
       const API_KEY = process.env.VUE_APP_API_KEY;
-      try {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
-        );
-        this.heroMovie = response.data.results[0];
-      } catch (error) {
-        console.error("Error fetching hero movie:", error);
-      }
-    },
+        try {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=ko-KR`
+          );
+          console.log("Hero Movie 데이터:", response.data.results[0]);
+          this.heroMovie = response.data.results[0];
+        } catch (error) {
+          console.error("Hero Movie 로드 실패:", error);
+        }
+      },
     async fetchMovies() {
       const API_KEY = process.env.VUE_APP_API_KEY;
-      const requests = this.movieCategories.map(async (category) => {
-        const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
-        );
-        console.log(`${category.title} 데이터:`, response.data.results);
-        category.movies = response.data.results;
-      });
-      await Promise.all(requests);
+      try {
+        const requests = this.movieCategories.map(async (category) => {
+          const response = await axios.get(
+            `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
+          );
+          console.log(`${category.title} 데이터:`, response.data.results);
+          category.movies = response.data.results;
+        });
+        await Promise.all(requests);
+      } catch (error) {
+        console.error("Movie Categories 로드 실패:", error);
+      }
     },
   },
 };

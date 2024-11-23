@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <Navbar />
     <router-view />
   </div>
 </template>
@@ -9,7 +8,6 @@
 import '@fortawesome/fontawesome-free/css/all.css';
 import Banner from './components/Banner.vue'; // 예시
 import Home from './views/Home.vue';
-import Navbar from "@/components/Navbar.vue";
 
 
 /* eslint-disable */
@@ -17,7 +15,6 @@ export default {
   components: {
     Banner,
     Home,
-    Navbar,
   }
 };
 

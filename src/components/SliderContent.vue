@@ -166,7 +166,7 @@ export default {
 
 @media (max-width: 480px) {
   .poster {
-    flex: 0 0 calc(100% / 3); /* 모바일: 한 화면에 1.5개 표시 (더 넓게) */
+    flex: 0 0 calc(100% / 2); /* 모바일: 한 화면에 1.5개 표시 (더 넓게) */
     height: 280px; /* 높이를 유지 */
   }
 

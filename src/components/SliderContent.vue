@@ -83,9 +83,9 @@ export default {
 
 .poster {
   flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
-  height: 300px;
-  background-size: cover;
-  background-position: center;
+  height: 400px; /* 높이를 충분히 크게 설정 */
+  background-size: cover; /* 이미지를 박스에 맞게 채우기 */
+  background-position: center; /* 이미지를 가운데로 정렬 */
   border-radius: 8px;
   position: relative;
   cursor: pointer;
@@ -129,12 +129,15 @@ export default {
 @media (max-width: 768px) {
   .poster {
     flex: 0 0 calc(100% / 4); /* 태블릿: 4개씩 */
+    height: 300px; /* 높이를 줄이기 */
   }
 }
 
 @media (max-width: 480px) {
   .poster {
     flex: 0 0 calc(100% / 2); /* 모바일: 2개씩 */
+    height: 250px; /* 모바일용 높이 설정 */
   }
 }
 </style>
+

@@ -2,6 +2,8 @@
   <div>
     <!-- Navbar -->
     <Navbar />
+    <SliderContent :movies="movieCategories[0].movies" />
+
 
     <!-- 메인 콘텐츠 -->
     <div class="home">
@@ -84,6 +86,7 @@ export default {
         const response = await axios.get(
           `https://api.themoviedb.org/3/movie/${category.name}?api_key=${API_KEY}&language=ko-KR`
         );
+        console.log(`${category.title} 데이터:`, response.data.results);
         category.movies = response.data.results;
       });
       await Promise.all(requests);

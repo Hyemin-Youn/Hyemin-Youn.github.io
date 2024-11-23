@@ -74,13 +74,15 @@ export default {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 좌우 버튼 간격 자동 조정 */
   margin: 20px 0;
 }
 
 .poster-list {
   display: flex;
-  gap: 10px;
+  gap: 10px; /* 포스터 간의 간격 */
   overflow: hidden; /* 스크롤 바 제거 */
+  flex: 1; /* 중앙 영역의 크기 확보 */
 }
 
 .poster {
@@ -121,6 +123,7 @@ export default {
   cursor: pointer;
   border-radius: 50%;
   z-index: 10;
+  margin: 0 10px; /* 좌우 버튼 간격 추가 */
 }
 
 .arrow-btn:hover {
@@ -142,4 +145,3 @@ export default {
   }
 }
 </style>
-

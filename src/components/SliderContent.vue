@@ -39,7 +39,7 @@ export default {
   data() {
     return {
       currentIndex: 0, // 현재 표시할 첫 영화의 인덱스
-      itemsPerPage: 6, // 한 화면에 표시할 영화 개수
+      itemsPerPage: 5, // 한 화면에 표시할 영화 개수 (이미지 기준 조정)
     };
   },
   computed: {
@@ -77,29 +77,32 @@ export default {
 
 .poster-list {
   display: flex;
-  gap: 10px;
+  gap: 15px; /* 포스터 간격 설정 */
   overflow: hidden; /* 스크롤 바 제거 */
 }
 
 .poster {
-  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
-  height: 400px; /* 높이를 충분히 크게 설정 */
+  flex: 0 0 calc(100% / 5 - 15px); /* 한 화면에 5개 표시 */
+  height: 360px; /* 적당한 포스터 크기 설정 */
   background-size: cover; /* 이미지를 박스에 맞게 채우기 */
   background-position: center; /* 이미지를 가운데로 정렬 */
   border-radius: 8px;
   position: relative;
   cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 포스터 그림자 */
 }
 
 .info {
   position: absolute;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   color: white;
   width: 100%;
   padding: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
+  font-size: 0.9rem;
+  text-align: center;
 }
 
 .poster:hover .info {
@@ -128,16 +131,15 @@ export default {
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .poster {
-    flex: 0 0 calc(100% / 4); /* 태블릿: 4개씩 */
-    height: 300px; /* 높이를 줄이기 */
+    flex: 0 0 calc(100% / 3 - 10px); /* 태블릿: 3개씩 */
+    height: 300px;
   }
 }
 
 @media (max-width: 480px) {
   .poster {
-    flex: 0 0 calc(100% / 2); /* 모바일: 2개씩 */
-    height: 250px; /* 모바일용 높이 설정 */
+    flex: 0 0 calc(100% / 2 - 10px); /* 모바일: 2개씩 */
+    height: 250px;
   }
 }
 </style>
-

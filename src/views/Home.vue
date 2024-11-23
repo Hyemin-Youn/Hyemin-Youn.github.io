@@ -3,6 +3,7 @@
     <!-- Navbar -->
     <Navbar />
     <MovieSlider />
+    <SliderContent />
 
 
     <div class="home">
@@ -51,12 +52,15 @@
 import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
+import SliderContent from "@/components/SliderContent.vue"
 
 export default {
   name: "Home",
   components: {
     Banner,
     Navbar,
+    SliderContent,
+    
   },
   data() {
     return {

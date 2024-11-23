@@ -4,6 +4,8 @@ import SignIn from '../components/sign-in/SignIn.vue';
 import Wishlist from '../views/WishList.vue';
 import store from '../store';
 import MovieDetail from "@/views/MovieDetail.vue";
+import SliderContent from './components/SliderContent.vue';
+
 
 const routes = [
   { 
@@ -33,7 +35,8 @@ const routes = [
   },
   {
     path: "/SliderContent",
-    component: SliderContent 
+    name: 'SliderContent',
+    component: SliderContent, 
   },
 ];
 

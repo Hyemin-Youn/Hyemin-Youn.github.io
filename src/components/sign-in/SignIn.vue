@@ -11,44 +11,21 @@
           <h2>Login</h2>
           <form @submit.prevent="handleLogin">
             <label for="email">Email</label>
-            <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-            >
+            <input id="email" v-model="email" type="email" required />
 
             <label for="password">Password</label>
-            <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-            >
-            <p
-              v-if="loginError"
-              class="error"
-            >
-              {{ loginError }}
-            </p>
+            <input id="password" v-model="password" type="password" required />
+
+            <p v-if="loginError" class="error">{{ loginError }}</p>
 
             <div class="remember-me">
-              <input
-                id="rememberMe"
-                v-model="rememberMe"
-                type="checkbox"
-              >
+              <input id="rememberMe" v-model="rememberMe" type="checkbox" />
               <label for="rememberMe">Remember Me</label>
             </div>
 
-            <button type="submit">
-Sign In
-</button>
+            <button type="submit">Sign In</button>
           </form>
-          <p
-            class="switch"
-            @click="switchToSignup"
-          >
+          <p class="switch" @click="switchToSignup">
             Don't have an account? <b>Sign up</b>
           </p>
         </div>
@@ -63,20 +40,10 @@ Sign In
           <h2>Sign Up</h2>
           <form @submit.prevent="handleRegister">
             <label for="newEmail">Email</label>
-            <input
-              id="newEmail"
-              v-model="newEmail"
-              type="email"
-              required
-            >
+            <input id="newEmail" v-model="newEmail" type="email" required />
 
             <label for="newPassword">Password</label>
-            <input
-              id="newPassword"
-              v-model="newPassword"
-              type="password"
-              required
-            >
+            <input id="newPassword" v-model="newPassword" type="password" required />
 
             <label for="confirmPassword">Confirm Password</label>
             <input
@@ -84,34 +51,18 @@ Sign In
               v-model="confirmPassword"
               type="password"
               required
-            >
-            <p
-              v-if="signupError"
-              class="error"
-            >
-              {{ signupError }}
-            </p>
+            />
+
+            <p v-if="signupError" class="error">{{ signupError }}</p>
 
             <div class="terms">
-              <input
-                id="terms"
-                v-model="termsAccepted"
-                type="checkbox"
-              >
+              <input id="terms" v-model="termsAccepted" type="checkbox" />
               <label for="terms">I have read the <b>Terms and Conditions</b></label>
             </div>
 
-            <button
-              type="submit"
-              :disabled="!termsAccepted"
-            >
-              Register
-            </button>
+            <button type="submit" :disabled="!termsAccepted">Register</button>
           </form>
-          <p
-            class="switch"
-            @click="switchToLogin"
-          >
+          <p class="switch" @click="switchToLogin">
             Already have an account? <b>Sign in</b>
           </p>
         </div>
@@ -139,13 +90,31 @@ export default {
   methods: {
     switchToSignup() {
       this.activeCard = "signup";
+      this.triggerCardAnimation();
     },
     switchToLogin() {
       this.activeCard = "login";
+      this.triggerCardAnimation();
+    },
+    triggerCardAnimation() {
+      const cards = document.querySelectorAll(".card");
+      cards.forEach((card) => {
+        if (card.classList.contains("active")) {
+          card.classList.remove("active");
+          card.classList.add("backward");
+        } else {
+          card.classList.remove("backward");
+          card.classList.add("enter");
+          setTimeout(() => {
+            card.classList.remove("enter");
+            card.classList.add("active");
+          }, 1000); // 애니메이션 시간을 1초로 설정
+        }
+      });
     },
     handleLogin() {
       if (this.password.length < 6) {
-        this.loginError = "Password must be 32 letters long. Use your API key. ";
+        this.loginError = "Password must be at least 6 characters long.";
         return;
       }
       alert("Login successful!");
@@ -178,7 +147,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -187,8 +156,7 @@ export default {
 /* 컨테이너 */
 .wrapper {
   width: 600px;
-  max-width: 90%;
-  height: auto;
+  height: 520px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -201,83 +169,93 @@ export default {
 
 /* 카드 */
 .card {
-  width: 100%;
-  max-width: 400px;
-  height: auto;
+  width: 360px;
+  height: 480px;
   position: absolute;
   transform-style: preserve-3d;
-  transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
-  opacity: 1; /* 항상 보이게 설정 */
-  z-index: 2; /* 배경보다 위로 표시 */
+  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out; /* 애니메이션 시간을 1.2초로 늘림 */
+  opacity: 0;
+  z-index: 0;
 }
 
-
-/* 반응형 스타일 */
-@media (max-width: 1024px) {
-  .wrapper {
-    width: 80%;
-  }
-
-  .card {
-    max-width: 320px;
-  }
-
-  h2 {
-    font-size: 1.3rem;
-  }
-
-  input,
-  button {
-    font-size: 0.85rem;
-    padding: 8px;
-  }
+.card.active {
+  opacity: 1;
+  z-index: 2;
+  transform: rotateY(0deg) translateX(0);
 }
 
-@media (max-width: 768px) {
-  .wrapper {
-    width: 90%;
-  }
-
-  .card {
-    max-width: 300px;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  input,
-  button {
-    font-size: 0.8rem;
-    padding: 6px;
-  }
+.card.backward {
+  z-index: 1;
+  transform: rotateY(-90deg) translateX(-100%);
+  opacity: 0;
 }
 
-@media (max-width: 480px) {
-  .wrapper {
-    width: 100%;
-    padding: 10px;
-  }
-
-  .card {
-    max-width: 280px;
-  }
-
-  h2 {
-    font-size: 1rem;
-  }
-
-  label,
-  .switch {
-    font-size: 0.75rem;
-  }
-
-  input,
-  button {
-    font-size: 0.75rem;
-    padding: 5px;
-  }
+.card.enter {
+  opacity: 0;
+  transform: rotateY(90deg) translateX(100%);
 }
 
+/* 카드 콘텐츠 */
+.content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  text-align: center;
+  background: #e50914;
+  color: #fff;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* 텍스트 스타일 */
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #bf0812;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+button:hover {
+  background-color: #a10610;
+}
+
+.switch {
+  margin-top: 15px;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.error {
+  color: yellow;
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
 </style>
-

@@ -8,7 +8,7 @@
     <!-- 영화 포스터 리스트 -->
     <div class="poster-list">
       <div
-        v-for="(movie, index) in displayedMovies"
+        v-for="movie in displayedMovies"
         :key="movie.id"
         class="poster"
         :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"

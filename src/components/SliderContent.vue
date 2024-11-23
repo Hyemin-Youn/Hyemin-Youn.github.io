@@ -38,8 +38,8 @@ export default {
   },
   data() {
     return {
-      currentIndex: 0, // 현재 표시되는 첫 영화의 인덱스
-      itemsPerPage: 5, // 한 화면에 표시할 영화 개수
+      currentIndex: 0, // 현재 표시할 첫 영화의 인덱스
+      itemsPerPage: 6, // 한 화면에 표시할 영화 개수
     };
   },
   computed: {
@@ -50,11 +50,13 @@ export default {
   },
   methods: {
     slideLeft() {
+      // 현재 인덱스가 0보다 크다면 왼쪽으로 이동
       if (this.currentIndex > 0) {
         this.currentIndex--;
       }
     },
     slideRight() {
+      // 현재 인덱스가 영화 목록의 끝에 도달하지 않았다면 오른쪽으로 이동
       if (this.currentIndex + this.itemsPerPage < this.movies.length) {
         this.currentIndex++;
       }
@@ -77,12 +79,12 @@ export default {
 
 .poster-list {
   display: flex;
-  overflow: hidden;
   gap: 10px;
+  overflow: hidden;
 }
 
 .poster {
-  flex: 0 0 calc(100% / 5); /* 기본 5개씩 표시 */
+  flex: 0 0 calc(100% / 6); /* 6개씩 표시 */
   height: 300px;
   background-size: cover;
   background-position: center;
@@ -107,7 +109,6 @@ export default {
 }
 
 .arrow-btn {
-  position: relative;
   background: rgba(0, 0, 0, 0.7);
   border: none;
   color: white;
@@ -134,9 +135,10 @@ export default {
   background: rgba(0, 0, 0, 0.9);
 }
 
+/* 반응형 스타일 */
 @media (max-width: 768px) {
   .poster {
-    flex: 0 0 calc(100% / 3); /* 태블릿: 3개씩 */
+    flex: 0 0 calc(100% / 4); /* 태블릿: 4개씩 */
   }
 }
 

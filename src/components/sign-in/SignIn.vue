@@ -184,10 +184,11 @@ export default {
   z-index: -1;
 }
 
-/* 전체 카드 컨테이너 */
+/* 컨테이너 */
 .wrapper {
   width: 600px;
-  height: 520px;
+  max-width: 90%;
+  height: auto;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -198,10 +199,11 @@ export default {
   perspective: 1000px;
 }
 
-/* 카드 기본 스타일 */
+/* 카드 */
 .card {
-  width: 360px;
-  height: 480px;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
@@ -209,114 +211,30 @@ export default {
   z-index: 0;
 }
 
-.card.active {
-  opacity: 1;
-  z-index: 2;
-  transform: translateX(-20px) scale(1);
-}
-
-.card.backward {
-  z-index: 1;
-  transform: translateX(30px) scale(0.95);
-  opacity: 0.5;
-}
-
-/* 카드 콘텐츠 */
-.content {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 30px;
-  text-align: center;
-  background: #e50914;
-  color: #fff;
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-/* 텍스트 스타일 */
-h2 {
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-  font-size: 0.9rem;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  margin-top: 6px;
-  margin-bottom: 12px;
-  border: none;
-  border-radius: 5px;
-  font-size: 0.9rem;
-}
-
-button {
-  width: 100%;
-  padding: 10px;
-  background-color: #bf0812;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-button:hover {
-  background-color: #a10610;
-}
-
-.switch {
-  margin-top: 15px;
-  color: #fff;
-  cursor: pointer;
-  text-decoration: underline;
-  font-size: 0.8rem;
-}
-
-.error {
-  color: yellow;
-  font-size: 0.8rem;
-  margin-top: 8px;
-}
-
 /* 반응형 스타일 */
 @media (max-width: 1024px) {
   .wrapper {
-    width: 90%;
-    height: auto;
+    width: 80%;
   }
 
   .card {
-    width: 90%;
     max-width: 320px;
-    height: auto;
   }
 
   h2 {
     font-size: 1.3rem;
   }
 
-  label,
-  .switch {
-    font-size: 0.85rem;
-  }
-
   input,
   button {
     font-size: 0.85rem;
+    padding: 8px;
   }
 }
 
 @media (max-width: 768px) {
   .wrapper {
-    width: 100%;
-    padding: 10px;
+    width: 90%;
   }
 
   .card {
@@ -330,17 +248,14 @@ button:hover {
   input,
   button {
     font-size: 0.8rem;
-    padding: 8px;
-  }
-
-  .switch {
-    font-size: 0.75rem;
+    padding: 6px;
   }
 }
 
 @media (max-width: 480px) {
   .wrapper {
     width: 100%;
+    padding: 10px;
   }
 
   .card {
@@ -353,14 +268,15 @@ button:hover {
 
   label,
   .switch {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
 
   input,
   button {
-    font-size: 0.7rem;
-    padding: 6px;
+    font-size: 0.75rem;
+    padding: 5px;
   }
 }
+
 </style>
 

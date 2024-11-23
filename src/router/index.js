@@ -29,6 +29,11 @@ const routes = [
     component: MovieDetail 
   },
   {
+    path: "/popular",
+    name: "Popular",
+    component: Popular,
+  },
+  {
     path: '/wishlist',
     name: 'Wishlist',
     component: Wishlist 
@@ -37,6 +42,10 @@ const routes = [
     path: "/slider",
     name: 'SliderContent',
     component: SliderContent, 
+  },
+  {
+    path: "*", // 404 페이지
+    redirect: "/home",
   },
 ];
 

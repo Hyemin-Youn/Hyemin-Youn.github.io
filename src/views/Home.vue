@@ -1,6 +1,7 @@
 <template>
   <div>
-
+    <navbar/>
+    
     <!-- 메인 콘텐츠 -->
     <div class="home">
       <!-- 로딩 중 표시 -->

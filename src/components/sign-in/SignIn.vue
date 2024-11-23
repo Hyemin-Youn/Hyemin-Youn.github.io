@@ -191,7 +191,7 @@ export default {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-55%, -50%); /* 화면 중앙에서 약간 왼쪽으로 이동 */
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -211,13 +211,13 @@ export default {
 
 .card.active {
   opacity: 1;
-  z-index: 2; /* 활성 카드 위로 오게 설정 */
-  transform: translateX(-20px) scale(1); /* 중앙에서 약간 겹치게 */
+  z-index: 2;
+  transform: translateX(-20px) scale(1);
 }
 
 .card.backward {
-  z-index: 1; /* 비활성 카드 아래로 설정 */
-  transform: translateX(30px) scale(0.95); /* 약간 오른쪽으로 밀려나게 설정 */
+  z-index: 1;
+  transform: translateX(30px) scale(0.95);
   opacity: 0.5;
 }
 
@@ -284,4 +284,83 @@ button:hover {
   font-size: 0.8rem;
   margin-top: 8px;
 }
+
+/* 반응형 스타일 */
+@media (max-width: 1024px) {
+  .wrapper {
+    width: 90%;
+    height: auto;
+  }
+
+  .card {
+    width: 90%;
+    max-width: 320px;
+    height: auto;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  label,
+  .switch {
+    font-size: 0.85rem;
+  }
+
+  input,
+  button {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .card {
+    max-width: 300px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  input,
+  button {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .switch {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    width: 100%;
+  }
+
+  .card {
+    max-width: 280px;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  label,
+  .switch {
+    font-size: 0.7rem;
+  }
+
+  input,
+  button {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
+}
 </style>
+

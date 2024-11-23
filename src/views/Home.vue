@@ -2,7 +2,7 @@
   <div>
     <!-- Navbar -->
     <Navbar />
-    <MovieSlider :movies="movieList" />
+    <MovieSlider />
 
 
     <div class="home">

@@ -1,8 +1,5 @@
 <template>
   <div>
-    <!-- Navbar -->
-    <Navbar />
-
 
     <!-- 메인 콘텐츠 -->
     <div class="home">

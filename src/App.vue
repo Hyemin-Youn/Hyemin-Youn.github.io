@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Navbar />
     <router-view />
   </div>
 </template>
@@ -13,6 +14,7 @@ import Navbar from "@/components/Navbar.vue";
 
 /* eslint-disable */
 export default {
+  name: "App",
   components: {
     Banner,
     Home,

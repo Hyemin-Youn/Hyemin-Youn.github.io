@@ -50,13 +50,11 @@ export default {
   },
   methods: {
     slideLeft() {
-      // 현재 인덱스가 0보다 크다면 왼쪽으로 이동
       if (this.currentIndex > 0) {
         this.currentIndex--;
       }
     },
     slideRight() {
-      // 현재 인덱스가 영화 목록의 끝에 도달하지 않았다면 오른쪽으로 이동
       if (this.currentIndex + this.itemsPerPage < this.movies.length) {
         this.currentIndex++;
       }
@@ -123,14 +121,6 @@ export default {
   z-index: 10;
 }
 
-.arrow-btn.left {
-  margin-right: 10px;
-}
-
-.arrow-btn.right {
-  margin-left: 10px;
-}
-
 .arrow-btn:hover {
   background: rgba(0, 0, 0, 0.9);
 }
@@ -148,4 +138,3 @@ export default {
   }
 }
 </style>
-

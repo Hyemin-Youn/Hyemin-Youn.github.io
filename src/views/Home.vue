@@ -2,10 +2,33 @@
   <div>
     <!-- Navbar -->
     <Navbar />
-    <MovieSlider />
-    <SliderContent :movies="popularMovies" />
 
+    <!-- 찜한 리스트 -->
+    <div class="favorite-list">
+      <h2>내가 찜한 리스트</h2>
+      <div class="favorite-movies">
+        <div
+          v-for="movie in favoriteMovies"
+          :key="movie.id"
+          class="movie-card"
+        >
+          <img
+            :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
+            :alt="movie.title"
+            class="movie-poster"
+          />
+          <div class="movie-info">
+            <h4>{{ movie.title }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- SliderContent Component -->
+    <SliderContent
+      :movies="movieCategories[0].movies"
+      :onFavoriteToggle="toggleFavorite"
+    />
 
     <div class="home">
       <!-- 로딩 중 표시 -->
@@ -35,7 +58,7 @@
                 :src="'https://image.tmdb.org/t/p/w200' + movie.poster_path"
                 :alt="movie.title"
                 class="movie-poster"
-              >
+              />
               <div class="movie-info">
                 <h4>{{ movie.title }}</h4>
                 <p>평점: ⭐ {{ movie.vote_average }}</p>
@@ -53,7 +76,7 @@
 import axios from "axios";
 import Banner from "@/components/Banner.vue";
 import Navbar from "@/components/Navbar.vue";
-import SliderContent from "@/components/SliderContent.vue"
+import SliderContent from "@/components/SliderContent.vue";
 
 export default {
   name: "Home",
@@ -61,12 +84,12 @@ export default {
     Banner,
     Navbar,
     SliderContent,
-    
   },
   data() {
     return {
       isLoading: true, // 로딩 상태
       heroMovie: {},
+      favoriteMovies: [], // 찜한 리스트
       movieCategories: [
         { name: "popular", title: "인기 영화", movies: [] },
         { name: "now_playing", title: "최신 영화", movies: [] },
@@ -109,114 +132,40 @@ export default {
       });
       await Promise.all(requests);
     },
+    toggleFavorite(movie) {
+      const index = this.favoriteMovies.findIndex((m) => m.id === movie.id);
+      if (index === -1) {
+        this.favoriteMovies.push(movie); // 찜 추가
+      } else {
+        this.favoriteMovies.splice(index, 1); // 찜 제거
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
-.home {
-  padding: 20px;
-  background-color: #141414;
-  color: #ffffff;
-  position: relative;
-}
-
-/* 로딩 오버레이 */
-.loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  font-size: 1.5em;
-  z-index: 10;
-}
-
-.movie-category {
+.favorite-list {
   margin-bottom: 20px;
+  background-color: #222;
+  padding: 20px;
+  border-radius: 10px;
 }
 
-.movie-category h3 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-.movie-list {
+.favorite-movies {
   display: flex;
-  overflow-x: auto;
   gap: 10px;
-  padding-bottom: 10px;
-}
-
-.movie-card {
-  width: 150px;
-  flex-shrink: 0;
-  position: relative;
-  transition: transform 0.3s ease, z-index 0.3s ease;
-  z-index: 1;
-}
-
-.movie-card:hover {
-  transform: scale(1.2);
-  z-index: 10;
+  overflow-x: auto;
 }
 
 .movie-poster {
   width: 100%;
   border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .movie-info {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  padding: 10px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  margin-top: 5px;
   text-align: center;
-  border-radius: 0 0 5px 5px;
+  color: white;
 }
-
-.movie-card:hover .movie-info {
-  opacity: 1;
-}
-
-/* 반응형 스타일 추가 */
-@media (max-width: 768px) {
-  .box {
-    flex: 0 0 calc(100% / 2 - 10px); /* 한 화면에 2개씩 */
-    height: 200px;
-  }
-
-  .arrow-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-
-  .info {
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .box {
-    flex: 0 0 calc(100% - 10px); /* 한 화면에 1개씩 */
-    height: 150px;
-  }
-
-  .info {
-    font-size: 0.7rem;
-  }
-}
-
 </style>

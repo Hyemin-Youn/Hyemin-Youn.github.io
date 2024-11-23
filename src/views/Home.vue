@@ -3,7 +3,8 @@
     <!-- Navbar -->
     <Navbar />
     <MovieSlider />
-    <SliderContent />
+    <SliderContent :movies="popularMovies" />
+
 
 
     <div class="home">

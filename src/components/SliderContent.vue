@@ -12,10 +12,10 @@
         :key="movie.id"
         class="poster"
         :style="{ backgroundImage: `url(${makeImagePath(movie.poster_path, 'w500')})` }"
-        @mouseenter="hoverMovie(index)" <!-- 마우스 오버 -->
-        @mouseleave="unhoverMovie(index)" <!-- 마우스 아웃 -->
-        @click="toggleMovieHover(index)" <!-- 클릭 -->
-        :class="{ active: isHovered[index] }" <!-- 클릭된 상태를 반영 -->
+        @mouseenter="hoverMovie(index)"   
+        @mouseleave="unhoverMovie(index)" 
+        @click="toggleMovieHover(index)" 
+        :class="{ active: isHovered[index] }" 
       >
         <div class="info">
           <h4>{{ movie.title }}</h4>

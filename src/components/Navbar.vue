@@ -1,33 +1,27 @@
 <template>
   <nav class="navbar">
     <div class="navbar-left">
-      <img 
-        src="@/assets/logo.png" 
-        alt="Logo" 
-        class="logo"
-      >
-
+      <!-- 로고에 router-link 추가 -->
+      <router-link to="/home">
+        <img 
+          src="@/assets/logo.png" 
+          alt="Logo" 
+          class="logo"
+        >
+      </router-link>
 
       <ul class="nav-links">
         <li>
-          <router-link to="/home">
-홈
-</router-link>
+          <router-link to="/home">홈</router-link>
         </li>
         <li>
-          <router-link to="/popular">
-대세 콘텐츠
-</router-link>
+          <router-link to="/popular">대세 콘텐츠</router-link>
         </li>
         <li>
-          <router-link to="/search">
-찾아보기
-</router-link>
+          <router-link to="/search">찾아보기</router-link>
         </li>
         <li>
-          <router-link to="/wishlist">
-내가 찜한 리스트
-</router-link>
+          <router-link to="/wishlist">내가 찜한 리스트</router-link>
         </li>
       </ul>
     </div>
@@ -81,6 +75,7 @@ export default {
 .logo {
   width: 40px;
   margin-right: 20px;
+  cursor: pointer; /* 클릭 가능한 커서 표시 */
 }
 
 .nav-links {

@@ -207,9 +207,10 @@ export default {
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 0.6s ease-in-out, opacity 0.6s ease-in-out;
-  opacity: 0;
-  z-index: 0;
+  opacity: 1; /* 항상 보이게 설정 */
+  z-index: 2; /* 배경보다 위로 표시 */
 }
+
 
 /* 반응형 스타일 */
 @media (max-width: 1024px) {

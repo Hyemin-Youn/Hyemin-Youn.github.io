@@ -34,7 +34,7 @@ const routes = [
     component: Wishlist 
   },
   {
-    path: "/SliderContent",
+    path: "/slider",
     name: 'SliderContent',
     component: SliderContent, 
   },

@@ -31,6 +31,10 @@ const routes = [
     name: 'Wishlist',
     component: Wishlist 
   },
+  {
+    path: "/SliderContent",
+    component: SliderContent 
+  },
 ];
 
 const router = createRouter({

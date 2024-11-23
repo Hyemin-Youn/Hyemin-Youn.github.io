@@ -93,6 +93,7 @@ export default {
 </script>
 
 <style scoped>
+/* 전체 슬라이더 컨테이너 */
 .slider-wrapper {
   position: relative;
   width: 100%;
@@ -106,7 +107,7 @@ export default {
 }
 
 .slide {
-  flex: 0 0 calc(100% / 5); /* 기본 5개씩 */
+  flex: 0 0 calc(100% / 5); /* 기본: 5개씩 */
   height: 300px;
   background-size: cover;
   background-position: center;

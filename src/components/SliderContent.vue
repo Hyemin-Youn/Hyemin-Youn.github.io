@@ -140,7 +140,7 @@ export default {
 
 @media (max-width: 480px) {
   .poster {
-    flex: 0 0 calc(100% / 2); /* 모바일: 2개씩 */
+    flex: 0 0 calc(100% / 3); /* 모바일: 2개씩 */
     height: 250px; /* 모바일용 높이 설정 */
   }
 }

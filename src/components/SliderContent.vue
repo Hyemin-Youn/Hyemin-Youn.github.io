@@ -33,13 +33,13 @@ export default {
   props: {
     movies: {
       type: Array,
-      required: true,
+      required: true, // 부모 컴포넌트에서 movies 데이터를 전달받음
     },
   },
   data() {
     return {
       currentIndex: 0, // 현재 표시할 첫 영화의 인덱스
-      itemsPerPage: 6, // 한 화면에 표시할 영화 개수
+      itemsPerPage: 5, // 한 화면에 표시할 영화 개수
     };
   },
   computed: {
@@ -68,6 +68,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .slider-wrapper {
   position: relative;
@@ -81,11 +82,12 @@ export default {
   display: flex;
   gap: 10px;
   overflow: hidden; /* 스크롤 바 제거 */
+  flex: 1;
 }
 
 .poster {
-  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
-  height: 300px;
+  flex: 0 0 calc(100% / 5); /* 한 번에 5개 표시 */
+  height: 250px;
   background-size: cover;
   background-position: center;
   border-radius: 8px;
@@ -112,23 +114,14 @@ export default {
   background: rgba(0, 0, 0, 0.7);
   border: none;
   color: white;
-  font-size: 1.5rem;
   width: 40px;
   height: 40px;
+  font-size: 1.2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
   border-radius: 50%;
-  z-index: 10;
-}
-
-.arrow-btn.left {
-  margin-right: 10px;
-}
-
-.arrow-btn.right {
-  margin-left: 10px;
 }
 
 .arrow-btn:hover {
@@ -138,7 +131,7 @@ export default {
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .poster {
-    flex: 0 0 calc(100% / 4); /* 태블릿: 4개씩 */
+    flex: 0 0 calc(100% / 3); /* 태블릿: 3개씩 */
   }
 }
 
@@ -148,4 +141,3 @@ export default {
   }
 }
 </style>
-

@@ -155,17 +155,25 @@ export default {
   background: rgba(0, 0, 0, 0.9);
 }
 
+/* 반응형 스타일 */
 @media (max-width: 768px) {
   .poster {
-    flex: 0 0 calc(100% / 4);
-    height: 300px;
+    flex: 0 0 calc(100% / 3); /* 태블릿: 한 화면에 3개 표시 */
+    height: 300px; /* 높이를 늘리기 */
   }
 }
 
 @media (max-width: 480px) {
   .poster {
-    flex: 0 0 calc(100% / 3);
-    height: 250px;
+    flex: 0 0 calc(100% / 2); /* 모바일: 한 화면에 2개 표시 */
+    height: 280px; /* 높이 늘리기 */
+    font-size: 14px; /* 글씨 크기를 약간 키움 */
+  }
+
+  .info {
+    font-size: 0.9rem; /* 정보 텍스트 크기 */
+    padding: 8px; /* 정보 영역의 여백 */
   }
 }
+
 </style>

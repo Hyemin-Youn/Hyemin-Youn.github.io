@@ -4,7 +4,7 @@ import SignIn from '../components/sign-in/SignIn.vue';
 import Wishlist from '../views/WishList.vue';
 import store from '../store';
 import MovieDetail from "@/views/MovieDetail.vue";
-import SliderContent from './components/SliderContent.vue';
+import SliderContent from '../components/SliderContent.vue';
 
 
 const routes = [

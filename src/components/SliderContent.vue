@@ -121,14 +121,30 @@ export default {
 .info {
   position: absolute;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   width: 100%;
+  box-sizing: border-box; /* 포스터 크기에 정확히 맞춤 */
   padding: 10px;
   opacity: 0;
   transition: opacity 0.3s ease;
-  text-align: center;
+  border-radius: 0 0 8px 8px; /* 포스터 아래 모서리와 일치 */
+  overflow: hidden; /* 텍스트가 튀어나오지 않도록 설정 */
 }
+
+.poster {
+  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden; /* 포스터 내부에 모든 내용 제한 */
+}
+
 
 .poster:hover .info,
 .poster.active .info {
@@ -155,7 +171,6 @@ export default {
   background: rgba(0, 0, 0, 0.9);
 }
 
-/* 반응형 스타일 */
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .poster {

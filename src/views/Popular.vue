@@ -1,17 +1,7 @@
 <template>
     <div class="popular">
       <!-- Navbar -->
-      <nav class="navbar">
-        <div class="logo">
-          <a href="/">넷플릭스 클론</a>
-        </div>
-        <ul class="nav-links">
-          <li><a href="/">홈</a></li>
-          <li><a href="/popular">인기 영화</a></li>
-          <li><a href="/mylist">내가 찜한 리스트</a></li>
-          <li><a href="/search">찾아보기</a></li>
-        </ul>
-      </nav>
+      <Navbar />
   
       <!-- Main Content -->
       <div class="content">
@@ -33,12 +23,15 @@
   </template>
   
   <script>
-  import MovieCard from '@/components/MovieCard';
-  import Pagination from '@/components/Pagination';
-  import { fetchPopularMovies } from '@/api/movies';
+  import Navbar from "@/components/Navbar.vue";
+  import MovieCard from "@/components/MovieCard.vue";
+  import Pagination from "@/components/Pagination.vue";
+  import { fetchPopularMovies } from "@/api/movies";
   
   export default {
+    name: "Popular",
     components: {
+      Navbar,
       MovieCard,
       Pagination,
     },
@@ -64,46 +57,6 @@
   </script>
   
   <style scoped>
-  /* Navbar Styles */
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #1a1a1a;
-    color: #fff;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    border-bottom: 1px solid #444;
-  }
-  
-  .navbar .logo a {
-    font-size: 20px;
-    font-weight: bold;
-    color: #e50914;
-    text-decoration: none;
-  }
-  
-  .navbar .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 15px;
-    margin: 0;
-  }
-  
-  .navbar .nav-links li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 16px;
-    transition: color 0.3s ease;
-  }
-  
-  .navbar .nav-links li a:hover {
-    color: #e50914;
-  }
-  
-  /* Page Content Styles */
   .popular {
     padding: 20px;
     background-color: #121212;

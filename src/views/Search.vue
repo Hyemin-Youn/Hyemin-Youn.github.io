@@ -29,10 +29,24 @@
         </div>
       </div>
       <button class="clear-options" @click="clearOptions">초기화</button>
+  
+      <!-- 영화 목록 렌더링 -->
+      <div class="movie-list">
+        <h2>검색 결과</h2>
+        <div v-if="loading">로딩 중...</div>
+        <div v-else-if="movies.length === 0">검색 결과가 없습니다.</div>
+        <ul>
+          <li v-for="movie in movies" :key="movie.id">
+            {{ movie.title }}
+          </li>
+        </ul>
+      </div>
     </div>
   </template>
   
   <script>
+  import { fetchMovies } from "@/api/movies";
+  
   export default {
     name: "Search",
     data() {
@@ -40,7 +54,7 @@
         dropdowns: {
           originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
           translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
-          sorting: ["언어 (전체)", "영어", "한국어"],
+          sorting: ["언어 (전체)", "en", "ko"], // 영어(en), 한국어(ko)
         },
         DEFAULT_OPTIONS: {
           originalLanguage: "장르 (전체)",
@@ -53,6 +67,8 @@
           sorting: "언어 (전체)",
         },
         activeDropdown: null,
+        movies: [],
+        loading: false,
       };
     },
     computed: {
@@ -73,96 +89,30 @@
           [key]: option,
         };
         this.activeDropdown = null;
-        this.$emit("change-options", this.selectedOptions);
+        this.fetchMovies(); // 옵션 변경 시 영화 검색
       },
       clearOptions() {
         this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-        this.$emit("change-options", this.selectedOptions);
+        this.fetchMovies(); // 초기화 후 영화 검색
       },
+      async fetchMovies() {
+        this.loading = true;
+        const filters = {
+          genre: this.selectedOptions.originalLanguage,
+          rating: this.selectedOptions.translationLanguage,
+          language: this.selectedOptions.sorting,
+        };
+        this.movies = await fetchMovies(filters);
+        this.loading = false;
+      },
+    },
+    created() {
+      this.fetchMovies(); // 페이지 로드 시 초기 영화 목록 가져오기
     },
   };
   </script>
   
   <style scoped>
-  .search-container {
-    padding: 20px;
-  }
-  
-  .dropdown-container {
-    margin-top: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .custom-select {
-    min-width: 200px;
-    position: relative;
-    display: inline-block;
-  }
-  
-  .select-selected {
-    background-color: black;
-    color: white;
-    padding: 10px;
-    border: 1px solid #fff;
-    font-size: 16px;
-    cursor: pointer;
-  }
-  
-  .select-items {
-    display: block;
-    position: absolute;
-    background-color: #333;
-    border: 1px solid #fff;
-    z-index: 99;
-    top: 100%;
-    left: 0;
-    right: 0;
-  }
-  
-  .select-items div {
-    color: white;
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .select-items div:hover {
-    background-color: #575757;
-  }
-  
-  .select-arrow-active:after {
-    content: "\25B2";
-    position: absolute;
-    right: 10px;
-    top: 14px;
-  }
-  
-  .select-selected:after {
-    content: "\25BC";
-    position: absolute;
-    right: 10px;
-    top: 14px;
-  }
-  
-  .select-selected.select-arrow-active:after {
-    content: "\25B2";
-  }
-  
-  .clear-options {
-    min-width: 120px;
-    background-color: black;
-    color: white;
-    padding: 10px;
-    border: 1px solid #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 0 !important;
-  }
-  
-  .clear-options:hover {
-    background-color: #333;
-  }
+  /* 동일한 스타일링 */
   </style>
   

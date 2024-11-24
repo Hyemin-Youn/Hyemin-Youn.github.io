@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" @scroll="handleScroll">
+  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }" @scroll="handleScroll">
     <!-- Navbar -->
     <Navbar />
 
@@ -36,13 +36,13 @@
         @change-page="fetchMovies"
       />
 
-      <!-- Loading Spinner -->
+      <!-- Loading Spinner (무한 스크롤 전용) -->
       <div v-if="loading && viewMode === 'infinite'" class="loading">
         로딩 중...
       </div>
 
       <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+      <button v-if="showScrollTopButton && viewMode === 'infinite'" class="scroll-top" @click="scrollToTop">
         위로
       </button>
     </div>
@@ -69,7 +69,7 @@ export default {
       totalPages: 1,
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
       loading: false,
-      showScrollTopButton: false,
+      showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
     };
   },
   methods: {
@@ -91,15 +91,17 @@ export default {
     },
     changeViewMode(mode) {
       this.viewMode = mode;
-      this.movies = []; // 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지부터 다시 로드
+      this.movies = [];
+      this.currentPage = 1;
       this.fetchMovies();
     },
     handleScroll() {
+      if (this.viewMode !== "infinite") return;
+
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
         this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
       }
 
@@ -110,7 +112,7 @@ export default {
     },
   },
   created() {
-    this.fetchMovies(); // 초기 데이터 로드
+    this.fetchMovies();
     window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
@@ -120,6 +122,12 @@ export default {
 </script>
 
 <style scoped>
+/* Table View에서 스크롤 제거 */
+.no-scroll {
+  overflow: hidden; /* Table View일 때 스크롤 제거 */
+}
+
+/* 기본 레이아웃 */
 .popular {
   padding: 20px;
   background-color: #121212;

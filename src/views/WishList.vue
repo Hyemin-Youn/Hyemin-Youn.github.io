@@ -1,5 +1,7 @@
 <template>
   <div class="wishlist">
+    <Navbar />
+    
     <h2>내가 찜한 영화</h2>
     <div class="wishlist-movies">
       <div

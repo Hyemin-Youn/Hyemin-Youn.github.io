@@ -7,7 +7,7 @@
           src="@/assets/logo.png" 
           alt="Logo" 
           class="logo"
-        >
+        />
       </router-link>
 
       <ul class="nav-links">
@@ -32,7 +32,7 @@
         alt="Profile" 
         class="profile-icon"
         @click="logout"  
-      >
+      />
     </div>
   </nav>
 </template>

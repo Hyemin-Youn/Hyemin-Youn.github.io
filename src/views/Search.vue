@@ -3,6 +3,7 @@
     <Navbar />
     <div class="content">
       <h1>영화 검색</h1>
+      <!-- 검색 필터 -->
       <div class="dropdown-container">
         <label>선호하는 설정을 선택하세요</label>
         <div v-for="dropdown in dropdownEntries" :key="dropdown.key" class="custom-select">

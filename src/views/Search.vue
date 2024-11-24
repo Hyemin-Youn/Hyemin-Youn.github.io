@@ -1,7 +1,9 @@
 <template>
     <div class="search-page">
+      <!-- Navbar -->
       <Navbar />
-
+  
+      <!-- 검색 기능 및 영화 리스트 -->
       <h1>영화 검색</h1>
       <div class="dropdown-container">
         <label>선호하는 설정을 선택하세요</label>
@@ -32,7 +34,7 @@
         <button class="clear-options" @click="clearOptions">초기화</button>
       </div>
   
-      <!-- 영화 목록 -->
+      <!-- 영화 리스트 -->
       <div class="movie-grid">
         <div
           class="movie-card"
@@ -51,10 +53,14 @@
   </template>
   
   <script>
+  import Navbar from "@/components/Navbar.vue";
   import { fetchMovies } from "@/api/movies";
   
   export default {
     name: "Search",
+    components: {
+      Navbar,
+    },
     data() {
       return {
         dropdowns: {
@@ -120,55 +126,15 @@
   
   <style scoped>
   .search-page {
-    padding: 20px;
-    color: white;
     background-color: #121212;
+    color: white;
+    min-height: 100vh;
   }
   
   .dropdown-container {
+    margin: 20px 0;
     display: flex;
-    flex-wrap: wrap;
     gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  .custom-select {
-    position: relative;
-    display: inline-block;
-    min-width: 150px;
-  }
-  
-  .select-selected {
-    background-color: black;
-    color: white;
-    padding: 10px;
-    border: 1px solid #fff;
-    cursor: pointer;
-  }
-  
-  .select-items {
-    position: absolute;
-    background-color: #333;
-    border: 1px solid #fff;
-    z-index: 99;
-    width: 100%;
-  }
-  
-  .select-items div {
-    padding: 10px;
-    cursor: pointer;
-  }
-  
-  .select-items div:hover {
-    background-color: #575757;
-  }
-  
-  .clear-options {
-    background-color: black;
-    color: white;
-    padding: 10px;
-    border: 1px solid #fff;
-    cursor: pointer;
   }
   
   .movie-grid {
@@ -191,8 +157,8 @@
   }
   
   .movie-title {
-    color: white;
     font-size: 14px;
+    color: white;
   }
   </style>
   

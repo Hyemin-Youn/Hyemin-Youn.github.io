@@ -181,4 +181,7 @@ export default {
   text-align: center;
   margin: 20px 0;
 }
+.movie-card:hover {
+  transform: scale(1.05);
+}
 </style>

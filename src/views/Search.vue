@@ -27,13 +27,12 @@
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
+      <!-- Pagination -->
       <Pagination
-        v-if="viewMode === 'table'"
         :currentPage="currentPage"
         :totalPages="totalPages"
         @change-page="fetchMovies"
       />
-      
     </div>
   </div>
 </template>

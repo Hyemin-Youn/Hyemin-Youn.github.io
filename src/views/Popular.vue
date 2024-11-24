@@ -21,7 +21,7 @@
 
     <!-- Main Content -->
     <div class="content">
-      <h1>대세 콘텐츠</h1>
+      <!-- <h1>대세 콘텐츠</h1> -->
 
       <!-- Table View -->
       <div v-if="viewMode === 'table'" class="movie-grid">

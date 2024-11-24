@@ -23,7 +23,7 @@
   </template>
   
   <script>
-import { fetchPopularMovies } from '@/api/movies';
+import { fetchPopularMovies } from '../api/movies';
 
 export default {
   data() {

@@ -68,7 +68,7 @@ export default {
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
       loading: false, // 로딩 상태
       showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
-      moviesPerPage: 10, // 한 페이지에 표시할 영화 수
+      moviesPerPage: 14, // 한 페이지에 표시할 영화 수 (14개로 변경)
     };
   },
   computed: {

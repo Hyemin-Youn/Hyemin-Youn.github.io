@@ -23,11 +23,12 @@
     <div class="content">
       <h1>대세 콘텐츠</h1>
 
-      <!-- 영화 리스트 -->
+      <!-- Table View -->
       <div v-if="viewMode === 'table'" class="movie-grid">
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <MovieCard v-for="movie in visibleMovies" :key="movie.id" :movie="movie" />
       </div>
 
+      <!-- Infinite Scroll View -->
       <div v-if="viewMode === 'infinite'" class="movie-grid">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
         <div v-if="loading" class="loading">로딩 중...</div>
@@ -40,7 +41,7 @@
         <button @click="nextPage" :disabled="currentPage === totalPages">다음 &gt;</button>
       </div>
 
-      <!-- 맨 위로 올라가기 버튼 (무한 스크롤 전용) -->
+      <!-- 맨 위로 올라가기 버튼 (무한 스크롤 View 전용) -->
       <button v-if="viewMode === 'infinite' && showScrollTopButton" class="scroll-top" @click="scrollToTop">
         위로
       </button>
@@ -61,16 +62,25 @@ export default {
   },
   data() {
     return {
-      movies: [], // 영화 데이터
-      currentPage: 1, // 현재 페이지
+      movies: [], // 전체 영화 데이터
+      currentPage: 1, // 현재 페이지 번호
       totalPages: 1, // 총 페이지 수
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
       loading: false, // 로딩 상태
-      showScrollTopButton: false, // 위로 버튼 표시 여부
+      showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
+      moviesPerPage: 10, // 한 페이지에 표시할 영화 수
     };
   },
+  computed: {
+    // Table View에서 현재 페이지에 보여질 영화 데이터 계산
+    visibleMovies() {
+      const startIndex = (this.currentPage - 1) * this.moviesPerPage;
+      const endIndex = startIndex + this.moviesPerPage;
+      return this.movies.slice(startIndex, endIndex);
+    },
+  },
   methods: {
-    // 영화 데이터를 가져오는 함수
+    // TMDB에서 영화 데이터를 가져오는 함수
     async fetchMovies(page = 1, append = false) {
       if (this.loading) return; // 로딩 중이면 중복 요청 방지
       this.loading = true;
@@ -78,35 +88,33 @@ export default {
       const data = await fetchPopularMovies(page);
 
       if (append) {
-        this.movies = [...this.movies, ...data.results]; // 데이터 추가
+        this.movies = [...this.movies, ...data.results]; // 추가 데이터 결합
       } else {
-        this.movies = data.results; // 데이터 덮어쓰기
+        this.movies = data.results; // 새로운 데이터로 교체
       }
 
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
+      this.totalPages = Math.ceil(data.total_results / this.moviesPerPage); // 총 페이지 계산
       this.loading = false;
     },
     // View 모드 변경
     changeViewMode(mode) {
       this.viewMode = mode;
-      this.movies = []; // 기존 데이터 초기화
-      this.currentPage = 1; // 첫 페이지부터 다시 시작
+      this.currentPage = 1; // 첫 페이지로 초기화
       this.fetchMovies(); // 데이터 재로드
     },
-    // 이전 페이지 이동 (Table View 전용)
+    // 이전 페이지로 이동
     prevPage() {
       if (this.currentPage > 1) {
-        this.fetchMovies(this.currentPage - 1);
+        this.currentPage--;
       }
     },
-    // 다음 페이지 이동 (Table View 전용)
+    // 다음 페이지로 이동
     nextPage() {
       if (this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1);
+        this.currentPage++;
       }
     },
-    // 스크롤 이벤트 처리 (무한 스크롤 View 전용)
+    // 무한 스크롤 처리
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
@@ -115,7 +123,7 @@ export default {
         this.fetchMovies(this.currentPage + 1, true);
       }
 
-      this.showScrollTopButton = window.scrollY > 300;
+      this.showScrollTopButton = window.scrollY > 300; // 위로 가기 버튼 표시 여부
     },
     // 페이지 상단으로 이동
     scrollToTop() {

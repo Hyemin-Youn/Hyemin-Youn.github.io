@@ -225,4 +225,52 @@ h1 {
   border-radius: 4px;
   cursor: pointer;
 }
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* 스크롤 막기 */
+}
+
+.popular {
+  padding: 20px;
+  background-color: #121212;
+  color: #fff;
+  height: 100vh; /* 뷰포트 높이에 맞추기 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between; /* 위아래 공간 조정 */
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* 내용이 전체 높이에 맞도록 */
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr); /* 7개의 열 */
+  grid-template-rows: repeat(2, 1fr); /* 2개의 행 */
+  gap: 20px; /* 카드 간격 */
+  width: 100%; /* 그리드 너비를 100%로 */
+  height: 80%; /* 그리드 높이 조정 */
+  justify-items: center; /* 중앙 정렬 */
+}
+
+.movie-card {
+  width: 150px; /* 카드 너비 고정 */
+  height: 220px; /* 카드 높이 고정 */
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지 비율 유지 */
+}
+
 </style>

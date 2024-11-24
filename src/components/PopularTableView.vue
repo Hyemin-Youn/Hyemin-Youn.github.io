@@ -23,34 +23,32 @@
   </template>
   
   <script>
-  export default {
-    data() {
-      return {
-        currentPage: 1,
-        movies: [],
-      };
+import { fetchPopularMovies } from '@/api/movies';
+
+export default {
+  data() {
+    return {
+      currentPage: 1,
+      movies: [],
+    };
+  },
+  methods: {
+    async fetchMovies() {
+      this.movies = await fetchPopularMovies(this.currentPage);
     },
-    methods: {
-      fetchMovies() {
-        // Replace with actual API call
-        this.movies = Array.from({ length: 10 }, (_, i) => ({
-          title: `Movie ${(this.currentPage - 1) * 10 + i + 1}`,
-        }));
-      },
-      nextPage() {
-        this.currentPage++;
-        this.fetchMovies();
-      },
-      prevPage() {
-        if (this.currentPage > 1) {
-          this.currentPage--;
-          this.fetchMovies();
-        }
-      },
-    },
-    created() {
+    nextPage() {
+      this.currentPage++;
       this.fetchMovies();
     },
-  };
-  </script>
-  
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.fetchMovies();
+      }
+    },
+  },
+  created() {
+    this.fetchMovies();
+  },
+};
+</script>

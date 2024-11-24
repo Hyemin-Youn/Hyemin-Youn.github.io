@@ -52,86 +52,72 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchPopularMovies } from "@/api/movies";
+import Pagination from "@/components/Pagination.vue";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "Popular",
   components: {
     Navbar,
     MovieCard,
+    Pagination,
   },
   data() {
     return {
-      movies: [], // 모든 영화 데이터
-      currentPage: 1, // 현재 페이지
-      rowSize: 4, // 한 행에 표시할 영화 개수
-      moviesPerPage: 20, // 한 페이지에 표시할 영화 수
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
-      loading: false, // 로딩 상태
-      showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
+      loading: false,
+      showScrollTopButton: false,
     };
-  },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.movies.length / this.moviesPerPage);
-    },
-    visibleMovieGroups() {
-      const startIndex = (this.currentPage - 1) * this.moviesPerPage;
-      const endIndex = startIndex + this.moviesPerPage;
-      const paginatedMovies = this.movies.slice(startIndex, endIndex);
-
-      return paginatedMovies.reduce((groups, movie, index) => {
-        const groupIndex = Math.floor(index / this.rowSize);
-        if (!groups[groupIndex]) {
-          groups[groupIndex] = [];
-        }
-        groups[groupIndex].push(movie);
-        return groups;
-      }, []);
-    },
   },
   methods: {
     async fetchMovies(page = 1, append = false) {
-      if (this.loading) return; // 로딩 중일 때 중복 요청 방지
+      if (this.loading) return;
       this.loading = true;
 
-      const data = await fetchPopularMovies(page); // TMDB API 호출
+      const data = await fetchPopularMovies(page);
 
       if (append) {
-        this.movies = [...this.movies, ...data.results]; // 추가 데이터 결합
+        this.movies = [...this.movies, ...data.results];
       } else {
-        this.movies = data.results; // 새로운 데이터로 대체
+        this.movies = data.results;
       }
 
-      this.currentPage = page; // 현재 페이지 업데이트
-      this.loading = false; // 로딩 상태 종료
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
+      this.loading = false;
     },
     changeViewMode(mode) {
       this.viewMode = mode;
-      this.movies = []; // 영화 데이터를 초기화
+      this.movies = []; // 데이터를 초기화
       this.currentPage = 1; // 첫 페이지부터 다시 로드
-      this.fetchMovies(); // 데이터 재로드
+      this.fetchMovies();
     },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
       }
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
+
+      this.showScrollTopButton = window.scrollY > 300;
     },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
   created() {
-    this.fetchMovies(); // 초기 영화 데이터 로드
+    this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
-
 
 <style scoped>
 .popular {

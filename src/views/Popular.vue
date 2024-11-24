@@ -79,8 +79,20 @@ export default {
 </script>
 
 <style scoped>
+/* Reset 기본 스타일 제거 */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 전체 레이아웃 */
 .popular {
-  padding: 20px;
+  padding: 0; /* 패딩 제거 */
   background-color: #121212;
   color: white;
   min-height: 100vh;
@@ -89,18 +101,23 @@ export default {
   justify-content: space-between;
 }
 
+/* 제목 스타일 */
 .page-title {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
+  font-size: 24px;
 }
 
+/* 영화 그리드 */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
+  padding: 20px; /* 간격 추가 */
   flex-grow: 1;
 }
 
+/* 영화 카드 */
 .movie-card {
   text-align: center;
   background-color: #1e1e1e;
@@ -127,11 +144,12 @@ export default {
   text-overflow: ellipsis;
 }
 
+/* 페이지네이션 */
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .pagination button {

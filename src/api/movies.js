@@ -54,9 +54,9 @@ export const fetchMovies = async (filters) => {
     }
 
     const response = await axios.get(`${BASE_URL}/discover/movie`, { params });
-    return response.data.results;
+    return response.data; // 전체 데이터를 반환
   } catch (error) {
     console.error("Error fetching movies:", error);
-    return [];
+    return { results: [] }; // 빈 데이터 반환
   }
 };

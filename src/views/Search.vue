@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <Navbar />
 
-    <!-- 검색 기능 및 영화 리스트 -->
+    <!-- 검색 기능 -->
     <h1>영화 검색</h1>
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <!-- 로딩 표시 -->
+    <!-- 로딩 중 표시 -->
     <div v-if="loading" class="loading">로딩 중...</div>
   </div>
 </template>
@@ -65,9 +65,9 @@ export default {
       },
       activeDropdown: null,
       movies: [],
-      currentPage: 1, // 현재 페이지
-      totalPages: 1, // 총 페이지 수
-      loading: false, // 로딩 상태
+      currentPage: 1,
+      totalPages: 1,
+      loading: false,
     };
   },
   computed: {
@@ -91,11 +91,10 @@ export default {
       };
 
       const data = await fetchMovies(filters);
-
       if (append) {
-        this.movies = [...this.movies, ...data.results]; // 추가 데이터를 기존 리스트에 결합
+        this.movies = [...this.movies, ...data.results];
       } else {
-        this.movies = data.results; // 새 데이터를 덮어쓰기
+        this.movies = data.results;
       }
 
       this.currentPage = page;
@@ -111,14 +110,11 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(1); // 옵션 변경 시 첫 페이지로 데이터 갱신
+      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1); // 초기화 후 첫 페이지로 데이터 갱신
-    },
-    getPosterUrl(path) {
-      return `https://image.tmdb.org/t/p/w500/${path}`;
+      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
     },
     handleScroll() {
       const bottomOfWindow =
@@ -128,13 +124,16 @@ export default {
         this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
       }
     },
+    getPosterUrl(path) {
+      return `https://image.tmdb.org/t/p/w500/${path}`;
+    },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 리스너 추가
+    window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll); // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -154,36 +153,32 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 최소 크기를 줄여 한 행에 더 많은 카드 표시 */
-  gap: 10px; /* 카드 간격 */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
 }
 
 .movie-card {
   text-align: center;
   background-color: #1e1e1e;
-  padding: 5px;
+  padding: 10px;
   border-radius: 8px;
 }
 
 .movie-poster {
   width: 100%;
-  height: 200px; /* 고정 높이 설정 */
+  height: 200px;
   border-radius: 8px;
-  margin-bottom: 5px;
-  object-fit: cover; /* 이미지 비율 유지 */
+  margin-bottom: 10px;
+  object-fit: cover;
 }
 
 .movie-title {
-  font-size: 12px; /* 텍스트 크기 조정 */
+  font-size: 14px;
   color: white;
-  overflow: hidden; /* 긴 제목 잘림 처리 */
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .loading {
   text-align: center;
-  color: white;
   margin: 20px 0;
 }
 </style>

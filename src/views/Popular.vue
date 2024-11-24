@@ -1,120 +1,89 @@
 <template>
-  <div class="popular" @scroll="handleScroll">
+  <div class="popular">
     <!-- Navbar -->
     <Navbar />
 
-    <!-- View Toggle Buttons -->
-    <div class="view-toggle">
-      <button
-        :class="{ active: viewMode === 'table' }"
-        @click="changeViewMode('table')"
-      >
-        Table View
-      </button>
-      <button
-        :class="{ active: viewMode === 'infinite' }"
-        @click="changeViewMode('infinite')"
-      >
-        무한 스크롤 View
-      </button>
-    </div>
-
     <!-- Main Content -->
     <div class="content">
-      <h1>대세 콘텐츠</h1>
+      <h1>인기 영화</h1>
 
       <!-- 영화 리스트 -->
       <div class="movie-grid">
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <div class="movie-card" v-for="movie in visibleMovies" :key="movie.id">
+          <img
+            class="movie-poster"
+            :src="getImageUrl(movie.poster_path)"
+            :alt="movie.title"
+          />
+          <div class="movie-title">{{ movie.title }}</div>
+        </div>
       </div>
 
-      <!-- Pagination (Table View 전용) -->
-      <Pagination
-        v-if="viewMode === 'table'"
-        :currentPage="currentPage"
-        :totalPages="totalPages"
-        @change-page="fetchMovies"
-      />
-
-      <!-- Loading Spinner -->
-      <div v-if="loading && viewMode === 'infinite'" class="loading">
-        로딩 중...
+      <!-- Pagination -->
+      <div class="pagination">
+        <button
+          class="page-button"
+          :disabled="currentPage === 1"
+          @click="prevPage"
+        >
+          이전
+        </button>
+        <span>{{ currentPage }} / {{ totalPages }}</span>
+        <button
+          class="page-button"
+          :disabled="currentPage === totalPages"
+          @click="nextPage"
+        >
+          다음
+        </button>
       </div>
-
-      <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
-        위로
-      </button>
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import MovieCard from "@/components/MovieCard.vue";
-import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "../api/movies";
+import { fetchPopularMovies } from "@/api/movies";
 
 export default {
   name: "Popular",
   components: {
     Navbar,
-    MovieCard,
-    Pagination,
   },
   data() {
     return {
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
-      loading: false,
-      showScrollTopButton: false,
+      movies: [], // 전체 영화 데이터
+      currentPage: 1, // 현재 페이지
+      moviesPerPage: 8, // 한 페이지당 영화 개수
     };
   },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.movies.length / this.moviesPerPage); // 전체 페이지 수 계산
+    },
+    visibleMovies() {
+      const startIndex = (this.currentPage - 1) * this.moviesPerPage;
+      const endIndex = startIndex + this.moviesPerPage;
+      return this.movies.slice(startIndex, endIndex); // 현재 페이지에 표시할 영화
+    },
+  },
   methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.loading) return;
-      this.loading = true;
-
-      const data = await fetchPopularMovies(page);
-
-      if (append) {
-        this.movies = [...this.movies, ...data.results];
-      } else {
-        this.movies = data.results;
-      }
-
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
-      this.loading = false;
+    async fetchMovies() {
+      const data = await fetchPopularMovies(); // TMDB API 호출
+      this.movies = data.results; // 전체 영화 데이터 저장
     },
-    changeViewMode(mode) {
-      this.viewMode = mode;
-      this.movies = []; // 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지부터 다시 로드
-      this.fetchMovies();
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--; // 이전 페이지 이동
     },
-    handleScroll() {
-      const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-
-      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
-      }
-
-      this.showScrollTopButton = window.scrollY > 300;
+    nextPage() {
+      if (this.currentPage < this.totalPages) this.currentPage++; // 다음 페이지 이동
     },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    getImageUrl(path) {
+      return `https://image.tmdb.org/t/p/w500${path}`; // 포스터 URL 생성
     },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -123,51 +92,56 @@ export default {
 .popular {
   padding: 20px;
   background-color: #121212;
-  color: #fff;
+  color: white;
   min-height: 100vh;
 }
 
-.view-toggle {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.view-toggle button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin: 0 5px;
-  border-radius: 4px;
-}
-
-.view-toggle button.active {
-  background-color: #e50914;
+.content {
+  text-align: center;
 }
 
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+  justify-items: center;
+  margin: 20px auto;
 }
 
-.loading {
+.movie-card {
+  width: 150px;
   text-align: center;
-  margin: 20px 0;
-  color: white;
 }
 
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e50914;
-  color: #fff;
+.movie-poster {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.movie-title {
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.page-button {
+  background-color: #333;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
+  padding: 10px 15px;
+  margin: 0 10px;
   cursor: pointer;
+  border-radius: 4px;
+}
+
+.page-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 </style>

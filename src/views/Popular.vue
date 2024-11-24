@@ -8,11 +8,7 @@
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <div
-        v-for="movie in currentMovies"
-        :key="movie.id"
-        class="movie-card"
-      >
+      <div v-for="movie in currentMovies" :key="movie.id" class="movie-card">
         <img :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
         <div class="movie-title">{{ movie.title }}</div>
       </div>
@@ -40,7 +36,7 @@ export default {
     return {
       movies: [],
       currentPage: 1,
-      moviesPerPage: 14, // 한 페이지에 표시할 영화 수
+      moviesPerPage: 10, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
@@ -115,6 +111,8 @@ body {
   gap: 20px;
   padding: 20px; /* 간격 추가 */
   flex-grow: 1;
+  justify-items: center; /* 중앙 정렬 */
+  align-items: center;
 }
 
 /* 영화 카드 */
@@ -124,6 +122,7 @@ body {
   border-radius: 8px;
   overflow: hidden;
   transition: transform 0.3s;
+  max-width: 200px;
 }
 
 .movie-card:hover {
@@ -132,7 +131,7 @@ body {
 
 .movie-card img {
   width: 100%;
-  height: 200px;
+  height: 250px;
   object-fit: cover;
 }
 

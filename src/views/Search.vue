@@ -1,8 +1,8 @@
 <template>
-  <div class="search-page" @scroll="handleScroll">
+  <div class="search-page">
     <!-- Navbar -->
     <Navbar />
-  
+
     <!-- 검색 기능 및 영화 리스트 -->
     <h1>영화 검색</h1>
     <div class="dropdown-container">
@@ -23,7 +23,7 @@
       </div>
       <button class="clear-options" @click="clearOptions">초기화</button>
     </div>
-  
+
     <!-- 영화 리스트 -->
     <div class="movie-grid">
       <div class="movie-card" v-for="movie in movies" :key="movie.id">
@@ -85,25 +85,30 @@ export default {
       this.isFetching = true;
       this.loading = true;
 
-      const filters = {
-        genre: this.selectedOptions.originalLanguage,
-        rating: this.selectedOptions.translationLanguage,
-        language: this.selectedOptions.sorting,
-        page,
-      };
+      try {
+        const filters = {
+          genre: this.selectedOptions.originalLanguage,
+          rating: this.selectedOptions.translationLanguage,
+          language: this.selectedOptions.sorting,
+          page,
+        };
 
-      const data = await fetchMovies(filters);
+        const data = await fetchMovies(filters);
 
-      if (append) {
-        this.movies = [...this.movies, ...data]; // 추가 데이터를 기존 데이터에 결합
-      } else {
-        this.movies = data; // 새로운 데이터로 갱신
+        if (append) {
+          this.movies = [...this.movies, ...data.results]; // 추가 데이터를 기존 데이터에 결합
+        } else {
+          this.movies = data.results; // 새로운 데이터로 갱신
+        }
+
+        this.currentPage = page;
+        this.totalPages = data.total_pages;
+      } catch (error) {
+        console.error("영화 데이터를 불러오는 중 오류 발생:", error);
+      } finally {
+        this.loading = false;
+        this.isFetching = false;
       }
-
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
-      this.loading = false;
-      this.isFetching = false;
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -122,7 +127,7 @@ export default {
     },
     handleScroll() {
       const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+        window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
 
       if (bottomOfWindow && this.currentPage < this.totalPages) {
         this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드

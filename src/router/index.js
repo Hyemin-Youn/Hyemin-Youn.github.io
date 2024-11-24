@@ -5,7 +5,7 @@ import Wishlist from '../views/WishList.vue';
 import store from '../store';
 import MovieDetail from "@/views/MovieDetail.vue";
 import SliderContent from '../components/SliderContent.vue';
-import Popular from "../views/Popular.vue";
+import Popular from "@/views/Popular.vue";
 
 const routes = [
   { 

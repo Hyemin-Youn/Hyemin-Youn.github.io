@@ -1,33 +1,62 @@
 <template>
-    <div>
-      <h1>Popular Movies</h1>
-      <ToggleViewButton @toggle-view="changeView" />
-      <PopularTableView v-if="viewType === 'table'" />
-      <PopularInfiniteScroll v-if="viewType === 'infinite'" />
+    <div class="popular">
+      <h1>인기 영화</h1>
+      <div class="movie-grid">
+        <MovieCard
+          v-for="movie in movies"
+          :key="movie.id"
+          :movie="movie"
+        />
+      </div>
+      <Pagination
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @change-page="fetchMovies"
+      />
     </div>
   </template>
   
   <script>
-  import PopularTableView from '@/components/PopularTableView.vue';
-  import PopularInfiniteScroll from '@/components/PopularInfiniteScroll.vue';
-  import ToggleViewButton from '@/components/ToggleViewButton.vue';
+  import MovieCard from '@/components/MovieCard';
+  import Pagination from '@/components/Pagination';
+  import { fetchPopularMovies } from '@/api/movies';
   
   export default {
     components: {
-      PopularTableView,
-      PopularInfiniteScroll,
-      ToggleViewButton,
+      MovieCard,
+      Pagination,
     },
     data() {
       return {
-        viewType: 'table',
+        movies: [],
+        currentPage: 1,
+        totalPages: 1,
       };
     },
     methods: {
-      changeView(type) {
-        this.viewType = type;
+      async fetchMovies(page = 1) {
+        const data = await fetchPopularMovies(page);
+        this.movies = data.results;
+        this.currentPage = page;
+        this.totalPages = data.total_pages;
       },
+    },
+    created() {
+      this.fetchMovies();
     },
   };
   </script>
+  
+  <style scoped>
+  .popular {
+    padding: 20px;
+    background-color: #121212;
+    color: #fff;
+  }
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  </style>
   

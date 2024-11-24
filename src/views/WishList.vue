@@ -54,7 +54,6 @@ export default {
 /* Navbar 높이에 따라 아래 컨텐츠를 배치 */
 .wishlist {
   padding: 20px;
-  margin-top: 60px; /* Navbar 높이 */
   color: #fff;
 }
 

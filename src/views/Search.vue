@@ -1,5 +1,5 @@
 <template>
-  <div class="search-page">
+  <div class="search-page" @scroll="handleScroll">
     <Navbar />
     <div class="content">
       <h1>영화 검색</h1>
@@ -27,12 +27,8 @@
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
-      <!-- Pagination -->
-      <Pagination
-        :currentPage="currentPage"
-        :totalPages="totalPages"
-        @change-page="fetchMovies"
-      />
+      <!-- 로딩 표시 -->
+      <div v-if="loading" class="loading">로딩 중...</div>
     </div>
   </div>
 </template>
@@ -40,20 +36,20 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import Pagination from "@/components/Pagination.vue";
 import { fetchMovies } from "@/api/movies";
 
 export default {
   components: {
     Navbar,
     MovieCard,
-    Pagination,
   },
   data() {
     return {
       movies: [],
       currentPage: 1,
       totalPages: 1,
+      loading: false,
+      isFetching: false, // 중복 요청 방지 플래그
       selectedOptions: {
         originalLanguage: "장르 (전체)",
         translationLanguage: "평점 (전체)",
@@ -63,17 +59,40 @@ export default {
     };
   },
   methods: {
-    async fetchMovies(page = 1) {
+    async fetchMovies(page = 1, append = false) {
+      if (this.isFetching) return;
+      this.isFetching = true; // 중복 요청 방지
+      this.loading = true;
+
+      const genreMapping = {
+        "장르 (전체)": null,
+        Action: 28,
+        Comedy: 35,
+        Drama: 18,
+      };
+
       const filters = {
-        genre: this.selectedOptions.originalLanguage,
+        genre: genreMapping[this.selectedOptions.originalLanguage],
         rating: this.selectedOptions.translationLanguage,
         language: this.selectedOptions.sorting,
         page,
       };
-      const data = await fetchMovies(filters);
-      this.movies = data.results;
-      this.totalPages = data.total_pages;
-      this.currentPage = page;
+
+      try {
+        const data = await fetchMovies(filters);
+        if (append) {
+          this.movies = [...this.movies, ...data.results];
+        } else {
+          this.movies = data.results;
+        }
+        this.totalPages = data.total_pages;
+        this.currentPage = page;
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        this.loading = false;
+        this.isFetching = false;
+      }
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -90,9 +109,21 @@ export default {
       };
       this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
     },
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+      }
+    },
   },
   created() {
     this.fetchMovies();
+    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll); // 이벤트 제거
   },
 };
 </script>
@@ -102,6 +133,7 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
+  overflow-y: auto;
 }
 
 .content {
@@ -118,5 +150,11 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+}
+
+.loading {
+  text-align: center;
+  margin-top: 20px;
+  color: white;
 }
 </style>

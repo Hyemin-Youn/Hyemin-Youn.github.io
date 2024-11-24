@@ -1,60 +1,3 @@
-<template>
-  <div class="popular">
-    <!-- Navbar -->
-    <Navbar />
-
-    <!-- View Toggle Buttons -->
-    <div class="view-toggle">
-      <button
-        :class="{ active: viewMode === 'table' }"
-        @click="changeViewMode('table')"
-      >
-        Table View
-      </button>
-      <button
-        :class="{ active: viewMode === 'infinite' }"
-        @click="changeViewMode('infinite')"
-      >
-        무한 스크롤 View
-      </button>
-    </div>
-
-    <!-- Main Content -->
-    <div class="content">
-      <!-- 영화 리스트 -->
-      <div class="movie-grid">
-        <MovieCard
-          v-for="movie in paginatedMovies"
-          :key="movie.id"
-          :movie="movie"
-        />
-      </div>
-
-      <!-- Pagination for Table View -->
-      <div
-        v-if="viewMode === 'table'"
-        class="pagination"
-      >
-        <button @click="changePage('prev')" :disabled="currentPage === 1">
-          이전
-        </button>
-        <span>{{ currentPage }} / {{ totalPages }}</span>
-        <button
-          @click="changePage('next')"
-          :disabled="currentPage === totalPages"
-        >
-          다음
-        </button>
-      </div>
-
-      <!-- Loading Spinner for Infinite Scroll -->
-      <div v-if="loading && viewMode === 'infinite'" class="loading">
-        로딩 중...
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
@@ -70,7 +13,7 @@ export default {
     return {
       movies: [], // 모든 영화 데이터
       currentPage: 1, // 현재 페이지
-      itemsPerPage: 9, // 한 페이지에 표시할 영화 수
+      itemsPerPage: 8, // 한 페이지에 표시할 영화 수
       totalPages: 1, // 전체 페이지 수
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
       loading: false, // 무한 스크롤 로딩 상태
@@ -113,13 +56,11 @@ export default {
     changeViewMode(mode) {
       this.viewMode = mode;
       if (mode === "table") {
-        // Table View: 스크롤 제거
-        document.body.setAttribute("style", "overflow-y: hidden");
+        document.body.style.overflowY = "hidden"; // Table View: 스크롤 제거
         this.currentPage = 1; // 페이지 초기화
         this.fetchMovies(); // 영화 데이터 로드
       } else {
-        // Infinite Scroll: 스크롤 복원
-        document.body.setAttribute("style", "overflow-y: auto");
+        document.body.style.overflowY = "auto"; // Infinite Scroll: 스크롤 복원
         this.fetchMovies(); // 영화 데이터 로드
       }
     },
@@ -137,11 +78,11 @@ export default {
   created() {
     this.fetchMovies(); // 초기 데이터 로드
     window.addEventListener("scroll", this.handleScroll); // 무한 스크롤 이벤트 등록
-    document.body.setAttribute("style", "overflow-y: hidden"); // 초기 Table View 스크롤 제거
+    document.body.style.overflowY = "hidden"; // 초기 Table View 스크롤 제거
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.handleScroll); // 이벤트 해제
-    document.body.setAttribute("style", "overflow-y: auto"); // 스크롤 상태 복원
+    document.body.style.overflowY = "auto"; // 스크롤 상태 복원
   },
 };
 </script>
@@ -176,11 +117,11 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* 고정된 4열 그리드 */
   gap: 20px;
   justify-items: center;
-  align-items: center;
-  height: calc(100vh - 100px); /* 전체 높이에서 상단과 하단 여백 제외 */
+  align-items: start;
+  height: auto; /* 콘텐츠에 맞게 자동 조정 */
 }
 
 .pagination {

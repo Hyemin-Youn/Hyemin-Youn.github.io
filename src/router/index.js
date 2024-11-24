@@ -38,6 +38,11 @@ const routes = [
     name: 'SliderContent',
     component: SliderContent, 
   },
+  {
+    path: '/popular',
+    name: 'Popular',
+    component: Popular,
+  },
 ];
 
 const router = createRouter({

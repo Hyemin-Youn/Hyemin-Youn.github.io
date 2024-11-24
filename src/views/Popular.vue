@@ -1,5 +1,5 @@
 <template>
-  <div class="popular">
+  <div class="popular" :style="viewMode === 'table' ? { overflow: 'hidden' } : {}">
     <!-- Navbar -->
     <Navbar />
 
@@ -35,6 +35,16 @@
         :totalPages="totalPages"
         @change-page="fetchMovies"
       />
+
+      <!-- Loading Spinner -->
+      <div v-if="loading && viewMode === 'infinite'" class="loading">
+        로딩 중...
+      </div>
+
+      <!-- 맨 위로 올라가기 버튼 -->
+      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+        위로
+      </button>
     </div>
   </div>
 </template>
@@ -54,29 +64,65 @@ export default {
   },
   data() {
     return {
-      movies: [], // 영화 데이터
+      movies: [],
       currentPage: 1,
       totalPages: 1,
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
       loading: false,
+      showScrollTopButton: false,
     };
   },
   methods: {
-    async fetchMovies(page = 1) {
+    async fetchMovies(page = 1, append = false) {
+      if (this.loading) return;
+      this.loading = true;
+
       const data = await fetchPopularMovies(page);
-      this.movies = data.results;
+
+      if (append) {
+        this.movies = [...this.movies, ...data.results];
+      } else {
+        this.movies = data.results;
+      }
+
       this.currentPage = page;
       this.totalPages = data.total_pages;
+      this.loading = false;
     },
     changeViewMode(mode) {
       this.viewMode = mode;
-      this.movies = [];
-      this.currentPage = 1;
+      this.movies = []; // 데이터를 초기화
+      this.currentPage = 1; // 첫 페이지부터 다시 로드
       this.fetchMovies();
+
+      // 스크롤 제거/복원
+      if (mode === "table") {
+        document.body.style.overflow = "hidden"; // 스크롤 비활성화
+      } else {
+        document.body.style.overflow = ""; // 스크롤 복원
+      }
+    },
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
+      }
+
+      this.showScrollTopButton = window.scrollY > 300;
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
+    document.body.style.overflow = ""; // 컴포넌트 해제 시 스크롤 복원
   },
 };
 </script>
@@ -86,26 +132,7 @@ export default {
   padding: 20px;
   background-color: #121212;
   color: #fff;
-  height: 100vh; /* 전체 화면 높이 */
-  overflow: hidden; /* 스크롤 제거 */
-  display: flex;
-  flex-direction: column;
-}
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 열의 수 조정 */
-  gap: 10px;
-  justify-items: center; /* 그리드 아이템 가운데 정렬 */
-  height: calc(100vh - 150px); /* 페이지 상단과 하단 여백을 제외한 높이 */
-  overflow: hidden;
+  min-height: 100vh;
 }
 
 .view-toggle {
@@ -128,9 +155,27 @@ export default {
   background-color: #e50914;
 }
 
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
 .loading {
   text-align: center;
   margin: 20px 0;
   color: white;
+}
+
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-    <div class="search-container">
+    <div class="search-page">
       <h1>영화 검색</h1>
       <div class="dropdown-container">
-        <label>선호하는 설정을 선택하세요:</label>
+        <label>선호하는 설정을 선택하세요</label>
         <div
           v-for="dropdown in dropdownEntries"
           :key="dropdown.key"
@@ -27,12 +27,30 @@
             </div>
           </div>
         </div>
+        <button class="clear-options" @click="clearOptions">초기화</button>
       </div>
-      <button class="clear-options" @click="clearOptions">초기화</button>
+  
+      <!-- 영화 목록 -->
+      <div class="movie-grid">
+        <div
+          class="movie-card"
+          v-for="movie in movies"
+          :key="movie.id"
+        >
+          <img
+            class="movie-poster"
+            :src="getPosterUrl(movie.poster_path)"
+            :alt="movie.title"
+          />
+          <div class="movie-title">{{ movie.title }}</div>
+        </div>
+      </div>
     </div>
   </template>
   
   <script>
+  import { fetchMovies } from "@/api/movies";
+  
   export default {
     name: "Search",
     data() {
@@ -40,7 +58,7 @@
         dropdowns: {
           originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
           translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
-          sorting: ["언어 (전체)", "영어", "한국어"],
+          sorting: ["언어 (전체)", "en", "ko"],
         },
         DEFAULT_OPTIONS: {
           originalLanguage: "장르 (전체)",
@@ -53,6 +71,7 @@
           sorting: "언어 (전체)",
         },
         activeDropdown: null,
+        movies: [],
       };
     },
     computed: {
@@ -64,6 +83,14 @@
       },
     },
     methods: {
+      async fetchMovies() {
+        const filters = {
+          genre: this.selectedOptions.originalLanguage,
+          rating: this.selectedOptions.translationLanguage,
+          language: this.selectedOptions.sorting,
+        };
+        this.movies = await fetchMovies(filters);
+      },
       toggleDropdown(key) {
         this.activeDropdown = this.activeDropdown === key ? null : key;
       },
@@ -73,32 +100,40 @@
           [key]: option,
         };
         this.activeDropdown = null;
-        this.$emit("change-options", this.selectedOptions);
+        this.fetchMovies(); // 옵션 변경 시 영화 검색
       },
       clearOptions() {
         this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-        this.$emit("change-options", this.selectedOptions);
+        this.fetchMovies(); // 초기화 후 영화 검색
       },
+      getPosterUrl(path) {
+        return `https://image.tmdb.org/t/p/w500/${path}`;
+      },
+    },
+    created() {
+      this.fetchMovies(); // 페이지 로드 시 초기 영화 목록 가져오기
     },
   };
   </script>
   
   <style scoped>
-  .search-container {
+  .search-page {
     padding: 20px;
+    color: white;
+    background-color: #121212;
   }
   
   .dropdown-container {
-    margin-top: 0;
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     gap: 15px;
+    margin-bottom: 20px;
   }
   
   .custom-select {
-    min-width: 200px;
     position: relative;
     display: inline-block;
+    min-width: 150px;
   }
   
   .select-selected {
@@ -106,23 +141,18 @@
     color: white;
     padding: 10px;
     border: 1px solid #fff;
-    font-size: 16px;
     cursor: pointer;
   }
   
   .select-items {
-    display: block;
     position: absolute;
     background-color: #333;
     border: 1px solid #fff;
     z-index: 99;
-    top: 100%;
-    left: 0;
-    right: 0;
+    width: 100%;
   }
   
   .select-items div {
-    color: white;
     padding: 10px;
     cursor: pointer;
   }
@@ -131,38 +161,36 @@
     background-color: #575757;
   }
   
-  .select-arrow-active:after {
-    content: "\25B2";
-    position: absolute;
-    right: 10px;
-    top: 14px;
-  }
-  
-  .select-selected:after {
-    content: "\25BC";
-    position: absolute;
-    right: 10px;
-    top: 14px;
-  }
-  
-  .select-selected.select-arrow-active:after {
-    content: "\25B2";
-  }
-  
   .clear-options {
-    min-width: 120px;
     background-color: black;
     color: white;
     padding: 10px;
     border: 1px solid #fff;
-    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    border-radius: 0 !important;
   }
   
-  .clear-options:hover {
-    background-color: #333;
+  .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  
+  .movie-card {
+    text-align: center;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  
+  .movie-poster {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .movie-title {
+    color: white;
+    font-size: 14px;
   }
   </style>
   

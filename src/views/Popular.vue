@@ -159,8 +159,13 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 열 개수 자동 조정 */
+  grid-auto-rows: calc((100vh - 150px) / 3); /* 행 높이 동적 계산 */
   gap: 20px;
+  justify-items: center;
+  align-items: center;
+  height: calc(100vh - 150px); /* 전체 높이 - 여백 */
+  overflow: hidden; /* 스크롤 제거 */
 }
 
 .loading {

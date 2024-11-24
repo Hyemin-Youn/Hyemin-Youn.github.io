@@ -6,6 +6,9 @@ import store from '../store';
 import MovieDetail from "@/views/MovieDetail.vue";
 import SliderContent from '../components/SliderContent.vue';
 import Popular from "@/views/Popular.vue";
+import Search from "@/views/Search.vue";
+
+
 
 const routes = [
   { 
@@ -42,6 +45,11 @@ const routes = [
     path: '/popular',
     name: 'Popular',
     component: Popular,
+  },
+  {
+    path: "/search",
+    name: "Search",
+    component: Search,
   },
 ];
 

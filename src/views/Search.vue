@@ -1,114 +1,158 @@
 <template>
-    <div class="search-page">
+    <div class="search-page" @scroll="handleScroll">
       <!-- Navbar -->
       <Navbar />
   
-      <!-- Filter Options -->
-      <div class="filter-container">
-        <h2>선호하는 설정을 선택하세요</h2>
-        <div class="dropdown-container">
-          <div v-for="(options, key) in dropdowns" :key="key" class="custom-select">
-            <div class="select-selected" @click="toggleDropdown(key)">
-              {{ selectedOptions[key] }}
-            </div>
-            <div v-if="activeDropdown === key" class="select-items">
-              <div
-                v-for="option in options"
-                :key="option"
-                @click="selectOption(key, option)"
-              >
-                {{ option }}
-              </div>
+      <!-- 검색 기능 -->
+      <h1>영화 검색</h1>
+      <div class="dropdown-container">
+        <label>선호하는 설정을 선택하세요</label>
+        <div
+          v-for="dropdown in dropdownEntries"
+          :key="dropdown.key"
+          class="custom-select"
+        >
+          <div class="select-selected" @click="toggleDropdown(dropdown.key)">
+            {{ selectedOptions[dropdown.key] }}
+          </div>
+          <div
+            v-if="activeDropdown === dropdown.key"
+            class="select-items"
+          >
+            <div
+              v-for="option in dropdown.options"
+              :key="option"
+              @click="selectOption(dropdown.key, option)"
+            >
+              {{ option }}
             </div>
           </div>
-          <button class="clear-options" @click="clearOptions">초기화</button>
+        </div>
+        <button class="clear-options" @click="clearOptions">초기화</button>
+      </div>
+  
+      <!-- 영화 리스트 -->
+      <div class="movie-grid">
+        <div
+          class="movie-card"
+          v-for="movie in movies"
+          :key="movie.id"
+        >
+          <img
+            class="movie-poster"
+            :src="getPosterUrl(movie.poster_path)"
+            :alt="movie.title"
+          />
+          <div class="movie-title">{{ movie.title }}</div>
         </div>
       </div>
   
-      <!-- Movie Grid -->
-      <div class="movie-grid">
-        <MovieCard
-          v-for="movie in filteredMovies"
-          :key="movie.id"
-          :movie="movie"
-        />
-      </div>
+      <!-- 로딩 표시 -->
+      <div v-if="loading" class="loading">로딩 중...</div>
     </div>
   </template>
   
   <script>
   import Navbar from "@/components/Navbar.vue";
-  import MovieCard from "@/components/MovieCard.vue";
-  import { fetchMoviesByCategory } from "@/api/movies";
+  import { fetchMovies } from "@/api/movies";
   
   export default {
     name: "Search",
     components: {
       Navbar,
-      MovieCard,
     },
     data() {
       return {
         dropdowns: {
-          genre: ["장르 (전체)", "액션", "코미디", "드라마"],
-          rating: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6"],
-          language: ["언어 (전체)", "한국어", "영어", "일본어"],
+          originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
+          translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
+          sorting: ["언어 (전체)", "en", "ko"],
+        },
+        DEFAULT_OPTIONS: {
+          originalLanguage: "장르 (전체)",
+          translationLanguage: "평점 (전체)",
+          sorting: "언어 (전체)",
         },
         selectedOptions: {
-          genre: "장르 (전체)",
-          rating: "평점 (전체)",
-          language: "언어 (전체)",
+          originalLanguage: "장르 (전체)",
+          translationLanguage: "평점 (전체)",
+          sorting: "언어 (전체)",
         },
         activeDropdown: null,
         movies: [],
-        filteredMovies: [],
+        currentPage: 1,
+        totalPages: 1,
+        loading: false,
+        isFetching: false, // 중복 요청 방지 플래그
       };
     },
+    computed: {
+      dropdownEntries() {
+        return Object.entries(this.dropdowns).map(([key, options]) => ({
+          key,
+          options,
+        }));
+      },
+    },
     methods: {
+      async fetchMovies(page = 1, append = false) {
+        if (this.isFetching) return;
+        this.isFetching = true; // 중복 요청 방지
+        this.loading = true;
+  
+        const filters = {
+          genre: this.selectedOptions.originalLanguage,
+          rating: this.selectedOptions.translationLanguage,
+          language: this.selectedOptions.sorting,
+          page,
+        };
+  
+        const data = await fetchMovies(filters);
+  
+        if (append) {
+          this.movies = [...this.movies, ...data]; // 추가 데이터 결합
+        } else {
+          this.movies = data; // 새로운 데이터로 갱신
+        }
+  
+        this.currentPage = page;
+        this.totalPages = data.total_pages;
+        this.loading = false;
+        this.isFetching = false;
+      },
       toggleDropdown(key) {
         this.activeDropdown = this.activeDropdown === key ? null : key;
       },
       selectOption(key, option) {
-        this.selectedOptions[key] = option;
+        this.selectedOptions = {
+          ...this.selectedOptions,
+          [key]: option,
+        };
         this.activeDropdown = null;
-        this.filterMovies();
+        this.fetchMovies(1); // 옵션 변경 시 첫 페이지 데이터 로드
       },
       clearOptions() {
-        this.selectedOptions = {
-          genre: "장르 (전체)",
-          rating: "평점 (전체)",
-          language: "언어 (전체)",
-        };
-        this.filterMovies();
+        this.selectedOptions = { ...this.DEFAULT_OPTIONS };
+        this.fetchMovies(1); // 초기화 후 첫 페이지 데이터 로드
       },
-      async fetchMovies() {
-        const data = await fetchMoviesByCategory();
-        this.movies = data.results;
-        this.filteredMovies = data.results;
+      handleScroll() {
+        const bottomOfWindow =
+          window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+  
+        if (bottomOfWindow && this.currentPage < this.totalPages) {
+          this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+        }
       },
-      filterMovies() {
-        this.filteredMovies = this.movies.filter((movie) => {
-          const matchesGenre =
-            this.selectedOptions.genre === "장르 (전체)" ||
-            movie.genre.includes(this.selectedOptions.genre);
-          const matchesRating =
-            this.selectedOptions.rating === "평점 (전체)" ||
-            this.filterByRating(movie.vote_average);
-          const matchesLanguage =
-            this.selectedOptions.language === "언어 (전체)" ||
-            movie.original_language === this.selectedOptions.language;
-          return matchesGenre && matchesRating && matchesLanguage;
-        });
-      },
-      filterByRating(vote) {
-        const range = this.selectedOptions.rating.split("~");
-        const min = parseFloat(range[0]);
-        const max = parseFloat(range[1]);
-        return vote >= min && vote <= max;
+      getPosterUrl(path) {
+        return `https://image.tmdb.org/t/p/w500/${path}`;
       },
     },
     created() {
-      this.fetchMovies();
+      this.fetchMovies(); // 초기 데이터 로드
+      window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
+    },
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll); // 이벤트 제거
     },
   };
   </script>

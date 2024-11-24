@@ -21,8 +21,6 @@
 
     <!-- Main Content -->
     <div class="content">
-      <h1>대세 콘텐츠</h1>
-
       <!-- 영화 리스트 -->
       <div class="movie-grid">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
@@ -42,7 +40,11 @@
       </div>
 
       <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+      <button
+        v-if="showScrollTopButton && viewMode === 'infinite'"
+        class="scroll-top"
+        @click="scrollToTop"
+      >
         위로
       </button>
     </div>

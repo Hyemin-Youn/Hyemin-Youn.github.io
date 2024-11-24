@@ -1,41 +1,18 @@
 <template>
   <div class="popular">
-    <!-- Navbar -->
     <Navbar />
-
-    <!-- View Toggle Buttons -->
     <div class="view-toggle">
-      <button
-        :class="{ active: viewMode === 'table' }"
-        @click="changeViewMode('table')"
-      >
-        Table View
-      </button>
-      <button
-        :class="{ active: viewMode === 'infinite' }"
-        @click="changeViewMode('infinite')"
-      >
-        무한 스크롤 View
-      </button>
+      <button class="active">Table View</button>
     </div>
-
-    <!-- Main Content -->
     <div class="content">
       <h1>대세 콘텐츠</h1>
-
-      <!-- Table View -->
-      <div v-if="viewMode === 'table'" class="movie-grid">
-        <MovieCard v-for="movie in visibleMovies" :key="movie.id" :movie="movie" />
+      <div class="movie-grid">
+        <div v-for="movie in visibleMovies" :key="movie.id" class="movie-card">
+          <img :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
+          <div class="movie-title">{{ movie.title }}</div>
+        </div>
       </div>
-
-      <!-- Infinite Scroll View -->
-      <div v-if="viewMode === 'infinite'" class="movie-grid">
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
-        <div v-if="loading" class="loading">로딩 중...</div>
-      </div>
-
-      <!-- Pagination (Table View 전용) -->
-      <div v-if="viewMode === 'table'" class="pagination">
+      <div class="pagination">
         <button @click="prevPage" :disabled="currentPage === 1">&lt; 이전</button>
         <span>{{ currentPage }} / {{ totalPages }}</span>
         <button @click="nextPage" :disabled="currentPage === totalPages">다음 &gt;</button>
@@ -46,62 +23,45 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import MovieCard from "@/components/MovieCard.vue";
 import { fetchPopularMovies } from "@/api/movies";
 
 export default {
-  name: "Popular",
-  components: {
-    Navbar,
-    MovieCard,
-  },
+  components: { Navbar },
   data() {
     return {
       movies: [],
       currentPage: 1,
-      totalPages: 1,
-      viewMode: "table",
-      loading: false,
-      moviesPerPage: 14,
+      rows: 2,
+      columns: 7,
     };
   },
   computed: {
     visibleMovies() {
-      const startIndex = (this.currentPage - 1) * this.moviesPerPage;
-      const endIndex = startIndex + this.moviesPerPage;
-      return this.movies.slice(startIndex, endIndex);
+      return this.movies.slice(0, this.rows * this.columns);
+    },
+    totalPages() {
+      return Math.ceil(this.movies.length / (this.rows * this.columns));
     },
   },
   methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.loading) return;
-      this.loading = true;
-
-      const data = await fetchPopularMovies(page);
-
-      if (append) {
-        this.movies = [...this.movies, ...data.results];
-      } else {
-        this.movies = data.results;
-      }
-
-      this.totalPages = Math.ceil(data.total_results / this.moviesPerPage);
-      this.loading = false;
-    },
-    changeViewMode(mode) {
-      this.viewMode = mode;
-      this.currentPage = 1;
-      this.fetchMovies();
+    async fetchMovies() {
+      const data = await fetchPopularMovies(this.currentPage);
+      this.movies = data.results;
     },
     prevPage() {
       if (this.currentPage > 1) {
         this.currentPage--;
+        this.fetchMovies();
       }
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
+        this.fetchMovies();
       }
+    },
+    getPosterUrl(path) {
+      return `https://image.tmdb.org/t/p/w500/${path}`;
     },
   },
   created() {
@@ -110,55 +70,46 @@ export default {
 };
 </script>
 
-
 <style scoped>
-/* 글로벌 스타일 */
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* 스크롤 막기 */
+  overflow: hidden; /* 스크롤 방지 */
+  height: 100%; /* 화면 전체 높이 사용 */
 }
-
 .popular {
   padding: 20px;
   background-color: #121212;
   color: #fff;
-  height: 100vh; /* 뷰포트 높이에 맞추기 */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between; /* 위아래 공간 조정 */
+  min-height: 100vh;
 }
-
-.content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%; /* 내용이 전체 높이에 맞도록 */
-}
-
 .movie-grid {
+  height: 100%;
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7개의 열 */
-  grid-template-rows: repeat(2, 1fr); /* 2개의 행 */
-  gap: 20px; /* 카드 간격 */
-  width: 100%; /* 그리드 너비를 100%로 */
-  height: 80%; /* 그리드 높이 조정 */
-  justify-items: center; /* 중앙 정렬 */
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+  justify-items: center;
+  align-items: center;
+  overflow: hidden;
 }
-
 .movie-card {
-  width: 150px; /* 카드 너비 고정 */
-  height: 220px; /* 카드 높이 고정 */
+  width: 150px;
+  transition: transform 0.3s;
 }
-
 .movie-card img {
   width: 100%;
-  height: 100%;
-  object-fit: cover; /* 이미지 비율 유지 */
+  border-radius: 4px;
+  object-fit: cover;
 }
-
-
+.movie-title {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 5px;
+}
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
 </style>

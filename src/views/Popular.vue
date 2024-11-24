@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" @scroll="handleScroll">
+  <div class="popular" style="overflow: hidden;">
     <!-- Navbar -->
     <Navbar />
 
@@ -125,6 +125,7 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
+  overflow: hidden; /* 스크롤 바 제거 */
 }
 
 .view-toggle {

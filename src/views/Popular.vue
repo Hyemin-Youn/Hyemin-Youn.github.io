@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" @scroll="handleScroll">
+  <div class="popular">
     <!-- Navbar -->
     <Navbar />
 
@@ -36,7 +36,7 @@
         @change-page="fetchMovies"
       />
 
-      <!-- Loading Spinner -->
+      <!-- Loading Spinner (Infinite Scroll 전용) -->
       <div v-if="loading && viewMode === 'infinite'" class="loading">
         로딩 중...
       </div>
@@ -64,57 +64,61 @@ export default {
   },
   data() {
     return {
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
+      movies: [], // 영화 데이터를 저장하는 배열
+      currentPage: 1, // 현재 페이지
+      totalPages: 1, // 전체 페이지 수
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
-      loading: false,
-      showScrollTopButton: false,
+      loading: false, // 데이터 로딩 상태
+      showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
     };
   },
   methods: {
+    // 영화 데이터를 TMDB API에서 가져오는 함수
     async fetchMovies(page = 1, append = false) {
-      if (this.loading) return;
+      if (this.loading) return; // 로딩 중일 때 중복 요청 방지
       this.loading = true;
 
-      const data = await fetchPopularMovies(page);
+      const data = await fetchPopularMovies(page); // TMDB API 호출
 
       if (append) {
-        this.movies = [...this.movies, ...data.results];
+        this.movies = [...this.movies, ...data.results]; // 추가 데이터 결합
       } else {
-        this.movies = data.results;
+        this.movies = data.results; // 새로운 데이터로 대체
       }
 
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
-      this.loading = false;
+      this.currentPage = page; // 현재 페이지 업데이트
+      this.totalPages = data.total_pages; // 총 페이지 수 업데이트
+      this.loading = false; // 로딩 상태 종료
     },
+    // View 모드 변경
     changeViewMode(mode) {
       this.viewMode = mode;
-      this.movies = []; // 데이터를 초기화
+      this.movies = []; // 영화 데이터를 초기화
       this.currentPage = 1; // 첫 페이지부터 다시 로드
-      this.fetchMovies();
+      this.fetchMovies(); // 데이터 재로드
     },
+    // 무한 스크롤 처리 함수
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
       if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
       }
 
-      this.showScrollTopButton = window.scrollY > 300;
+      this.showScrollTopButton = window.scrollY > 300; // 스크롤 상단 버튼 표시 여부
     },
+    // 페이지 상단으로 스크롤 이동
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll); // 스크롤 이벤트 제거
   },
 };
 </script>

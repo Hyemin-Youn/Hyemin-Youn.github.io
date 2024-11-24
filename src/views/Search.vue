@@ -1,9 +1,9 @@
 <template>
-    <div class="search-page">
+    <div class="search-page" @scroll="handleScroll">
       <!-- Navbar -->
       <Navbar />
   
-      <!-- 검색 기능 및 영화 리스트 -->
+      <!-- 검색 기능 -->
       <h1>영화 검색</h1>
       <div class="dropdown-container">
         <label>선호하는 설정을 선택하세요</label>
@@ -12,10 +12,7 @@
           :key="dropdown.key"
           class="custom-select"
         >
-          <div
-            class="select-selected"
-            @click="toggleDropdown(dropdown.key)"
-          >
+          <div class="select-selected" @click="toggleDropdown(dropdown.key)">
             {{ selectedOptions[dropdown.key] }}
           </div>
           <div
@@ -49,6 +46,9 @@
           <div class="movie-title">{{ movie.title }}</div>
         </div>
       </div>
+  
+      <!-- 로딩 표시 -->
+      <div v-if="loading" class="loading">로딩 중...</div>
     </div>
   </template>
   
@@ -80,6 +80,10 @@
         },
         activeDropdown: null,
         movies: [],
+        currentPage: 1,
+        totalPages: 1,
+        loading: false,
+        isFetching: false, // 중복 요청 방지 플래그
       };
     },
     computed: {
@@ -91,13 +95,30 @@
       },
     },
     methods: {
-      async fetchMovies() {
+      async fetchMovies(page = 1, append = false) {
+        if (this.isFetching) return;
+        this.isFetching = true; // 중복 요청 방지
+        this.loading = true;
+  
         const filters = {
           genre: this.selectedOptions.originalLanguage,
           rating: this.selectedOptions.translationLanguage,
           language: this.selectedOptions.sorting,
+          page,
         };
-        this.movies = await fetchMovies(filters);
+  
+        const data = await fetchMovies(filters);
+  
+        if (append) {
+          this.movies = [...this.movies, ...data]; // 추가 데이터 결합
+        } else {
+          this.movies = data; // 새로운 데이터로 갱신
+        }
+  
+        this.currentPage = page;
+        this.totalPages = data.total_pages;
+        this.loading = false;
+        this.isFetching = false;
       },
       toggleDropdown(key) {
         this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -108,22 +129,34 @@
           [key]: option,
         };
         this.activeDropdown = null;
-        this.fetchMovies(); // 옵션 변경 시 영화 검색
+        this.fetchMovies(1); // 옵션 변경 시 첫 페이지 데이터 로드
       },
       clearOptions() {
         this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-        this.fetchMovies(); // 초기화 후 영화 검색
+        this.fetchMovies(1); // 초기화 후 첫 페이지 데이터 로드
+      },
+      handleScroll() {
+        const bottomOfWindow =
+          window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+  
+        if (bottomOfWindow && this.currentPage < this.totalPages) {
+          this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+        }
       },
       getPosterUrl(path) {
         return `https://image.tmdb.org/t/p/w500/${path}`;
       },
     },
     created() {
-      this.fetchMovies(); // 페이지 로드 시 초기 영화 목록 가져오기
+      this.fetchMovies(); // 초기 데이터 로드
+      window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
+    },
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll); // 이벤트 제거
     },
   };
   </script>
-  
+
   <style scoped>
   .search-page {
     background-color: #121212;
@@ -159,6 +192,11 @@
   .movie-title {
     font-size: 14px;
     color: white;
+  }
+  .loading {
+    text-align: center;
+    color: white;
+    margin: 20px 0;
   }
   </style>
   

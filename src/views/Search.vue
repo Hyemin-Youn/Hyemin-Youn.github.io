@@ -1,5 +1,9 @@
 <template>
-  <div class="search-page" @scroll="handleScroll">
+  <div class="search-page">
+    <!-- Navbar -->
+    <Navbar />
+
+    <!-- 검색 기능 -->
     <h1>영화 검색</h1>
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
@@ -22,25 +26,29 @@
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <div v-for="movie in movies" :key="movie.id" class="movie-card">
-        <img :src="getPosterUrl(movie.poster_path)" :alt="movie.title" class="movie-poster" />
+      <div class="movie-card" v-for="movie in movies" :key="movie.id">
+        <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
         <div class="movie-title">{{ movie.title }}</div>
       </div>
     </div>
-
-    <!-- 로딩 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
   </div>
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
+import { fetchMovies } from "@/api/movies";
+
 export default {
+  name: "Search",
+  components: {
+    Navbar,
+  },
   data() {
     return {
       dropdowns: {
         originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
         translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
-        sorting: ["언어 (전체)", "영어", "한국어"],
+        sorting: ["언어 (전체)", "en", "ko"],
       },
       DEFAULT_OPTIONS: {
         originalLanguage: "장르 (전체)",
@@ -54,9 +62,6 @@ export default {
       },
       activeDropdown: null,
       movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      loading: false,
     };
   },
   computed: {
@@ -68,69 +73,35 @@ export default {
     },
   },
   methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.loading) return;
-      this.loading = true;
-
+    async fetchMovies() {
       const filters = {
         genre: this.selectedOptions.originalLanguage,
         rating: this.selectedOptions.translationLanguage,
         language: this.selectedOptions.sorting,
-        page,
       };
-
-      try {
-        const response = await fetch(
-          `https://api.example.com/movies?genre=${filters.genre}&rating=${filters.rating}&language=${filters.language}&page=${page}`
-        );
-        const data = await response.json();
-
-        if (append) {
-          this.movies = [...this.movies, ...data.results];
-        } else {
-          this.movies = data.results;
-        }
-
-        this.currentPage = page;
-        this.totalPages = data.total_pages;
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      } finally {
-        this.loading = false;
-      }
+      this.movies = await fetchMovies(filters);
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
     },
     selectOption(key, option) {
-      this.selectedOptions[key] = option;
+      this.selectedOptions = {
+        ...this.selectedOptions,
+        [key]: option,
+      };
       this.activeDropdown = null;
-      this.movies = [];
-      this.fetchMovies(1); // 첫 페이지부터 다시 로드
+      this.fetchMovies(); // 옵션 변경 시 영화 검색
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.movies = [];
-      this.fetchMovies(1); // 첫 페이지부터 다시 로드
+      this.fetchMovies(); // 초기화 후 영화 검색
     },
     getPosterUrl(path) {
       return `https://image.tmdb.org/t/p/w500/${path}`;
     },
-    handleScroll() {
-      const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-
-      if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 추가 로드
-      }
-    },
   },
   created() {
-    this.fetchMovies();
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    this.fetchMovies(); // 페이지 로드 시 초기 영화 목록 가져오기
   },
 };
 </script>
@@ -140,77 +111,61 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
-  padding: 20px;
-  overflow-y: auto;
+  padding: 0 10px; /* 양쪽 여백 추가 */
 }
 
 .dropdown-container {
+  margin: 20px 0;
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.custom-select {
-  position: relative;
-}
-
-.select-selected {
-  padding: 10px;
-  background-color: black;
-  color: white;
-  cursor: pointer;
-  border: 1px solid white;
-  border-radius: 4px;
-}
-
-.select-items {
-  position: absolute;
-  background-color: #333;
-  z-index: 100;
-  border: 1px solid white;
-  top: 100%;
-  left: 0;
-  right: 0;
-}
-
-.select-items div {
-  padding: 10px;
-  color: white;
-  cursor: pointer;
-}
-
-.select-items div:hover {
-  background-color: #575757;
+  flex-wrap: wrap; /* 화면 크기에 따라 줄바꿈 */
+  gap: 15px;
 }
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 카드 최소 크기 150px */
+  gap: 15px; /* 카드 간격 */
+  justify-content: center; /* 가운데 정렬 */
 }
 
 .movie-card {
-  background-color: #1e1e1e;
-  border-radius: 8px;
   text-align: center;
+  background-color: #1e1e1e;
   padding: 10px;
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.movie-card:hover {
+  transform: scale(1.05); /* 호버 시 확대 효과 */
 }
 
 .movie-poster {
   width: 100%;
-  height: 220px;
-  object-fit: cover;
+  height: 225px; /* 고정 높이 */
   border-radius: 8px;
+  object-fit: cover; /* 이미지 비율 유지 */
+  margin-bottom: 10px;
 }
 
 .movie-title {
-  margin-top: 10px;
-  color: white;
   font-size: 14px;
+  color: white;
+  overflow: hidden; /* 긴 제목 잘림 처리 */
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
-.loading {
-  text-align: center;
-  margin-top: 20px;
+.clear-options {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.clear-options:hover {
+  background-color: #333;
 }
 </style>

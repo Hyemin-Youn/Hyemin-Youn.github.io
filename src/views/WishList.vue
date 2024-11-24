@@ -1,7 +1,8 @@
 <template>
   <div class="wishlist">
-    <navbar />
-    
+    <!-- Navbar 추가 -->
+    <Navbar />
+
     <h2>내가 찜한 영화</h2>
     <div class="wishlist-movies">
       <div
@@ -24,11 +25,15 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
+import Navbar from "@/components/Navbar.vue"; // Navbar 컴포넌트 추가
 
 const makeImagePath = (path, size) =>
   `https://image.tmdb.org/t/p/${size}${path}`;
 
 export default {
+  components: {
+    Navbar, // Navbar 등록
+  },
   setup() {
     const store = useStore();
 
@@ -46,8 +51,10 @@ export default {
 </script>
 
 <style scoped>
+/* Navbar 높이에 따라 아래 컨텐츠를 배치 */
 .wishlist {
   padding: 20px;
+  margin-top: 60px; /* Navbar 높이 */
   color: #fff;
 }
 

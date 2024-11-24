@@ -3,87 +3,131 @@
     <!-- Navbar -->
     <Navbar />
 
+    <!-- View Toggle Buttons -->
+    <div class="view-toggle">
+      <button
+        :class="{ active: viewMode === 'table' }"
+        @click="changeViewMode('table')"
+      >
+        Table View
+      </button>
+      <button
+        :class="{ active: viewMode === 'infinite' }"
+        @click="changeViewMode('infinite')"
+      >
+        무한 스크롤 View
+      </button>
+    </div>
+
     <!-- Main Content -->
     <div class="content">
-      <h1>인기 영화</h1>
+      <h1>대세 콘텐츠</h1>
 
       <!-- 영화 리스트 -->
-      <div class="movie-grid">
-        <div class="movie-card" v-for="movie in visibleMovies" :key="movie.id">
-          <img
-            class="movie-poster"
-            :src="getImageUrl(movie.poster_path)"
-            :alt="movie.title"
-          />
-          <div class="movie-title">{{ movie.title }}</div>
-        </div>
+      <div v-if="viewMode === 'table'" class="movie-grid">
+        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
-      <!-- Pagination -->
-      <div class="pagination">
-        <button
-          class="page-button"
-          :disabled="currentPage === 1"
-          @click="prevPage"
-        >
-          이전
-        </button>
-        <span>{{ currentPage }} / {{ totalPages }}</span>
-        <button
-          class="page-button"
-          :disabled="currentPage === totalPages"
-          @click="nextPage"
-        >
-          다음
-        </button>
+      <div v-if="viewMode === 'infinite'" class="movie-grid">
+        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <div v-if="loading" class="loading">로딩 중...</div>
       </div>
+
+      <!-- Pagination (Table View 전용) -->
+      <div v-if="viewMode === 'table'" class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1">&lt; 이전</button>
+        <span>{{ currentPage }} / {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages">다음 &gt;</button>
+      </div>
+
+      <!-- 맨 위로 올라가기 버튼 (무한 스크롤 전용) -->
+      <button v-if="viewMode === 'infinite' && showScrollTopButton" class="scroll-top" @click="scrollToTop">
+        위로
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
+import MovieCard from "@/components/MovieCard.vue";
 import { fetchPopularMovies } from "@/api/movies";
 
 export default {
   name: "Popular",
   components: {
     Navbar,
+    MovieCard,
   },
   data() {
     return {
-      movies: [], // 전체 영화 데이터
+      movies: [], // 영화 데이터
       currentPage: 1, // 현재 페이지
-      moviesPerPage: 8, // 한 페이지당 영화 개수
+      totalPages: 1, // 총 페이지 수
+      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
+      loading: false, // 로딩 상태
+      showScrollTopButton: false, // 위로 버튼 표시 여부
     };
   },
-  computed: {
-    totalPages() {
-      return Math.ceil(this.movies.length / this.moviesPerPage); // 전체 페이지 수 계산
-    },
-    visibleMovies() {
-      const startIndex = (this.currentPage - 1) * this.moviesPerPage;
-      const endIndex = startIndex + this.moviesPerPage;
-      return this.movies.slice(startIndex, endIndex); // 현재 페이지에 표시할 영화
-    },
-  },
   methods: {
-    async fetchMovies() {
-      const data = await fetchPopularMovies(); // TMDB API 호출
-      this.movies = data.results; // 전체 영화 데이터 저장
+    // 영화 데이터를 가져오는 함수
+    async fetchMovies(page = 1, append = false) {
+      if (this.loading) return; // 로딩 중이면 중복 요청 방지
+      this.loading = true;
+
+      const data = await fetchPopularMovies(page);
+
+      if (append) {
+        this.movies = [...this.movies, ...data.results]; // 데이터 추가
+      } else {
+        this.movies = data.results; // 데이터 덮어쓰기
+      }
+
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
+      this.loading = false;
     },
+    // View 모드 변경
+    changeViewMode(mode) {
+      this.viewMode = mode;
+      this.movies = []; // 기존 데이터 초기화
+      this.currentPage = 1; // 첫 페이지부터 다시 시작
+      this.fetchMovies(); // 데이터 재로드
+    },
+    // 이전 페이지 이동 (Table View 전용)
     prevPage() {
-      if (this.currentPage > 1) this.currentPage--; // 이전 페이지 이동
+      if (this.currentPage > 1) {
+        this.fetchMovies(this.currentPage - 1);
+      }
     },
+    // 다음 페이지 이동 (Table View 전용)
     nextPage() {
-      if (this.currentPage < this.totalPages) this.currentPage++; // 다음 페이지 이동
+      if (this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1);
+      }
     },
-    getImageUrl(path) {
-      return `https://image.tmdb.org/t/p/w500${path}`; // 포스터 URL 생성
+    // 스크롤 이벤트 처리 (무한 스크롤 View 전용)
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true);
+      }
+
+      this.showScrollTopButton = window.scrollY > 300;
+    },
+    // 페이지 상단으로 이동
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll); // 스크롤 이벤트 제거
   },
 };
 </script>
@@ -92,35 +136,52 @@ export default {
 .popular {
   padding: 20px;
   background-color: #121212;
-  color: white;
+  color: #fff;
   min-height: 100vh;
 }
 
 .content {
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  margin-bottom: 20px;
+}
+
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.view-toggle button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.view-toggle button.active {
+  background-color: #e50914;
 }
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 카드 크기 */
   gap: 20px;
-  justify-items: center;
-  margin: 20px auto;
-}
-
-.movie-card {
-  width: 150px;
-  text-align: center;
-}
-
-.movie-poster {
   width: 100%;
-  border-radius: 8px;
+  max-width: 1200px; /* 최대 너비 */
+  justify-content: center;
 }
 
-.movie-title {
-  font-size: 14px;
-  margin-top: 10px;
+.loading {
+  text-align: center;
+  margin: 20px 0;
 }
 
 .pagination {
@@ -130,7 +191,7 @@ export default {
   margin-top: 20px;
 }
 
-.page-button {
+.pagination button {
   background-color: #333;
   color: white;
   border: none;
@@ -140,8 +201,20 @@ export default {
   border-radius: 4px;
 }
 
-.page-button:disabled {
+.pagination button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>

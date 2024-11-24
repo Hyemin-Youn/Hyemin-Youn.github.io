@@ -53,7 +53,7 @@
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "@/api/movies";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "Popular",

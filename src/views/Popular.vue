@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" :style="{ overflow: 'hidden' }">
+  <div class="popular">
     <!-- Navbar -->
     <Navbar />
 
@@ -90,15 +90,23 @@ export default {
     },
     changeViewMode(mode) {
       this.viewMode = mode;
+
+      // 스크롤 제거/복원
       if (mode === "table") {
-        document.body.style.overflow = "hidden"; // 스크롤 비활성화
+        document.body.style.overflowY = "hidden"; // 스크롤 비활성화
       } else {
-        document.body.style.overflow = ""; // 스크롤 활성화
+        document.body.style.overflowY = "auto"; // 스크롤 복원
       }
     },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
+    // 초기 상태에서 Table View 모드에 대해 스크롤 제거
+    document.body.style.overflowY = "hidden";
+  },
+  beforeDestroy() {
+    // 컴포넌트가 해제되면 스크롤 상태 복원
+    document.body.style.overflowY = "auto";
   },
 };
 </script>
@@ -133,11 +141,11 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 열 개수 자동 조정 */
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 20px;
   justify-items: center;
   align-items: center;
-  height: calc(100vh - 100px); /* 전체 높이 - 상단/하단 여백 */
+  height: calc(100vh - 100px); /* 전체 높이에서 상단과 하단 여백 제외 */
 }
 
 .pagination {

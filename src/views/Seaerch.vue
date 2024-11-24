@@ -160,5 +160,10 @@
     font-size: 14px;
     color: white;
   }
+  .loading {
+  text-align: center;
+  color: white;
+  margin: 20px 0;
+}
   </style>
   

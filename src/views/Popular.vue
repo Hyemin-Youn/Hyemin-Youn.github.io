@@ -113,11 +113,13 @@ export default {
     changeViewMode(mode) {
       this.viewMode = mode;
       if (mode === "table") {
-        document.body.style.overflowY = "hidden"; // Table View: 스크롤 제거
+        // Table View: 스크롤 제거
+        document.body.setAttribute("style", "overflow-y: hidden");
         this.currentPage = 1; // 페이지 초기화
         this.fetchMovies(); // 영화 데이터 로드
       } else {
-        document.body.style.overflowY = "auto"; // Infinite Scroll: 스크롤 복원
+        // Infinite Scroll: 스크롤 복원
+        document.body.setAttribute("style", "overflow-y: auto");
         this.fetchMovies(); // 영화 데이터 로드
       }
     },
@@ -135,11 +137,11 @@ export default {
   created() {
     this.fetchMovies(); // 초기 데이터 로드
     window.addEventListener("scroll", this.handleScroll); // 무한 스크롤 이벤트 등록
-    document.body.style.overflowY = "hidden"; // 초기 Table View 스크롤 제거
+    document.body.setAttribute("style", "overflow-y: hidden"); // 초기 Table View 스크롤 제거
   },
   beforeDestroy() {
     window.removeEventListener("scroll", this.handleScroll); // 이벤트 해제
-    document.body.style.overflowY = "auto"; // 스크롤 상태 복원
+    document.body.setAttribute("style", "overflow-y: auto"); // 스크롤 상태 복원
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="popular">
+  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }">
     <!-- Navbar -->
     <Navbar />
 
@@ -21,7 +21,7 @@
 
     <!-- Main Content -->
     <div class="content">
-      <h1>대세 콘텐츠</h1>
+      <h1>인기 영화</h1>
 
       <!-- 영화 리스트 -->
       <div class="movie-grid">
@@ -70,6 +70,7 @@ export default {
       viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
       loading: false, // 데이터 로딩 상태
       showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
+      moviesPerPage: 20, // Table View에서 한 페이지에 표시할 영화 수
     };
   },
   methods: {
@@ -83,7 +84,7 @@ export default {
       if (append) {
         this.movies = [...this.movies, ...data.results]; // 추가 데이터 결합
       } else {
-        this.movies = data.results; // 새로운 데이터로 대체
+        this.movies = data.results.slice(0, this.moviesPerPage); // 한 페이지 제한
       }
 
       this.currentPage = page; // 현재 페이지 업데이트
@@ -99,10 +100,12 @@ export default {
     },
     // 무한 스크롤 처리 함수
     handleScroll() {
+      if (this.viewMode === "table") return; // Table View에서는 스크롤 처리 X
+
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
         this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
       }
 
@@ -129,6 +132,10 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
+}
+
+.popular.no-scroll {
+  overflow: hidden; /* Table View에서 스크롤 비활성화 */
 }
 
 .view-toggle {

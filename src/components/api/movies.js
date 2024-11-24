@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { API_KEY, BASE_URL } from '@/config.js';
+import { API_KEY, BASE_URL } from '@/config';
 
 export const fetchPopularMovies = async (page = 1) => {
   try {
@@ -10,7 +10,7 @@ export const fetchPopularMovies = async (page = 1) => {
         page,
       },
     });
-    return response.data.results; // 영화 데이터 배열 반환
+    return response.data.results;
   } catch (error) {
     console.error('Error fetching popular movies:', error);
     return [];

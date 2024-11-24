@@ -1,5 +1,7 @@
 <template>
     <div class="search-page">
+      <Navbar />
+
       <h1>영화 검색</h1>
       <div class="dropdown-container">
         <label>선호하는 설정을 선택하세요</label>

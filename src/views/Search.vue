@@ -3,7 +3,7 @@
     <!-- Navbar -->
     <Navbar />
 
-    <!-- 검색 기능 및 영화 리스트 -->
+    <!-- 검색 필터 -->
     <h1>영화 검색</h1>
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
@@ -25,15 +25,19 @@
     </div>
 
     <!-- 영화 리스트 -->
-    <div class="movie-grid">
-      <div class="movie-card" v-for="movie in movies" :key="movie.id">
+    <div class="movie-table">
+      <div class="movie-row" v-for="movie in movies" :key="movie.id">
         <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
         <div class="movie-title">{{ movie.title }}</div>
       </div>
     </div>
 
-    <!-- 로딩 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
+    <!-- Pagination -->
+    <div class="pagination">
+      <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">이전</button>
+      <span>{{ currentPage }} / {{ totalPages }}</span>
+      <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">다음</button>
+    </div>
   </div>
 </template>
 
@@ -67,8 +71,6 @@ export default {
       movies: [],
       currentPage: 1,
       totalPages: 1,
-      loading: false,
-      isFetching: false, // 중복 요청 방지 플래그
     };
   },
   computed: {
@@ -80,34 +82,21 @@ export default {
     },
   },
   methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.isFetching) return; // 중복 요청 방지
-      this.isFetching = true;
-      this.loading = true;
+    async fetchMovies(page = 1) {
+      const filters = {
+        genre: this.selectedOptions.originalLanguage,
+        rating: this.selectedOptions.translationLanguage,
+        language: this.selectedOptions.sorting,
+        page,
+      };
 
       try {
-        const filters = {
-          genre: this.selectedOptions.originalLanguage,
-          rating: this.selectedOptions.translationLanguage,
-          language: this.selectedOptions.sorting,
-          page,
-        };
-
         const data = await fetchMovies(filters);
-
-        if (append) {
-          this.movies = [...this.movies, ...data.results]; // 추가 데이터를 기존 데이터에 결합
-        } else {
-          this.movies = data.results; // 새로운 데이터로 갱신
-        }
-
-        this.currentPage = page;
+        this.movies = data.results;
         this.totalPages = data.total_pages;
+        this.currentPage = page;
       } catch (error) {
-        console.error("영화 데이터를 불러오는 중 오류 발생:", error);
-      } finally {
-        this.loading = false;
-        this.isFetching = false;
+        console.error("API 호출 오류:", error);
       }
     },
     toggleDropdown(key) {
@@ -119,18 +108,15 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(1); // 옵션 변경 시 첫 페이지 데이터 로드
+      this.fetchMovies(1); // 첫 페이지로 다시 로드
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1); // 초기화 후 첫 페이지 데이터 로드
+      this.fetchMovies(1); // 초기화 후 첫 페이지 로드
     },
-    handleScroll() {
-      const bottomOfWindow =
-        window.innerHeight + window.pageYOffset >= document.body.offsetHeight - 100;
-
-      if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+    changePage(page) {
+      if (page >= 1 && page <= this.totalPages) {
+        this.fetchMovies(page);
       }
     },
     getPosterUrl(path) {
@@ -138,11 +124,7 @@ export default {
     },
   },
   created() {
-    this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll); // 이벤트 제거
+    this.fetchMovies(); // 페이지 로드 시 초기 데이터 로드
   },
 };
 </script>
@@ -152,6 +134,7 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
+  padding: 20px;
 }
 
 .dropdown-container {
@@ -160,33 +143,52 @@ export default {
   gap: 15px;
 }
 
-.movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+.movie-table {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
-.movie-card {
-  text-align: center;
-  background-color: #1e1e1e;
+.movie-row {
+  display: flex;
+  align-items: center;
+  gap: 15px;
   padding: 10px;
+  background-color: #1e1e1e;
   border-radius: 8px;
 }
 
 .movie-poster {
-  width: 100%;
+  width: 100px;
+  height: 150px;
   border-radius: 8px;
-  margin-bottom: 10px;
 }
 
 .movie-title {
-  font-size: 14px;
+  font-size: 18px;
   color: white;
 }
 
-.loading {
-  text-align: center;
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+button {
+  background-color: #e50914;
   color: white;
-  margin: 20px 0;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:disabled {
+  background-color: #444;
+  cursor: not-allowed;
 }
 </style>

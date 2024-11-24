@@ -1,5 +1,5 @@
 <template>
-    <div class="search-page" @scroll="handleScroll">
+    <div class="search-page">
       <!-- Navbar -->
       <Navbar />
   
@@ -47,6 +47,25 @@
         </div>
       </div>
   
+      <!-- 페이지 이동 버튼 -->
+      <div class="pagination-container">
+        <button
+          class="pagination-btn"
+          :disabled="currentPage === 1"
+          @click="changePage(currentPage - 1)"
+        >
+          이전
+        </button>
+        <span>{{ currentPage }} / {{ totalPages }}</span>
+        <button
+          class="pagination-btn"
+          :disabled="currentPage === totalPages"
+          @click="changePage(currentPage + 1)"
+        >
+          다음
+        </button>
+      </div>
+  
       <!-- 로딩 표시 -->
       <div v-if="loading" class="loading">로딩 중...</div>
     </div>
@@ -83,7 +102,6 @@
         currentPage: 1,
         totalPages: 1,
         loading: false,
-        isFetching: false, // 중복 요청 방지 플래그
       };
     },
     computed: {
@@ -95,11 +113,8 @@
       },
     },
     methods: {
-      async fetchMovies(page = 1, append = false) {
-        if (this.isFetching) return;
-        this.isFetching = true; // 중복 요청 방지
+      async fetchMovies(page = 1) {
         this.loading = true;
-  
         const filters = {
           genre: this.selectedOptions.originalLanguage,
           rating: this.selectedOptions.translationLanguage,
@@ -109,16 +124,10 @@
   
         const data = await fetchMovies(filters);
   
-        if (append) {
-          this.movies = [...this.movies, ...data]; // 추가 데이터 결합
-        } else {
-          this.movies = data; // 새로운 데이터로 갱신
-        }
-  
+        this.movies = data;
         this.currentPage = page;
-        this.totalPages = data.total_pages;
+        this.totalPages = Math.ceil(data.length / 20); // 총 페이지 수 계산 (20개 영화 기준)
         this.loading = false;
-        this.isFetching = false;
       },
       toggleDropdown(key) {
         this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -135,13 +144,8 @@
         this.selectedOptions = { ...this.DEFAULT_OPTIONS };
         this.fetchMovies(1); // 초기화 후 첫 페이지 데이터 로드
       },
-      handleScroll() {
-        const bottomOfWindow =
-          window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-  
-        if (bottomOfWindow && this.currentPage < this.totalPages) {
-          this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
-        }
+      changePage(page) {
+        this.fetchMovies(page); // 페이지 변경 시 데이터 로드
       },
       getPosterUrl(path) {
         return `https://image.tmdb.org/t/p/w500/${path}`;
@@ -149,14 +153,10 @@
     },
     created() {
       this.fetchMovies(); // 초기 데이터 로드
-      window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
-    },
-    beforeDestroy() {
-      window.removeEventListener("scroll", this.handleScroll); // 이벤트 제거
     },
   };
   </script>
-
+  
   <style scoped>
   .search-page {
     background-color: #121212;
@@ -193,7 +193,30 @@
     font-size: 14px;
     color: white;
   }
-    .loading {
+  
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    gap: 10px;
+  }
+  
+  .pagination-btn {
+    background-color: #e50914;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .pagination-btn:disabled {
+    background-color: #444;
+    cursor: not-allowed;
+  }
+  
+  .loading {
     text-align: center;
     color: white;
     margin: 20px 0;

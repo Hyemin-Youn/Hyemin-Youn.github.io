@@ -1,9 +1,9 @@
 <template>
-  <div class="search-page">
+  <div class="search-page" @scroll="handleScroll">
     <!-- Navbar -->
     <Navbar />
 
-    <!-- 검색 기능 -->
+    <!-- 검색 기능 및 영화 리스트 -->
     <h1>영화 검색</h1>
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
@@ -31,6 +31,9 @@
         <div class="movie-title">{{ movie.title }}</div>
       </div>
     </div>
+
+    <!-- 로딩 표시 -->
+    <div v-if="loading" class="loading">로딩 중...</div>
   </div>
 </template>
 
@@ -62,6 +65,9 @@ export default {
       },
       activeDropdown: null,
       movies: [],
+      currentPage: 1, // 현재 페이지
+      totalPages: 1, // 총 페이지 수
+      loading: false, // 로딩 상태
     };
   },
   computed: {
@@ -73,13 +79,28 @@ export default {
     },
   },
   methods: {
-    async fetchMovies() {
+    async fetchMovies(page = 1, append = false) {
+      if (this.loading) return; // 중복 호출 방지
+      this.loading = true;
+
       const filters = {
         genre: this.selectedOptions.originalLanguage,
         rating: this.selectedOptions.translationLanguage,
         language: this.selectedOptions.sorting,
+        page,
       };
-      this.movies = await fetchMovies(filters);
+
+      const data = await fetchMovies(filters);
+
+      if (append) {
+        this.movies = [...this.movies, ...data.results]; // 추가 데이터를 기존 리스트에 결합
+      } else {
+        this.movies = data.results; // 새 데이터를 덮어쓰기
+      }
+
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
+      this.loading = false;
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -90,18 +111,30 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(); // 옵션 변경 시 영화 검색
+      this.fetchMovies(1); // 옵션 변경 시 첫 페이지로 데이터 갱신
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(); // 초기화 후 영화 검색
+      this.fetchMovies(1); // 초기화 후 첫 페이지로 데이터 갱신
     },
     getPosterUrl(path) {
       return `https://image.tmdb.org/t/p/w500/${path}`;
     },
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+      }
+    },
   },
   created() {
-    this.fetchMovies(); // 페이지 로드 시 초기 영화 목록 가져오기
+    this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 리스너 추가
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll); // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
   },
 };
 </script>
@@ -111,61 +144,46 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
-  padding: 0 10px; /* 양쪽 여백 추가 */
 }
 
 .dropdown-container {
   margin: 20px 0;
   display: flex;
-  flex-wrap: wrap; /* 화면 크기에 따라 줄바꿈 */
   gap: 15px;
 }
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 카드 최소 크기 150px */
-  gap: 15px; /* 카드 간격 */
-  justify-content: center; /* 가운데 정렬 */
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* 최소 크기를 줄여 한 행에 더 많은 카드 표시 */
+  gap: 10px; /* 카드 간격 */
 }
 
 .movie-card {
   text-align: center;
   background-color: #1e1e1e;
-  padding: 10px;
+  padding: 5px;
   border-radius: 8px;
-  transition: transform 0.3s ease-in-out;
-}
-
-.movie-card:hover {
-  transform: scale(1.05); /* 호버 시 확대 효과 */
 }
 
 .movie-poster {
   width: 100%;
-  height: 225px; /* 고정 높이 */
+  height: 200px; /* 고정 높이 설정 */
   border-radius: 8px;
+  margin-bottom: 5px;
   object-fit: cover; /* 이미지 비율 유지 */
-  margin-bottom: 10px;
 }
 
 .movie-title {
-  font-size: 14px;
+  font-size: 12px; /* 텍스트 크기 조정 */
   color: white;
   overflow: hidden; /* 긴 제목 잘림 처리 */
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
-.clear-options {
-  background-color: black;
+.loading {
+  text-align: center;
   color: white;
-  border: 1px solid white;
-  padding: 10px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.clear-options:hover {
-  background-color: #333;
+  margin: 20px 0;
 }
 </style>

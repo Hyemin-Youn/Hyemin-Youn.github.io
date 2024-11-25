@@ -47,7 +47,7 @@
 
       <!-- 맨 위로 올라가기 버튼 -->
       <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
-        위로
+        TOP(위로)
       </button>
     </div>
   </div>

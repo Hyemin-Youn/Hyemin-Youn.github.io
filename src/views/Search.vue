@@ -79,11 +79,11 @@ export default {
         sorting: "언어 (전체)",
       },
       activeDropdown: null,
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      loading: false,
-      isFetching: false, // 중복 요청 방지 플래그
+      movies: [], // 영화 데이터를 저장
+      currentPage: 1, // 현재 페이지
+      totalPages: 1, // 총 페이지 수
+      loading: false, // 로딩 상태
+      isFetching: false, // 중복 요청 방지
     };
   },
   computed: {
@@ -97,7 +97,7 @@ export default {
   methods: {
     async fetchMovies(page = 1, append = false) {
       if (this.isFetching) return;
-      this.isFetching = true; // 중복 요청 방지
+      this.isFetching = true;
       this.loading = true;
 
       const filters = {
@@ -110,13 +110,13 @@ export default {
       const data = await fetchMovies(filters);
 
       if (append) {
-        this.movies = [...this.movies, ...data]; // 추가 데이터 결합
+        this.movies = [...this.movies, ...data]; // 기존 데이터에 추가
       } else {
-        this.movies = data; // 새로운 데이터로 갱신
+        this.movies = data; // 새 데이터로 대체
       }
 
       this.currentPage = page;
-      this.totalPages = data.total_pages;
+      this.totalPages = data.total_pages || 10; // 기본 페이지 수 설정
       this.loading = false;
       this.isFetching = false;
     },
@@ -129,11 +129,11 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(1); // 옵션 변경 시 첫 페이지 데이터 로드
+      this.fetchMovies(1); // 옵션 변경 시 첫 페이지부터 다시 로드
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1); // 초기화 후 첫 페이지 데이터 로드
+      this.fetchMovies(1); // 옵션 초기화 후 첫 페이지부터 다시 로드
     },
     handleScroll() {
       const bottomOfWindow =
@@ -162,6 +162,7 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
+  overflow-y: auto; /* 스크롤 활성화 */
 }
 
 .dropdown-container {
@@ -200,13 +201,8 @@ export default {
   text-align: center;
   margin: 20px 0;
 }
+
 .movie-card:hover {
   transform: scale(1.05);
-}
-
-.loading {
-  text-align: center;
-  color: white;
-  margin: 20px 0;
 }
 </style>

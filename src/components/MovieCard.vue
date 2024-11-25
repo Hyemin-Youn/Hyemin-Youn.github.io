@@ -8,7 +8,7 @@
         ⭐ {{ movie.vote_average }} / 10
       </div>
     </div>
-    <span class="wishlist-icon">
+    <span class="wishlist-icon" @click.stop="handleWishlist">
       <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'"></i>
     </span>
   </div>
@@ -23,17 +23,23 @@ export default {
     },
     isInWishlist: {
       type: Function,
-      default: () => false, // 기본적으로 위시리스트 여부를 확인하는 함수
+      default: () => false,
     },
   },
+  emits: ["toggle-wishlist"],
   computed: {
     posterUrl() {
       return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
     },
     formattedReleaseDate() {
-      if (!this.movie.release_date) return "개봉일 정보 없음";
+      if (!this.movie.release_date) return "알 수 없음";
       const options = { year: "numeric", month: "long", day: "numeric" };
       return new Date(this.movie.release_date).toLocaleDateString("ko-KR", options);
+    },
+  },
+  methods: {
+    handleWishlist() {
+      this.$emit("toggle-wishlist", this.movie);
     },
   },
 };
@@ -44,10 +50,9 @@ export default {
   position: relative;
   width: 150px;
   cursor: pointer;
-  flex-shrink: 0; /* 카드 크기 고정 */
+  flex-shrink: 0;
   overflow: hidden;
   text-align: center;
-  margin: 10px;
 }
 
 .poster {
@@ -57,7 +62,7 @@ export default {
 }
 
 .movie-card:hover .poster {
-  transform: scale(1.1); /* Hover 시 이미지 확대 */
+  transform: scale(1.1);
 }
 
 .movie-info {
@@ -73,7 +78,7 @@ export default {
 }
 
 .movie-card:hover .movie-info {
-  opacity: 1; /* Hover 시 정보 표시 */
+  opacity: 1;
 }
 
 .movie-title {

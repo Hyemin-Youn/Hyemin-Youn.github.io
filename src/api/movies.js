@@ -11,10 +11,10 @@ export const fetchPopularMovies = async (page = 1) => {
         page,
       },
     });
-    return response.data;
+    return response.data; // API 응답 데이터
   } catch (error) {
     console.error("Error fetching popular movies:", error);
-    return { results: [] };
+    return { results: [] }; // 에러 발생 시 빈 데이터 반환
   }
 };
 

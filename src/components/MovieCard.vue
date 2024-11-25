@@ -1,13 +1,16 @@
 <template>
   <div class="movie-card">
-    <div class="poster-wrapper">
-      <img :src="posterUrl" :alt="movie.title" class="poster" />
-      <div class="hover-info">
-        <p class="rating">⭐ {{ movie.vote_average || "N/A" }} / 10</p>
-        <p class="release-date">📅 {{ formattedReleaseDate }}</p>
+    <img :src="posterUrl" :alt="movie.title" class="poster" />
+    <div class="movie-info">
+      <p class="movie-title">{{ movie.title }}</p>
+      <p class="release-date">개봉일: {{ formattedReleaseDate }}</p>
+      <div class="movie-rating" v-if="movie.vote_average">
+        ⭐ {{ movie.vote_average }} / 10
       </div>
     </div>
-    <p class="title">{{ movie.title }}</p>
+    <span class="wishlist-icon">
+      <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'"></i>
+    </span>
   </div>
 </template>
 
@@ -17,6 +20,10 @@ export default {
     movie: {
       type: Object,
       required: true,
+    },
+    isInWishlist: {
+      type: Function,
+      default: () => false, // 기본적으로 위시리스트 여부를 확인하는 함수
     },
   },
   computed: {
@@ -34,60 +41,67 @@ export default {
 
 <style scoped>
 .movie-card {
+  position: relative;
+  width: 150px;
+  cursor: pointer;
+  flex-shrink: 0; /* 카드 크기 고정 */
+  overflow: hidden;
   text-align: center;
   margin: 10px;
-  position: relative; /* 자식 요소 위치 제어 */
-}
-
-.poster-wrapper {
-  position: relative;
-  overflow: hidden;
-  border-radius: 8px;
 }
 
 .poster {
   width: 100%;
-  transition: transform 0.3s ease-in-out; /* 이미지 확대 애니메이션 */
+  border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
 }
 
 .movie-card:hover .poster {
   transform: scale(1.1); /* Hover 시 이미지 확대 */
 }
 
-.hover-info {
+.movie-info {
   position: absolute;
-  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  text-align: center;
   opacity: 0;
-  transition: opacity 0.3s ease-in-out; /* 애니메이션 */
+  transition: opacity 0.3s ease-in-out;
 }
 
-.movie-card:hover .hover-info {
+.movie-card:hover .movie-info {
   opacity: 1; /* Hover 시 정보 표시 */
 }
 
-.title {
+.movie-title {
   font-size: 14px;
-  margin-top: 8px;
   color: white;
-}
-
-.rating {
-  font-size: 16px;
-  color: gold;
-  font-weight: bold;
+  margin-bottom: 5px;
 }
 
 .release-date {
-  font-size: 14px;
-  color: #ffffff;
-  margin-top: 5px;
+  font-size: 12px;
+  color: #b3b3b3;
+  margin-bottom: 5px;
+}
+
+.movie-rating {
+  font-size: 12px;
+  color: gold;
+}
+
+.wishlist-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: white;
+}
+
+.wishlist-icon .liked {
+  color: #e50914;
 }
 </style>

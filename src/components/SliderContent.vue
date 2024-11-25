@@ -85,10 +85,15 @@ export default {
 .slider-content {
   display: flex;
   gap: 15px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
+  overflow-x: auto; /* 가로 스크롤 허용 */
+  scroll-behavior: smooth; /* 부드러운 스크롤 */
   padding: 10px 0;
   width: 100%;
+  scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+}
+
+.slider-content::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge에서 스크롤바 숨기기 */
 }
 
 /* 카드 스타일 */
@@ -151,3 +156,4 @@ export default {
   right: 10px;
 }
 </style>
+

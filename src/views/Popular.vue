@@ -47,12 +47,12 @@
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { useScrollLock } from "@vueuse/core";
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "../api/movies";
+import { fetchPopularMovies } from "@/api/movies";
 
 export default {
   name: "Popular",
@@ -71,50 +71,65 @@ export default {
 
     const isScrollLocked = useScrollLock(ref(document.body), false);
 
+    // 영화 데이터를 가져오는 함수
     const fetchMovies = async (page = 1, append = false) => {
       if (loading.value) return;
       loading.value = true;
 
-      const data = await fetchPopularMovies(page);
-
-      if (append) {
-        movies.value = [...movies.value, ...data.results];
-      } else {
-        movies.value = data.results;
+      try {
+        const data = await fetchPopularMovies(page);
+        if (append) {
+          movies.value = [...movies.value, ...data.results];
+        } else {
+          movies.value = data.results;
+        }
+        currentPage.value = page;
+        totalPages.value = data.total_pages;
+      } catch (error) {
+        console.error("영화 데이터를 가져오는 중 오류 발생:", error);
+        // 기본 데이터 설정 (API 실패 시)
+        if (!append) {
+          movies.value = [{ id: 1, title: "샘플 영화" }];
+          totalPages.value = 1;
+        }
+      } finally {
+        loading.value = false;
       }
-
-      currentPage.value = page;
-      totalPages.value = data.total_pages;
-      loading.value = false;
     };
 
+    // 뷰 모드 전환
     const changeViewMode = (mode) => {
       viewMode.value = mode;
-      isScrollLocked.value = mode === "table"; // 테이블 뷰에서 스크롤 잠금
-      movies.value = [];
+      isScrollLocked.value = mode === "table"; // 스크롤 잠금 설정
+      movies.value = []; // 데이터 초기화
       currentPage.value = 1;
       fetchMovies();
     };
 
+    // 스크롤 맨 위로 이동
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    // 스크롤 이벤트 처리
     const handleScroll = () => {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (bottomOfWindow && viewMode.value === "infinite" && currentPage.value < totalPages.value) {
+      if (
+        bottomOfWindow &&
+        viewMode.value === "infinite" &&
+        currentPage.value < totalPages.value &&
+        !loading.value
+      ) {
         fetchMovies(currentPage.value + 1, true);
       }
 
       showScrollTopButton.value = window.scrollY > 300;
     };
 
-    watch(viewMode, (newMode) => {
-      if (newMode === "table") isScrollLocked.value = true;
-      else isScrollLocked.value = false;
-    });
+    // 초기 데이터 로드
+    fetchMovies();
 
     window.addEventListener("scroll", handleScroll);
 

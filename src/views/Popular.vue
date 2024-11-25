@@ -121,7 +121,7 @@ export default {
 
 <style scoped>
 .popular {
-  padding: 20px;
+  /* padding: 20px; */
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
@@ -176,5 +176,8 @@ export default {
 /* .disable-scroll{
   overflow-y: hidden;
 } */
+#app {
+  overflow-y: hidden;
+}
 
 </style>

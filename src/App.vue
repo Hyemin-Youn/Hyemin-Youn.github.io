@@ -33,9 +33,7 @@ export default {
 #app {
   display: flex;
   flex-direction: column;
-  /* height: 100%; */
-  position: fixed;
-  overflow: hidden;
+  height: 100%;
 }
 
 

@@ -15,19 +15,17 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   props: {
     movie: {
       type: Object,
       required: true,
     },
-    isInWishlist: {
-      type: Function,
-      default: () => false,
-    },
   },
-  emits: ["toggle-wishlist"],
   computed: {
+    ...mapGetters(["isInWishlist"]), // Vuex getter 연결
     posterUrl() {
       return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
     },
@@ -38,8 +36,9 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["toggleWishlist"]), // Vuex action 연결
     handleWishlist() {
-      this.$emit("toggle-wishlist", this.movie);
+      this.toggleWishlist(this.movie); // 영화 추가/삭제 토글
     },
   },
 };

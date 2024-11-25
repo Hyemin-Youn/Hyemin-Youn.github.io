@@ -1,33 +1,17 @@
-<template> 
+<template>
   <div class="slider-container">
-    <!-- 왼쪽 화살표 버튼 -->
     <button class="arrow-btn left" @click="scrollLeft">
       <i class="fas fa-chevron-left"></i>
     </button>
 
-    <!-- 슬라이더 콘텐츠 -->
     <div class="slider-content" ref="slider">
-      <div
+      <MovieCard
         v-for="movie in movies"
         :key="movie.id"
-        class="movie-card"
-        @click="toggleWishlist(movie)"
-      >
-        <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" />
-        <div class="movie-info">
-          <p class="movie-title">{{ movie.title }}</p>
-          <p class="release-date">개봉일: {{ formatDate(movie.release_date) }}</p>
-          <div class="movie-rating" v-if="movie.vote_average">
-            ⭐ {{ movie.vote_average }} / 10
-          </div>
-        </div>
-        <span class="wishlist-icon">
-          <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'"></i>
-        </span>
-      </div>
+        :movie="movie"
+      />
     </div>
 
-    <!-- 오른쪽 화살표 버튼 -->
     <button class="arrow-btn right" @click="scrollRight">
       <i class="fas fa-chevron-right"></i>
     </button>
@@ -36,7 +20,7 @@
 
 <script>
 import { ref } from "vue";
-import { useStore } from "vuex";
+import MovieCard from "@/components/MovieCard.vue";
 
 export default {
   props: {
@@ -45,42 +29,25 @@ export default {
       required: true,
     },
   },
+  components: {
+    MovieCard,
+  },
   setup() {
-    const store = useStore();
-    const slider = ref(null); // 슬라이더 참조
-
-    const isInWishlist = (id) => store.getters.isInWishlist(id);
-
-    const toggleWishlist = (movie) => {
-      store.dispatch("toggleWishlist", movie);
-    };
+    const slider = ref(null);
 
     const scrollLeft = () => {
       if (slider.value) {
-        slider.value.scrollBy({
-          left: -300, // 왼쪽으로 300px 이동
-          behavior: "smooth",
-        });
+        slider.value.scrollBy({ left: -300, behavior: "smooth" });
       }
     };
 
     const scrollRight = () => {
       if (slider.value) {
-        slider.value.scrollBy({
-          left: 300, // 오른쪽으로 300px 이동
-          behavior: "smooth",
-        });
+        slider.value.scrollBy({ left: 300, behavior: "smooth" });
       }
     };
 
-    // 개봉일 포맷팅
-    const formatDate = (date) => {
-      if (!date) return "알 수 없음";
-      const options = { year: "numeric", month: "long", day: "numeric" };
-      return new Date(date).toLocaleDateString("ko-KR", options);
-    };
-
-    return { isInWishlist, toggleWishlist, slider, scrollLeft, scrollRight, formatDate };
+    return { slider, scrollLeft, scrollRight };
   },
 };
 </script>

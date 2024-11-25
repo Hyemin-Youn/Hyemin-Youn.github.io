@@ -1,23 +1,35 @@
 <template>
   <nav :class="['navbar', { 'navbar-scrolled': isScrolled }]">
-    <div class="navbar-content">
-      <img src="/logo.png" alt="Netflix Logo" class="logo" />
-      <ul>
-        <li>홈</li>
-        <li>대세 콘텐츠</li>
-        <li>찾아보기</li>
-        <li>내가 찜한 리스트</li>
+    <div class="navbar-left">
+      <router-link to="/home">
+        <img src="@/assets/logo.png" alt="Logo" class="logo" />
+      </router-link>
+
+      <ul class="nav-links">
+        <li><router-link to="/home">홈</router-link></li>
+        <li><router-link to="/popular">대세 콘텐츠</router-link></li>
+        <li><router-link to="/search">찾아보기</router-link></li>
+        <li><router-link to="/wishlist">내가 찜한 리스트</router-link></li>
       </ul>
-      <i class="fas fa-user-circle user-icon"></i>
+    </div>
+
+    <div class="navbar-right">
+      <img
+        src="@/assets/profile-icon.png"
+        alt="Profile"
+        class="profile-icon"
+        @click="logout"
+      />
     </div>
   </nav>
 </template>
 
 <script>
 export default {
+  name: "Navbar",
   data() {
     return {
-      isScrolled: false, // 스크롤 상태
+      isScrolled: false, // 스크롤 상태 관리
     };
   },
   mounted() {
@@ -28,53 +40,72 @@ export default {
   },
   methods: {
     handleScroll() {
-      // 스크롤 위치가 50px 이상이면 네비게이션 바를 변경
+      // 스크롤 위치가 50px 이상이면 'isScrolled' 상태를 true로 설정
       this.isScrolled = window.scrollY > 50;
+    },
+    logout() {
+      localStorage.removeItem("user");
+      if (this.$store) {
+        this.$store.dispatch("logout");
+      }
+      this.$router.push("/signin");
     },
   },
 };
 </script>
 
 <style scoped>
-/* 기본 네비게이션 바 스타일 */
 .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
-  background: transparent;
-  transition: background 0.3s ease;
   padding: 10px 20px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 100;
+  background-color: transparent; /* 초기 배경 투명 */
 }
 
 .navbar-scrolled {
-  background: rgba(0, 0, 0, 0.8); /* 스크롤 시 배경색 변경 */
+  background-color: rgba(125, 16, 16, 0.9); /* 스크롤 후 배경색 */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* 스크롤 후 그림자 추가 */
 }
 
-.navbar-content {
+.navbar-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
 }
 
 .logo {
-  height: 30px;
-}
-
-ul {
-  display: flex;
-  list-style: none;
-  gap: 20px;
-}
-
-ul li {
-  color: white;
+  width: 40px;
+  margin-right: 20px;
   cursor: pointer;
 }
 
-.user-icon {
-  color: white;
-  font-size: 24px;
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-links li {
+  list-style: none;
+}
+
+.nav-links a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #e50914;
+}
+
+.profile-icon {
+  width: 30px;
   cursor: pointer;
 }
 </style>

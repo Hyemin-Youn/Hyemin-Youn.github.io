@@ -1,4 +1,4 @@
-<template> 
+<template>
   <div :class="['popular', { 'disable-scroll': viewMode === 'table' }]">
     <!-- Navbar -->
     <Navbar />
@@ -24,7 +24,11 @@
       <h1>대세 콘텐츠</h1>
 
       <!-- 영화 리스트 -->
-      <div class="movie-grid" :class="{ 'table-view': viewMode === 'table' }">
+      <div
+        class="movie-grid"
+        :class="{ 'table-view': viewMode === 'table' }"
+        :style="gridStyle"
+      >
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
@@ -70,7 +74,19 @@ export default {
       viewMode: "table", // 기본 View 모드
       loading: false,
       showScrollTopButton: false,
+      containerHeight: 0, // 동적 높이 계산
     };
+  },
+  computed: {
+    gridStyle() {
+      if (this.viewMode === "table") {
+        return {
+          height: `${this.containerHeight}px`,
+          overflow: "hidden",
+        };
+      }
+      return {};
+    },
   },
   methods: {
     async fetchMovies(page = 1, append = false) {
@@ -88,20 +104,30 @@ export default {
       this.currentPage = page;
       this.totalPages = data.total_pages;
       this.loading = false;
+
+      if (this.viewMode === "table") {
+        this.calculateContainerHeight();
+      }
     },
     changeViewMode(mode) {
       this.viewMode = mode;
 
       if (mode === "table") {
-        // 스크롤바 제거
+        // 스크롤바 제거 및 동적 높이 계산
         document.body.style.overflow = "hidden";
         this.movies = [];
         this.currentPage = 1;
-        this.fetchMovies(); // 데이터 새로 로드
+        this.fetchMovies();
       } else {
-        // 스크롤바 다시 활성화
+        // Infinite Scroll에서 스크롤바 활성화
         document.body.style.overflow = "auto";
       }
+    },
+    calculateContainerHeight() {
+      const rowHeight = 150; // 각 영화 카드의 높이
+      const gap = 20; // 카드 간 간격
+      const rows = Math.ceil(this.movies.length / 5); // 가로 5개씩 배치
+      this.containerHeight = rows * (rowHeight + gap) - gap; // 전체 높이 계산
     },
     handleScroll() {
       if (this.viewMode !== "infinite") return;
@@ -164,7 +190,7 @@ export default {
 }
 
 .movie-grid.table-view {
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Table View 크기 */
+  grid-template-columns: repeat(5, 1fr); /* Table View에서 고정된 열 크기 */
   gap: 10px;
 }
 

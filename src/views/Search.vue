@@ -6,39 +6,38 @@
     <!-- 검색 기능 -->
     <h1>영화 검색</h1>
     <div class="dropdown-container">
-      <div class="filter-box">
-        <label for="genre-filter">장르</label>
-        <select id="genre-filter" v-model="selectedOptions.originalLanguage" @change="fetchMovies">
-          <option v-for="option in dropdowns.originalLanguage" :key="option" :value="option">
+      <label>선호하는 설정을 선택하세요</label>
+      <div
+        v-for="dropdown in dropdownEntries"
+        :key="dropdown.key"
+        class="custom-select"
+      >
+        <div class="select-selected" @click="toggleDropdown(dropdown.key)">
+          {{ selectedOptions[dropdown.key] }}
+        </div>
+        <div
+          v-if="activeDropdown === dropdown.key"
+          class="select-items"
+        >
+          <div
+            v-for="option in dropdown.options"
+            :key="option"
+            @click="selectOption(dropdown.key, option)"
+          >
             {{ option }}
-          </option>
-        </select>
+          </div>
+        </div>
       </div>
-
-      <div class="filter-box">
-        <label for="rating-filter">평점</label>
-        <select id="rating-filter" v-model="selectedOptions.translationLanguage" @change="fetchMovies">
-          <option v-for="option in dropdowns.translationLanguage" :key="option" :value="option">
-            {{ option }}
-          </option>
-        </select>
-      </div>
-
-      <div class="filter-box">
-        <label for="language-filter">언어</label>
-        <select id="language-filter" v-model="selectedOptions.sorting" @change="fetchMovies">
-          <option v-for="option in dropdowns.sorting" :key="option" :value="option">
-            {{ option }}
-          </option>
-        </select>
-      </div>
-
       <button class="clear-options" @click="clearOptions">초기화</button>
     </div>
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+      <MovieCard
+        v-for="movie in movies"
+        :key="movie.id"
+        :movie="movie"
+      />
     </div>
 
     <!-- 로딩 표시 -->
@@ -74,16 +73,24 @@ export default {
         translationLanguage: "평점 (전체)",
         sorting: "언어 (전체)",
       },
+      activeDropdown: null,
       movies: [],
       currentPage: 1,
       totalPages: 1,
       loading: false,
     };
   },
+  computed: {
+    dropdownEntries() {
+      return Object.entries(this.dropdowns).map(([key, options]) => ({
+        key,
+        options,
+      }));
+    },
+  },
   methods: {
     async fetchMovies(page = 1, append = false) {
-      if (this.loading || page > this.totalPages) return;
-
+      if (this.loading || page > this.totalPages) return; // 중복 호출 방지 및 페이지 초과 방지
       this.loading = true;
 
       try {
@@ -110,13 +117,36 @@ export default {
         this.loading = false;
       }
     },
+    toggleDropdown(key) {
+      this.activeDropdown = this.activeDropdown === key ? null : key;
+    },
+    selectOption(key, option) {
+      this.selectedOptions = {
+        ...this.selectedOptions,
+        [key]: option,
+      };
+      this.activeDropdown = null;
+      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+    },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1);
+      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
+    },
+    handleScroll() {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (scrollPosition >= documentHeight - 100 && !this.loading) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+      }
     },
   },
   created() {
-    this.fetchMovies();
+    this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -126,54 +156,39 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
-  padding: 20px;
+  overflow-y: auto; /* 스크롤 활성화 */
 }
 
 .dropdown-container {
-  background-color: #2d2d2d; /* 회색 박스 */
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
+  margin: 20px 0;
   display: flex;
   gap: 15px;
-  align-items: flex-end;
-}
-
-.filter-box {
-  display: flex;
-  flex-direction: column;
-}
-
-.filter-box label {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-
-.filter-box select {
-  padding: 8px;
-  background-color: #444;
-  color: white;
-  border: none;
-  border-radius: 4px;
-}
-
-.clear-options {
-  padding: 8px 16px;
-  background-color: #e50914;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.clear-options:hover {
-  background-color: #d40813;
 }
 
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+}
+
+.movie-card {
+  text-align: center;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+.movie-title {
+  font-size: 14px;
+  color: white;
 }
 
 .loading {

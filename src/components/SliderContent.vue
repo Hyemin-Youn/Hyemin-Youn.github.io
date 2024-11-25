@@ -73,20 +73,6 @@ export default {
 </script>
 
 <style scoped>
-.slider-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.slider-content {
-  display: flex;
-  gap: 15px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  padding: 10px 0;
-  width: 100%;
-}
 
 .movie-card {
   position: relative;

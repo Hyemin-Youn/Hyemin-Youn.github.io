@@ -1,7 +1,7 @@
 <template>
   <div :class="['popular', { 'disable-scroll': viewMode === 'table' }]">
     <!-- Navbar -->
-    <Navbar />
+    <Navbar class="navbar" />
 
     <!-- View Toggle Buttons -->
     <div class="view-toggle">
@@ -21,14 +21,8 @@
 
     <!-- Main Content -->
     <div class="content">
-      <!-- <h1>대세 콘텐츠</h1> -->
-
       <!-- 영화 리스트 -->
-      <div
-        class="movie-grid"
-        :class="{ 'table-view': viewMode === 'table' }"
-        :style="gridStyle"
-      >
+      <div class="movie-grid" :class="{ 'table-view': viewMode === 'table' }">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
@@ -156,17 +150,35 @@ export default {
 </script>
 
 <style scoped>
+/* Navbar 고정 및 화면 상단에 딱 붙이기 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #121212; /* 배경색 추가 */
+  border-bottom: 1px solid #333; /* 하단 구분선 추가 */
+}
+
+/* 전체 페이지 스타일 */
 .popular {
-  padding: 20px;
+  padding-top: 60px; /* Navbar 높이만큼 패딩 추가 */
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
 }
 
+/* 스크롤 제거 */
+.disable-scroll {
+  overflow: hidden;
+}
+
+/* 뷰 전환 버튼 */
 .view-toggle {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin: 20px 0;
 }
 
 .view-toggle button {
@@ -174,7 +186,6 @@ export default {
   color: #fff;
   border: none;
   padding: 10px 20px;
-  cursor: pointer;
   margin: 0 5px;
   border-radius: 4px;
 }
@@ -183,36 +194,19 @@ export default {
   background-color: #e50914;
 }
 
+/* 영화 그리드 */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 View 크기 */
   gap: 20px;
+  padding: 20px;
 }
 
-.movie-grid.table-view {
-  grid-template-columns: repeat(5, 1fr); /* Table View에서 고정된 열 크기 */
-  gap: 10px;
-}
-
-.loading {
-  text-align: center;
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   margin: 20px 0;
-  color: white;
-}
-
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e50914;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.disable-scroll {
-  overflow: hidden; /* Table View에서 스크롤 제거 */
 }
 </style>

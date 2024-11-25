@@ -59,53 +59,46 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
-  top: 0;
+  position: sticky; /* 수정: fixed에서 sticky로 변경 */
+  top: 0; /* 화면 상단에 고정 */
   left: 0;
   width: 100%;
   padding: 10px 20px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 100;
-  background-color: gray; /* 초기 배경 투명 */
+  background-color: gray; /* 초기 배경색 설정 */
 }
-
 .navbar-scrolled {
   background-color: rgba(125, 16, 16, 0.9); /* 스크롤 후 배경색 */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* 스크롤 후 그림자 추가 */
 }
-
 .navbar-left {
   display: flex;
   align-items: center;
 }
-
 .logo {
   width: 40px;
   margin-right: 20px;
   cursor: pointer;
 }
-
 .nav-links {
   display: flex;
   gap: 20px;
 }
-
 .nav-links li {
   list-style: none;
 }
-
 .nav-links a {
   color: #ffffff;
   text-decoration: none;
   transition: color 0.3s ease;
 }
-
 .nav-links a:hover {
   color: #e50914;
 }
-
 .profile-icon {
   width: 30px;
   cursor: pointer;
 }
 </style>
+

@@ -35,6 +35,11 @@
 
     <!-- 로딩 표시 -->
     <div v-if="loading" class="loading">로딩 중...</div>
+
+    <!-- TOP 버튼 -->
+    <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+      TOP(위로)
+    </button>
   </div>
 </template>
 
@@ -71,6 +76,7 @@ export default {
       currentPage: 1,
       totalPages: 1,
       loading: false,
+      showScrollTopButton: false, // TOP 버튼 표시 여부
     };
   },
   computed: {
@@ -126,20 +132,18 @@ export default {
       this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
     },
     handleScroll() {
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      if (scrollPosition >= documentHeight - 100 && !this.loading) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
-      }
+      this.showScrollTopButton = window.scrollY > 300; // 스크롤이 300px 이상일 때 TOP 버튼 표시
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" }); // 부드럽게 화면 맨 위로 이동
     },
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 등록
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll); // 스크롤 이벤트 해제
   },
 };
 </script>
@@ -250,5 +254,23 @@ export default {
 .loading {
   text-align: center;
   margin: 20px 0;
+}
+
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  z-index: 1000;
+}
+
+.scroll-top:hover {
+  background-color: #b00610;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="slider-container">
-    <!-- 왼쪽 버튼 -->
-    <button class="slide-btn left" @click="scrollLeft">
+    <!-- 왼쪽 화살표 버튼 -->
+    <button class="arrow-btn left" @click="scrollLeft">
       <i class="fas fa-chevron-left"></i>
     </button>
 
@@ -21,8 +21,8 @@
       </div>
     </div>
 
-    <!-- 오른쪽 버튼 -->
-    <button class="slide-btn right" @click="scrollRight">
+    <!-- 오른쪽 화살표 버튼 -->
+    <button class="arrow-btn right" @click="scrollRight">
       <i class="fas fa-chevron-right"></i>
     </button>
   </div>
@@ -73,12 +73,14 @@ export default {
 </script>
 
 <style scoped>
+/* 전체 슬라이더 컨테이너 */
 .slider-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* 슬라이더 콘텐츠 */
 .slider-content {
   display: flex;
   gap: 15px;
@@ -88,11 +90,12 @@ export default {
   width: 100%;
 }
 
+/* 카드 스타일 */
 .movie-card {
   position: relative;
   width: 150px;
   cursor: pointer;
-  flex-shrink: 0; /* 카드의 크기가 줄어들지 않도록 설정 */
+  flex-shrink: 0; /* 카드 크기 고정 */
 }
 
 .movie-card img {
@@ -119,8 +122,8 @@ export default {
   color: #e50914;
 }
 
-/* 슬라이드 버튼 스타일 */
-.slide-btn {
+/* 화살표 버튼 스타일 */
+.arrow-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -135,17 +138,15 @@ export default {
   transition: background 0.3s;
 }
 
-.slide-btn:hover {
+.arrow-btn:hover {
   background: rgba(0, 0, 0, 0.8);
 }
 
-.slide-btn.left {
+.arrow-btn.left {
   left: 10px;
 }
 
-.slide-btn.right {
+.arrow-btn.right {
   right: 10px;
 }
-
-
 </style>

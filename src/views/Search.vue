@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     async fetchMovies(page = 1, append = false) {
-      if (this.isFetching) return;
+      if (this.isFetching || (page > this.totalPages && !append)) return; // 중복 요청 방지 및 페이지 초과 방지
       this.isFetching = true;
       this.loading = true;
 
@@ -110,9 +110,9 @@ export default {
       const data = await fetchMovies(filters);
 
       if (append) {
-        this.movies = [...this.movies, ...data]; // 기존 데이터에 추가
+        this.movies = [...this.movies, ...data.results]; // 기존 데이터에 추가
       } else {
-        this.movies = data; // 새 데이터로 대체
+        this.movies = data.results; // 새 데이터로 대체
       }
 
       this.currentPage = page;
@@ -137,7 +137,7 @@ export default {
     },
     handleScroll() {
       const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+        window.innerHeight + window.scrollY >= document.documentElement.offsetHeight - 50;
 
       if (bottomOfWindow && this.currentPage < this.totalPages) {
         this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드

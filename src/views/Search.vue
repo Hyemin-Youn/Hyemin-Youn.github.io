@@ -15,10 +15,7 @@
         <div class="select-selected" @click="toggleDropdown(dropdown.key)">
           {{ selectedOptions[dropdown.key] }}
         </div>
-        <div
-          v-if="activeDropdown === dropdown.key"
-          class="select-items"
-        >
+        <div v-if="activeDropdown === dropdown.key" class="select-items">
           <div
             v-for="option in dropdown.options"
             :key="option"
@@ -33,11 +30,7 @@
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <MovieCard
-        v-for="movie in movies"
-        :key="movie.id"
-        :movie="movie"
-      />
+      <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
     </div>
 
     <!-- 로딩 표시 -->
@@ -163,19 +156,82 @@ export default {
   margin: 20px 0;
   display: flex;
   gap: 15px;
+  background-color: #333; /* 회색 박스 추가 */
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.custom-select {
+  position: relative;
+  width: 200px;
+  background-color: #222;
+  border-radius: 4px;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+}
+
+.custom-select .select-selected {
+  font-size: 14px;
+}
+
+.custom-select .select-items {
+  position: absolute;
+  background-color: #333;
+  width: 100%;
+  top: 40px;
+  left: 0;
+  z-index: 10;
+  border-radius: 4px;
+}
+
+.select-items div {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.select-items div:hover {
+  background-color: #444;
+}
+
+.clear-options {
+  background-color: #e50914;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.clear-options:hover {
+  background-color: #b00610;
 }
 
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+  padding-top: 20px;
 }
 
 .movie-card {
+  position: relative;
   text-align: center;
   background-color: #1e1e1e;
   padding: 10px;
   border-radius: 8px;
+}
+
+.movie-card .wishlist-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: white;
+}
+
+.movie-card .wishlist-icon.liked {
+  color: #e50914;
 }
 
 .movie-poster {

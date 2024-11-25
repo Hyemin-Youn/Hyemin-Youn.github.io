@@ -1,140 +1,126 @@
 <template>
-  <div class="search">
+  <div class="search-page" @scroll="handleScroll">
     <!-- Navbar -->
     <Navbar />
 
-    <!-- 필터 섹션 -->
-    <div class="filters">
-      <select v-model="filters.genre" @change="fetchMovies">
-        <option value="">장르 (전체)</option>
-        <option value="Action">액션</option>
-        <option value="Comedy">코미디</option>
-        <option value="Drama">드라마</option>
-      </select>
-      <select v-model="filters.rating" @change="fetchMovies">
-        <option value="">평점 (전체)</option>
-        <option value="8~10">8~10</option>
-        <option value="5~7">5~7</option>
-        <option value="0~4">0~4</option>
-      </select>
-      <select v-model="filters.language" @change="fetchMovies">
-        <option value="">언어 (전체)</option>
-        <option value="en">영어</option>
-        <option value="ko">한국어</option>
-      </select>
-    </div>
-
-    <!-- View Toggle Buttons -->
-    <div class="view-toggle">
-      <button
-        :class="{ active: viewMode === 'table' }"
-        @click="changeViewMode('table')"
-      >
-        Table View
-      </button>
-      <button
-        :class="{ active: viewMode === 'infinite' }"
-        @click="changeViewMode('infinite')"
-      >
-        무한 스크롤 View
-      </button>
-    </div>
-
-    <!-- 영화 데이터 -->
-    <div class="content">
-      <h1>대세 콘텐츠</h1>
-
-      <!-- SliderContent 활용 -->
-      <SliderContent :movies="movies" />
-
-      <!-- Pagination (Table View 전용) -->
-      <Pagination
-        v-if="viewMode === 'table'"
-        :currentPage="currentPage"
-        :totalPages="totalPages"
-        @change-page="fetchMovies"
-      />
-
-      <!-- Loading Spinner -->
-      <div v-if="loading && viewMode === 'infinite'" class="loading">
-        로딩 중...
+    <!-- 검색 기능 -->
+    <h1>영화 검색</h1>
+    <div class="dropdown-container">
+      <label>선호하는 설정을 선택하세요</label>
+      <div v-for="dropdown in dropdownEntries" :key="dropdown.key" class="custom-select">
+        <div class="select-selected" @click="toggleDropdown(dropdown.key)">
+          {{ selectedOptions[dropdown.key] }}
+        </div>
+        <div v-if="activeDropdown === dropdown.key" class="select-items">
+          <div
+            v-for="option in dropdown.options"
+            :key="option"
+            @click="selectOption(dropdown.key, option)"
+          >
+            {{ option }}
+          </div>
+        </div>
       </div>
-
-      <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
-        위로
-      </button>
+      <button class="clear-options" @click="clearOptions">초기화</button>
     </div>
+
+    <!-- 영화 리스트 -->
+    <div class="movie-grid">
+      <div class="movie-card" v-for="movie in movies" :key="movie.id">
+        <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
+        <div class="movie-title">{{ movie.title }}</div>
+      </div>
+    </div>
+
+    <!-- 로딩 중 표시 -->
+    <div v-if="loading" class="loading">로딩 중...</div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import SliderContent from "@/components/SliderContent.vue";
-import Pagination from "@/components/Pagination.vue";
 import { fetchMovies } from "@/api/movies";
-
 export default {
   name: "Search",
   components: {
     Navbar,
-    SliderContent,
-    Pagination,
   },
   data() {
     return {
-      movies: [], // 영화 데이터
-      currentPage: 1, // 현재 페이지
-      totalPages: 1, // 전체 페이지 수
-      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
-      loading: false, // 로딩 상태
-      showScrollTopButton: false, // 스크롤 버튼 표시 여부
-      filters: { // 필터 데이터
-        genre: null,
-        rating: null,
-        language: null,
+      dropdowns: {
+        originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
+        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
+        sorting: ["언어 (전체)", "en", "ko"],
       },
+      DEFAULT_OPTIONS: {
+        originalLanguage: "장르 (전체)",
+        translationLanguage: "평점 (전체)",
+        sorting: "언어 (전체)",
+      },
+      selectedOptions: {
+        originalLanguage: "장르 (전체)",
+        translationLanguage: "평점 (전체)",
+        sorting: "언어 (전체)",
+      },
+      activeDropdown: null,
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
+      loading: false,
     };
+  },
+  computed: {
+    dropdownEntries() {
+      return Object.entries(this.dropdowns).map(([key, options]) => ({
+        key,
+        options,
+      }));
+    },
   },
   methods: {
     async fetchMovies(page = 1, append = false) {
-      // 로딩 중일 경우 중복 호출 방지
-      if (this.loading) return;
+      if (this.loading) return; // 중복 호출 방지
       this.loading = true;
-
-      // API 호출
-      const data = await fetchMovies({ ...this.filters, page });
-
+      const filters = {
+        genre: this.selectedOptions.originalLanguage,
+        rating: this.selectedOptions.translationLanguage,
+        language: this.selectedOptions.sorting,
+        page,
+      };
+      const data = await fetchMovies(filters);
       if (append) {
-        this.movies = [...this.movies, ...data.results]; // 데이터 추가
+        this.movies = [...this.movies, ...data.results];
       } else {
-        this.movies = data.results; // 새로운 데이터로 갱신
+        this.movies = data.results;
       }
-
       this.currentPage = page;
       this.totalPages = data.total_pages;
       this.loading = false;
     },
-    changeViewMode(mode) {
-      this.viewMode = mode;
-      this.movies = []; // 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지부터 다시 로드
-      this.fetchMovies();
+    toggleDropdown(key) {
+      this.activeDropdown = this.activeDropdown === key ? null : key;
+    },
+    selectOption(key, option) {
+      this.selectedOptions = {
+        ...this.selectedOptions,
+        [key]: option,
+      };
+      this.activeDropdown = null;
+      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+    },
+    clearOptions() {
+      this.selectedOptions = { ...this.DEFAULT_OPTIONS };
+      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
     },
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-
-      // 무한 스크롤 동작
-      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
       }
-
-      // 맨 위로 버튼 표시 여부
-      this.showScrollTopButton = window.scrollY > 300;
     },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+    getPosterUrl(path) {
+      return `https://image.tmdb.org/t/p/w500/${path}`;
     },
   },
   created() {
@@ -148,67 +134,40 @@ export default {
 </script>
 
 <style scoped>
-.search {
-  padding: 20px;
+.search-page {
   background-color: #121212;
-  color: #fff;
+  color: white;
   min-height: 100vh;
 }
-
-.filters {
+.dropdown-container {
+  margin: 20px 0;
   display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: 15px;
 }
-
-.filters select {
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+.movie-card {
+  text-align: center;
+  background-color: #1e1e1e;
   padding: 10px;
-  background-color: #333;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
+  border-radius: 8px;
 }
-
-.view-toggle {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
+.movie-poster {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  object-fit: cover;
 }
-
-.view-toggle button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  margin: 0 5px;
-  border-radius: 4px;
+.movie-title {
+  font-size: 14px;
+  color: white;
 }
-
-.view-toggle button.active {
-  background-color: #e50914;
-}
-
-.content {
-  padding-top: 20px;
-}
-
 .loading {
   text-align: center;
   margin: 20px 0;
-  color: white;
-}
-
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e50914;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 </style>

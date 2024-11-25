@@ -125,6 +125,8 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
+  width: 100%; 
+  height: 100%; 
 }
 
 .view-toggle {
@@ -170,8 +172,8 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
-
-.html, body { width: 100%, height: 100% }
+/* 
+.html, body { width: 100%, height: 100% } */
 /* .disable-scroll{
   overflow-y: hidden;
 } */

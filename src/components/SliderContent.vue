@@ -151,12 +151,12 @@ export default {
 
 /* 왼쪽 화살표 버튼 */
 .arrow-btn.left {
-  left: -30px; /* 컨테이너 왼쪽 바깥쪽에 위치 */
+  left: -20px; /* 컨테이너 왼쪽 바깥쪽에 위치 */
 }
 
 /* 오른쪽 화살표 버튼 */
 .arrow-btn.right {
-  right: -30px; /* 컨테이너 오른쪽 바깥쪽에 위치 */
+  right: -20px; /* 컨테이너 오른쪽 바깥쪽에 위치 */
 }
 </style>
 

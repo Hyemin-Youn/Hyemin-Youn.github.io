@@ -176,7 +176,7 @@ export default {
 /* .disable-scroll{
   overflow-y: hidden;
 } */
-#app {
+.body {
   overflow-y: hidden;
 }
 

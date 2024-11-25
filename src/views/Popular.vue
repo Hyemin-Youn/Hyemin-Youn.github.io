@@ -45,7 +45,7 @@ import { ref, watch } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "@/api/movies";
+import URLService from "@/services/URLService";
 import { useScrollLock } from "@/utils/index.js";
 
 export default {
@@ -63,23 +63,32 @@ export default {
     const loading = ref(false);
     const showScrollTopButton = ref(false);
 
+    const apiKey = "YOUR_TMDB_API_KEY"; // API 키를 여기에 입력하세요
     const isScrollLocked = useScrollLock(ref(document.body), false);
 
     const fetchMovies = async (page = 1, append = false) => {
       if (loading.value) return;
       loading.value = true;
 
-      const data = await fetchPopularMovies(page);
+      try {
+        // URLService를 사용해 URL 생성
+        const url = URLService.getURL4PopularMovies(apiKey, page);
+        const response = await fetch(url);
+        const data = await response.json();
 
-      if (append) {
-        movies.value = [...movies.value, ...data.results];
-      } else {
-        movies.value = data.results;
+        if (append) {
+          movies.value = [...movies.value, ...data.results];
+        } else {
+          movies.value = data.results;
+        }
+
+        currentPage.value = page;
+        totalPages.value = data.total_pages;
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      } finally {
+        loading.value = false;
       }
-
-      currentPage.value = page;
-      totalPages.value = data.total_pages;
-      loading.value = false;
     };
 
     const changeViewMode = (mode) => {

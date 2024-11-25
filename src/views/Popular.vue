@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div :class="['popular', { 'disable-scroll': viewMode === 'table' }]">
     <!-- Navbar -->
     <Navbar />
@@ -67,7 +67,7 @@ export default {
       movies: [],
       currentPage: 1,
       totalPages: 1,
-      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
+      viewMode: "table", // 기본 View 모드
       loading: false,
       showScrollTopButton: false,
     };
@@ -75,8 +75,8 @@ export default {
   methods: {
     async fetchMovies(page = 1, append = false) {
       if (this.loading) return;
-      this.loading = true;
 
+      this.loading = true;
       const data = await fetchPopularMovies(page);
 
       if (append) {
@@ -92,14 +92,14 @@ export default {
     changeViewMode(mode) {
       this.viewMode = mode;
 
-      // Table View에서 스크롤바 제거 및 페이지네이션 초기화
       if (mode === "table") {
+        // 스크롤바 제거
         document.body.style.overflow = "hidden";
         this.movies = [];
         this.currentPage = 1;
-        this.fetchMovies();
+        this.fetchMovies(); // 데이터 새로 로드
       } else {
-        // Infinite Scroll에서 스크롤바 다시 활성화
+        // 스크롤바 다시 활성화
         document.body.style.overflow = "auto";
       }
     },
@@ -110,7 +110,7 @@ export default {
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
       if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
       }
 
       this.showScrollTopButton = window.scrollY > 300;
@@ -159,7 +159,7 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 크기 */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 View 크기 */
   gap: 20px;
 }
 

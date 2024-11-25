@@ -1,9 +1,7 @@
 <template>
-  <div class="popular" @scroll="handleScroll">
-    <!-- Navbar -->
+  <div class="popular">
     <Navbar />
 
-    <!-- View Toggle Buttons -->
     <div class="view-toggle">
       <button
         :class="{ active: viewMode === 'table' }"
@@ -19,16 +17,13 @@
       </button>
     </div>
 
-    <!-- Main Content -->
     <div class="content">
       <h1>대세 콘텐츠</h1>
 
-      <!-- 영화 리스트 -->
       <div class="movie-grid">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
-      <!-- Pagination (Table View 전용) -->
       <Pagination
         v-if="viewMode === 'table'"
         :currentPage="currentPage"
@@ -36,13 +31,15 @@
         @change-page="fetchMovies"
       />
 
-      <!-- Loading Spinner -->
       <div v-if="loading && viewMode === 'infinite'" class="loading">
         로딩 중...
       </div>
 
-      <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+      <button
+        v-if="showScrollTopButton"
+        class="scroll-top"
+        @click="scrollToTop"
+      >
         위로
       </button>
     </div>
@@ -50,6 +47,8 @@
 </template>
 
 <script>
+import { ref, watch } from "vue";
+import { useScrollLock } from "@vueuse/core";
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import Pagination from "@/components/Pagination.vue";
@@ -62,58 +61,75 @@ export default {
     MovieCard,
     Pagination,
   },
-  data() {
-    return {
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
-      loading: false,
-      showScrollTopButton: false,
-    };
-  },
-  methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.loading) return;
-      this.loading = true;
+  setup() {
+    const movies = ref([]);
+    const currentPage = ref(1);
+    const totalPages = ref(1);
+    const viewMode = ref("table");
+    const loading = ref(false);
+    const showScrollTopButton = ref(false);
+
+    const isScrollLocked = useScrollLock(ref(document.body), false);
+
+    const fetchMovies = async (page = 1, append = false) => {
+      if (loading.value) return;
+      loading.value = true;
 
       const data = await fetchPopularMovies(page);
 
       if (append) {
-        this.movies = [...this.movies, ...data.results];
+        movies.value = [...movies.value, ...data.results];
       } else {
-        this.movies = data.results;
+        movies.value = data.results;
       }
 
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
-      this.loading = false;
-    },
-    changeViewMode(mode) {
-      this.viewMode = mode;
-      this.movies = []; // 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지부터 다시 로드
-      this.fetchMovies();
-    },
-    handleScroll() {
+      currentPage.value = page;
+      totalPages.value = data.total_pages;
+      loading.value = false;
+    };
+
+    const changeViewMode = (mode) => {
+      viewMode.value = mode;
+      isScrollLocked.value = mode === "table"; // 테이블 뷰에서 스크롤 잠금
+      movies.value = [];
+      currentPage.value = 1;
+      fetchMovies();
+    };
+
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    const handleScroll = () => {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
+      if (bottomOfWindow && viewMode.value === "infinite" && currentPage.value < totalPages.value) {
+        fetchMovies(currentPage.value + 1, true);
       }
 
-      this.showScrollTopButton = window.scrollY > 300;
-    },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
+      showScrollTopButton.value = window.scrollY > 300;
+    };
+
+    watch(viewMode, (newMode) => {
+      if (newMode === "table") isScrollLocked.value = true;
+      else isScrollLocked.value = false;
+    });
+
+    window.addEventListener("scroll", handleScroll);
+
+    return {
+      movies,
+      currentPage,
+      totalPages,
+      viewMode,
+      loading,
+      showScrollTopButton,
+      changeViewMode,
+      scrollToTop,
+    };
   },
-  created() {
-    this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
+  beforeUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
   },
 };
@@ -170,9 +186,4 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
-
-.active-scroll-bars {
-  overflow-y: hidden
-}
- 
 </style>

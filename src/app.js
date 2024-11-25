@@ -1,5 +1,5 @@
 const URLService = require("./URLService"); // 모듈 가져오기
-const API_KEY = "your_api_key_here"; // TMDB API 키
+const API_KEY = "VUE_APP_API_KEY"; // TMDB API 키
 
 (async () => {
   const urlService = new URLService();

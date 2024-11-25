@@ -21,15 +21,12 @@
 
     <!-- Main Content -->
     <div class="content">
-      <!-- <h1>대세 콘텐츠</h1> -->
-
       <!-- 영화 리스트 -->
       <div
         class="movie-grid"
         :class="{ 'table-view': viewMode === 'table' }"
-        :style="gridStyle"
       >
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
       </div>
 
       <!-- Pagination (Table View 전용) -->
@@ -74,72 +71,39 @@ export default {
       viewMode: "table", // 기본 View 모드
       loading: false,
       showScrollTopButton: false,
-      containerHeight: 0, // 동적 높이 계산
+      moviesPerPage: 10, // 한 페이지에 표시할 영화 개수
     };
   },
   computed: {
-    gridStyle() {
-      if (this.viewMode === "table") {
-        return {
-          height: `${this.containerHeight}px`,
-          overflow: "hidden",
-        };
-      }
-      return {};
+    paginatedMovies() {
+      const start = (this.currentPage - 1) * this.moviesPerPage;
+      const end = start + this.moviesPerPage;
+      return this.movies.slice(start, end);
     },
   },
   methods: {
-    async fetchMovies(page = 1, append = false) {
+    async fetchMovies(page = 1) {
       if (this.loading) return;
 
       this.loading = true;
       const data = await fetchPopularMovies(page);
 
-      if (append) {
-        this.movies = [...this.movies, ...data.results];
-      } else {
-        this.movies = data.results;
-      }
-
+      this.movies = data.results;
       this.currentPage = page;
-      this.totalPages = data.total_pages;
+      this.totalPages = Math.ceil(data.results.length / this.moviesPerPage); // 페이지 수 계산
       this.loading = false;
-
-      if (this.viewMode === "table") {
-        this.calculateContainerHeight();
-      }
     },
     changeViewMode(mode) {
       this.viewMode = mode;
 
       if (mode === "table") {
-        // 스크롤바 제거 및 동적 높이 계산
+        // 스크롤바 제거
         document.body.style.overflow = "hidden";
-        this.movies = [];
-        this.currentPage = 1;
-        this.fetchMovies();
+        this.currentPage = 1; // 테이블 뷰에 맞게 초기화
       } else {
         // Infinite Scroll에서 스크롤바 활성화
         document.body.style.overflow = "auto";
       }
-    },
-    calculateContainerHeight() {
-      const rowHeight = 150; // 각 영화 카드의 높이
-      const gap = 20; // 카드 간 간격
-      const rows = Math.ceil(this.movies.length / 5); // 가로 5개씩 배치
-      this.containerHeight = rows * (rowHeight + gap) - gap; // 전체 높이 계산
-    },
-    handleScroll() {
-      if (this.viewMode !== "infinite") return;
-
-      const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-
-      if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
-      }
-
-      this.showScrollTopButton = window.scrollY > 300;
     },
     scrollToTop() {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -147,10 +111,6 @@ export default {
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
@@ -185,13 +145,14 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 View 크기 */
+  grid-template-columns: repeat(5, 1fr); /* 고정 열 크기 */
+  grid-template-rows: repeat(2, 1fr); /* Table View에서 2줄만 표시 */
   gap: 20px;
 }
 
 .movie-grid.table-view {
-  grid-template-columns: repeat(5, 1fr); /* Table View에서 고정된 열 크기 */
-  gap: 10px;
+  height: calc(100vh - 150px); /* 헤더와 버튼의 높이를 제외한 나머지 */
+  overflow: hidden;
 }
 
 .loading {

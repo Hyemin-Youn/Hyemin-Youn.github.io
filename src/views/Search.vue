@@ -7,11 +7,18 @@
     <h1>영화 검색</h1>
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
-      <div v-for="dropdown in dropdownEntries" :key="dropdown.key" class="custom-select">
+      <div
+        v-for="dropdown in dropdownEntries"
+        :key="dropdown.key"
+        class="custom-select"
+      >
         <div class="select-selected" @click="toggleDropdown(dropdown.key)">
           {{ selectedOptions[dropdown.key] }}
         </div>
-        <div v-if="activeDropdown === dropdown.key" class="select-items">
+        <div
+          v-if="activeDropdown === dropdown.key"
+          class="select-items"
+        >
           <div
             v-for="option in dropdown.options"
             :key="option"
@@ -26,20 +33,28 @@
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <div class="movie-card" v-for="movie in movies" :key="movie.id">
-        <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
+      <div
+        class="movie-card"
+        v-for="movie in movies"
+        :key="movie.id"
+      >
+        <img
+          class="movie-poster"
+          :src="getPosterUrl(movie.poster_path)"
+          :alt="movie.title"
+        />
         <div class="movie-title">{{ movie.title }}</div>
       </div>
     </div>
 
-    <!-- 로딩 중 표시 -->
+    <!-- 로딩 표시 -->
     <div v-if="loading" class="loading">로딩 중...</div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import { fetchMovies } from "@/api/movie";
+import { fetchMovies } from "@/api/movies";
 
 export default {
   name: "Search",
@@ -68,6 +83,7 @@ export default {
       currentPage: 1,
       totalPages: 1,
       loading: false,
+      isFetching: false, // 중복 요청 방지 플래그
     };
   },
   computed: {
@@ -80,7 +96,8 @@ export default {
   },
   methods: {
     async fetchMovies(page = 1, append = false) {
-      if (this.loading) return; // 중복 호출 방지
+      if (this.isFetching) return;
+      this.isFetching = true; // 중복 요청 방지
       this.loading = true;
 
       const filters = {
@@ -91,15 +108,17 @@ export default {
       };
 
       const data = await fetchMovies(filters);
+
       if (append) {
-        this.movies = [...this.movies, ...data.results];
+        this.movies = [...this.movies, ...data]; // 추가 데이터 결합
       } else {
-        this.movies = data.results;
+        this.movies = data; // 새로운 데이터로 갱신
       }
 
       this.currentPage = page;
       this.totalPages = data.total_pages;
       this.loading = false;
+      this.isFetching = false;
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -110,11 +129,11 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+      this.fetchMovies(1); // 옵션 변경 시 첫 페이지 데이터 로드
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
+      this.fetchMovies(1); // 초기화 후 첫 페이지 데이터 로드
     },
     handleScroll() {
       const bottomOfWindow =
@@ -130,10 +149,10 @@ export default {
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 추가
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
+    window.removeEventListener("scroll", this.handleScroll); // 이벤트 제거
   },
 };
 </script>
@@ -183,5 +202,11 @@ export default {
 }
 .movie-card:hover {
   transform: scale(1.05);
+}
+
+.loading {
+  text-align: center;
+  color: white;
+  margin: 20px 0;
 }
 </style>

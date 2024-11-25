@@ -1,62 +1,34 @@
-import axios from "axios";
-import { API_KEY, BASE_URL } from "@/config";
+const axios = require("axios");
 
-// 인기 영화 데이터를 가져오는 함수
-export const fetchPopularMovies = async (page = 1) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/movie/popular`, {
-      params: {
-        api_key: API_KEY,
-        language: "ko-KR",
-        page,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching popular movies:", error);
-    return { results: [] };
+class URLService {
+  // 인기 영화 데이터 가져오기
+  async fetchFeaturedMovie(apiKey) {
+    try {
+      const response = await axios.get(
+        `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR`
+      );
+      console.log("Featured Movie:", response.data.results[0]);
+      return response.data.results[0];
+    } catch (error) {
+      console.error("Error fetching featured movie:", error.message);
+      return null; // 에러 발생 시 null 반환
+    }
   }
-};
 
-// 검색 및 필터 옵션에 따라 영화를 가져오는 함수
-export const fetchMovies = async (filters) => {
-  const { genre, rating, language, page = 1 } = filters;
-
-  try {
-    const params = {
-      api_key: API_KEY,
-      language: "ko-KR",
-      page,
-    };
-
-    // 장르 필터 추가
-    if (genre && genre !== "장르 (전체)") {
-      const genreMap = {
-        Action: 28,
-        Adventure: 12,
-        Comedy: 35,
-        Crime: 80,
-        Family: 10751,
-      };
-      params.with_genres = genreMap[genre] || null; // 장르 매핑
-    }
-
-    // 평점 필터 추가
-    if (rating && rating !== "평점 (전체)") {
-      const [minRating, maxRating] = rating.split("~").map(Number);
-      params["vote_average.gte"] = minRating || 0;
-      params["vote_average.lte"] = maxRating || 10;
-    }
-
-    // 언어 필터 추가
-    if (language && language !== "언어 (전체)") {
-      params.with_original_language = language;
-    }
-
-    const response = await axios.get(`${BASE_URL}/discover/movie`, { params });
-    return response.data.results;
-  } catch (error) {
-    console.error("Error fetching movies:", error);
-    return [];
+  // 인기 영화 URL 생성
+  getURL4PopularMovies(apiKey, page = 1) {
+    return `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}&language=ko-KR&page=${page}`;
   }
-};
+
+  // 개봉 예정 영화 URL 생성
+  getURL4ReleaseMovies(apiKey, page = 2) {
+    return `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&language=ko-KR&page=${page}`;
+  }
+
+  // 특정 장르 영화 URL 생성
+  getURL4GenreMovies(apiKey, genre, page = 1) {
+    return `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genre}&language=ko-KR&page=${page}`;
+  }
+}
+
+module.exports = URLService;

@@ -125,7 +125,6 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
-  width: 100%; 
   height: 100%; 
 }
 

@@ -56,7 +56,6 @@ export default {
       movies: [], // 전체 영화 리스트
       paginatedMovies: [], // 현재 페이지의 영화 리스트
       currentPage: 1, // 현재 페이지
-      totalPages: 1, // 전체 페이지 수
       itemsPerPage: 10, // 페이지당 항목 수
       loading: false, // 로딩 상태
     };
@@ -92,6 +91,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 /* 전체 스크롤 비활성화 */

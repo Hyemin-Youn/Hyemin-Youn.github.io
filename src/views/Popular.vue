@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" @scroll="handleScroll">
+  <div :class="['popular', { 'disable-scroll': viewMode === 'table' }]">
     <!-- Navbar -->
     <Navbar />
 
@@ -91,18 +91,25 @@ export default {
     },
     changeViewMode(mode) {
       this.viewMode = mode;
+
+      // Table View에서 스크롤바 제거 및 페이지네이션 초기화
       if (mode === "table") {
-        // Table View로 변경할 때 페이지네이션을 초기화
+        document.body.style.overflow = "hidden";
         this.movies = [];
         this.currentPage = 1;
         this.fetchMovies();
+      } else {
+        // Infinite Scroll에서 스크롤바 다시 활성화
+        document.body.style.overflow = "auto";
       }
     },
     handleScroll() {
+      if (this.viewMode !== "infinite") return;
+
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
         this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
       }
 
@@ -152,12 +159,12 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 뷰 */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 크기 */
   gap: 20px;
 }
 
 .movie-grid.table-view {
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Table View에서 작은 크기 */
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Table View 크기 */
   gap: 10px;
 }
 
@@ -177,5 +184,9 @@ export default {
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.disable-scroll {
+  overflow: hidden; /* Table View에서 스크롤 제거 */
 }
 </style>

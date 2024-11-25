@@ -171,8 +171,9 @@ export default {
   cursor: pointer;
 }
 
-.disable-scroll{
+.html, body { width: 100%, height: 100% }
+/* .disable-scroll{
   overflow-y: hidden;
-}
+} */
 
 </style>

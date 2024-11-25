@@ -34,6 +34,7 @@ export default {
   display: flex;
   flex-direction: column;
   /* height: 100%; */
+  position: fixed;
   overflow: hidden;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" :class="{ 'no-scroll': viewMode === 'grid' }">
+  <div class="popular" :class="{ 'active-scroll-bars': viewMode === 'grid' }">
     <!-- Navbar -->
     <Navbar />
 
@@ -134,12 +134,10 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
-  overflow-y: auto;
 }
 
-.no-scroll {
-  height: 100vh;
-  overflow: hidden;
+.active-scroll-bars {
+  overflow-y: hidden;
 }
 
 .view-toggle {

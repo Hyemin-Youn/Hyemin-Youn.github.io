@@ -60,3 +60,38 @@ export const fetchMovies = async (filters) => {
     return { results: [] }; // 빈 데이터 반환
   }
 };
+
+// 카테고리별 영화 데이터를 가져오는 함수
+export const fetchMoviesByCategory = async (category, page = 1) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/movie/${category}`, {
+      params: {
+        api_key: API_KEY,
+        language: "ko-KR",
+        page,
+      },
+    });
+    return response.data.results; // 영화 목록만 반환
+  } catch (error) {
+    console.error(`Error fetching ${category} movies:`, error);
+    return [];
+  }
+};
+
+// 키워드로 영화를 검색하는 함수
+export const searchMovies = async (query, page = 1) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/search/movie`, {
+      params: {
+        api_key: API_KEY,
+        language: "ko-KR",
+        query,
+        page,
+      },
+    });
+    return response.data.results; // 영화 목록만 반환
+  } catch (error) {
+    console.error("Error searching movies:", error);
+    return [];
+  }
+};

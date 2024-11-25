@@ -28,7 +28,6 @@
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
-
       <!-- Pagination (Table View 전용) -->
       <Pagination
         v-if="viewMode === 'table'"
@@ -90,7 +89,6 @@ export default {
       this.totalPages = data.total_pages;
       this.loading = false;
     },
-    methods: {
     changeViewMode(mode) {
       this.viewMode = mode;
       if (mode === "table") {
@@ -98,10 +96,8 @@ export default {
         this.movies = [];
         this.currentPage = 1;
         this.fetchMovies();
-        }
-      },
+      }
     },
-
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
@@ -156,8 +152,13 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 뷰 */
   gap: 20px;
+}
+
+.movie-grid.table-view {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Table View에서 작은 크기 */
+  gap: 10px;
 }
 
 .loading {
@@ -177,21 +178,4 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
-
-.disable-scroll{
-  overflow-y: hidden;
-}
-
-.movie-grid {
-  display: grid;
-  gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Default for infinite scroll */
-}
-
-.movie-grid.table-view {
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller poster size for Table View */
-  gap: 10px;
-}
-
-
 </style>

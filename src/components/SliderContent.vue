@@ -1,4 +1,4 @@
-=<template>
+<template> 
   <div class="slider-container">
     <!-- 왼쪽 화살표 버튼 -->
     <button class="arrow-btn left" @click="scrollLeft">
@@ -16,6 +16,7 @@
         <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" />
         <div class="movie-info">
           <p class="movie-title">{{ movie.title }}</p>
+          <p class="release-date">개봉일: {{ formatDate(movie.release_date) }}</p>
           <div class="movie-rating" v-if="movie.vote_average">
             ⭐ {{ movie.vote_average }} / 10
           </div>
@@ -72,7 +73,14 @@ export default {
       }
     };
 
-    return { isInWishlist, toggleWishlist, slider, scrollLeft, scrollRight };
+    // 개봉일 포맷팅
+    const formatDate = (date) => {
+      if (!date) return "알 수 없음";
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(date).toLocaleDateString("ko-KR", options);
+    };
+
+    return { isInWishlist, toggleWishlist, slider, scrollLeft, scrollRight, formatDate };
   },
 };
 </script>
@@ -134,12 +142,18 @@ export default {
 }
 
 .movie-card:hover .movie-info {
-  opacity: 1; /* Hover 시 별점 정보 표시 */
+  opacity: 1; /* Hover 시 정보 표시 */
 }
 
 .movie-title {
   font-size: 14px;
   color: white;
+  margin-bottom: 5px;
+}
+
+.release-date {
+  font-size: 12px;
+  color: #b3b3b3;
   margin-bottom: 5px;
 }
 

@@ -1,10 +1,17 @@
 <template>
   <div class="wishlist">
-    <!-- Navbar 추가 -->
     <Navbar />
 
     <h2>내가 찜한 영화</h2>
-    <div class="wishlist-movies">
+
+    <!-- 찜한 영화가 없는 경우 -->
+    <div v-if="wishlist.length === 0" class="empty-wishlist">
+      <p>찜한 영화가 없습니다.</p>
+      <button @click="goToHome" class="go-home-btn">영화 보러 가기</button>
+    </div>
+
+    <!-- 찜한 영화가 있는 경우 -->
+    <div v-else class="wishlist-movies">
       <div
         v-for="movie in wishlist"
         :key="movie.id"
@@ -25,14 +32,14 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
-import Navbar from "@/components/Navbar.vue"; // Navbar 컴포넌트 추가
+import Navbar from "@/components/Navbar.vue";
 
 const makeImagePath = (path, size) =>
   `https://image.tmdb.org/t/p/${size}${path}`;
 
 export default {
   components: {
-    Navbar, // Navbar 등록
+    Navbar,
   },
   setup() {
     const store = useStore();
@@ -47,11 +54,15 @@ export default {
 
     return { wishlist, makeImagePath, removeFromWishlist };
   },
+  methods: {
+    goToHome() {
+      this.$router.push("/home");
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Navbar 높이에 따라 아래 컨텐츠를 배치 */
 .wishlist {
   padding: 20px;
   color: #fff;
@@ -60,6 +71,28 @@ export default {
 .wishlist h2 {
   margin-bottom: 20px;
   font-size: 1.8em;
+}
+
+.empty-wishlist {
+  text-align: center;
+  margin-top: 50px;
+  color: #aaa;
+}
+
+.go-home-btn {
+  margin-top: 20px;
+  padding: 10px 20px;
+  border: none;
+  background-color: #e50914;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s;
+}
+
+.go-home-btn:hover {
+  background-color: #b00610;
 }
 
 .wishlist-movies {

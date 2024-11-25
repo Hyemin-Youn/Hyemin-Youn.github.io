@@ -1,5 +1,5 @@
 <template>
-  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }" @scroll="handleScroll">
+  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }">
     <!-- Navbar -->
     <Navbar />
 
@@ -36,7 +36,7 @@
         @change-page="fetchMovies"
       />
 
-      <!-- Loading Spinner (무한 스크롤 전용) -->
+      <!-- Loading Spinner -->
       <div v-if="loading && viewMode === 'infinite'" class="loading">
         로딩 중...
       </div>
@@ -95,46 +95,30 @@ export default {
       this.currentPage = 1;
       this.fetchMovies();
     },
-    handleScroll() {
-      if (this.viewMode !== "infinite") return;
-
-      const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-
-      if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
-      }
-
-      this.showScrollTopButton = window.scrollY > 300;
-    },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
   },
   created() {
     this.fetchMovies();
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-/* Table View에서 스크롤 제거 */
-.no-scroll {
-  overflow: hidden; /* Table View일 때 스크롤 제거 */
-}
-
 /* 기본 레이아웃 */
 .popular {
   padding: 20px;
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
+  overflow-y: auto; /* 기본적으로 스크롤 가능 */
 }
 
+/* Table View에서 스크롤 제거 */
+.no-scroll {
+  height: 100vh;
+  overflow: hidden; /* 스크롤 완전 제거 */
+}
+
+/* View Toggle 버튼 스타일 */
 .view-toggle {
   display: flex;
   justify-content: center;
@@ -155,18 +139,22 @@ export default {
   background-color: #e50914;
 }
 
+/* 영화 카드 그리드 */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+  margin-top: 20px;
 }
 
+/* Pagination 컴포넌트 스타일 */
 .loading {
   text-align: center;
   margin: 20px 0;
   color: white;
 }
 
+/* 맨 위로 버튼 스타일 */
 .scroll-top {
   position: fixed;
   bottom: 20px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="popular">
+  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }">
     <Navbar />
 
     <div class="view-toggle">
@@ -20,10 +20,34 @@
     <div class="content">
       <h1>대세 콘텐츠</h1>
 
-      <div class="movie-grid">
+      <!-- Table View -->
+      <div v-if="viewMode === 'table'" class="movie-table">
+        <table>
+          <thead>
+            <tr>
+              <th>포스터</th>
+              <th>영화 제목</th>
+              <th>평점</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="movie in movies" :key="movie.id">
+              <td>
+                <img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" alt="포스터" />
+              </td>
+              <td>{{ movie.title }}</td>
+              <td>{{ movie.vote_average }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Infinite Scroll View -->
+      <div v-else class="movie-grid">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
+      <!-- Pagination (Table View 전용) -->
       <Pagination
         v-if="viewMode === 'table'"
         :currentPage="currentPage"
@@ -31,15 +55,13 @@
         @change-page="fetchMovies"
       />
 
+      <!-- Loading Spinner -->
       <div v-if="loading && viewMode === 'infinite'" class="loading">
         로딩 중...
       </div>
 
-      <button
-        v-if="showScrollTopButton"
-        class="scroll-top"
-        @click="scrollToTop"
-      >
+      <!-- 맨 위로 올라가기 버튼 -->
+      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
         위로
       </button>
     </div>
@@ -48,7 +70,6 @@
 
 <script>
 import { ref } from "vue";
-import { useScrollLock } from "@vueuse/core";
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import Pagination from "@/components/Pagination.vue";
@@ -65,13 +86,10 @@ export default {
     const movies = ref([]);
     const currentPage = ref(1);
     const totalPages = ref(1);
-    const viewMode = ref("table");
+    const viewMode = ref("table"); // 초기 상태는 Table View
     const loading = ref(false);
     const showScrollTopButton = ref(false);
 
-    const isScrollLocked = useScrollLock(ref(document.body), false);
-
-    // 영화 데이터를 가져오는 함수
     const fetchMovies = async (page = 1, append = false) => {
       if (loading.value) return;
       loading.value = true;
@@ -87,49 +105,41 @@ export default {
         totalPages.value = data.total_pages;
       } catch (error) {
         console.error("영화 데이터를 가져오는 중 오류 발생:", error);
-        // 기본 데이터 설정 (API 실패 시)
-        if (!append) {
-          movies.value = [{ id: 1, title: "샘플 영화" }];
-          totalPages.value = 1;
-        }
       } finally {
         loading.value = false;
       }
     };
 
-    // 뷰 모드 전환
     const changeViewMode = (mode) => {
       viewMode.value = mode;
-      isScrollLocked.value = mode === "table"; // 스크롤 잠금 설정
-      movies.value = []; // 데이터 초기화
+      if (mode === "table") {
+        document.body.style.overflow = "hidden"; // 스크롤 비활성화
+      } else {
+        document.body.style.overflow = "auto"; // 스크롤 활성화
+      }
+      movies.value = [];
       currentPage.value = 1;
       fetchMovies();
     };
 
-    // 스크롤 맨 위로 이동
     const scrollToTop = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    // 스크롤 이벤트 처리
     const handleScroll = () => {
+      if (viewMode.value !== "infinite") return; // Infinite Scroll View에서만 실행
+
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (
-        bottomOfWindow &&
-        viewMode.value === "infinite" &&
-        currentPage.value < totalPages.value &&
-        !loading.value
-      ) {
+      if (bottomOfWindow && currentPage.value < totalPages.value && !loading.value) {
         fetchMovies(currentPage.value + 1, true);
       }
 
       showScrollTopButton.value = window.scrollY > 300;
     };
 
-    // 초기 데이터 로드
-    fetchMovies();
+    fetchMovies(); // 초기 데이터 로드
 
     window.addEventListener("scroll", handleScroll);
 
@@ -158,6 +168,11 @@ export default {
   min-height: 100vh;
 }
 
+.no-scroll {
+  height: 100vh;
+  overflow: hidden; /* 스크롤 비활성화 */
+}
+
 .view-toggle {
   display: flex;
   justify-content: center;
@@ -182,6 +197,18 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+}
+
+.movie-table table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.movie-table th,
+.movie-table td {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #444;
 }
 
 .loading {

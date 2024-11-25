@@ -73,24 +73,19 @@ export default {
 </script>
 
 <style scoped>
-.arrow-btn {
-  background: rgba(0, 0, 0, 0.7);
-  border: none;
-  color: white;
-  font-size: 1.5rem;
-  width: 40px;
-  height: 40px;
+.slider-container {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  cursor: pointer;
-  border-radius: 50%;
-  z-index: 10;
-  margin: 0 10px;
 }
 
-.arrow-btn:hover {
-  background: rgba(0, 0, 0, 0.9);
+.slider-content {
+  display: flex;
+  gap: 15px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  width: 100%;
 }
 
 .movie-card {
@@ -123,5 +118,34 @@ export default {
 .wishlist-icon .liked {
   color: #e50914;
 }
-</style>
 
+/* 슬라이드 버튼 스타일 */
+.slide-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 20px;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s;
+}
+
+.slide-btn:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.slide-btn.left {
+  left: 10px;
+}
+
+.slide-btn.right {
+  right: 10px;
+}
+
+
+</style>

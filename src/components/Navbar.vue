@@ -66,7 +66,7 @@ export default {
   padding: 10px 20px;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
   z-index: 100;
-  background-color: transparent; /* 초기 배경 투명 */
+  background-color: gray; /* 초기 배경 투명 */
 }
 
 .navbar-scrolled {

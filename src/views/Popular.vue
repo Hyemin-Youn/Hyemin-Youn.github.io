@@ -1,7 +1,9 @@
 <template>
-  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }">
+  <div class="popular" @scroll="handleScroll">
+    <!-- Navbar -->
     <Navbar />
 
+    <!-- View Toggle Buttons -->
     <div class="view-toggle">
       <button
         :class="{ active: viewMode === 'table' }"
@@ -17,33 +19,12 @@
       </button>
     </div>
 
+    <!-- Main Content -->
     <div class="content">
       <h1>대세 콘텐츠</h1>
 
-      <!-- Table View -->
-      <div v-if="viewMode === 'table'" class="movie-table">
-        <table>
-          <thead>
-            <tr>
-              <th>포스터</th>
-              <th>영화 제목</th>
-              <th>평점</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="movie in movies" :key="movie.id">
-              <td>
-                <img :src="`https://image.tmdb.org/t/p/w200${movie.poster_path}`" alt="포스터" />
-              </td>
-              <td>{{ movie.title }}</td>
-              <td>{{ movie.vote_average }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Infinite Scroll View -->
-      <div v-else class="movie-grid">
+      <!-- 영화 리스트 -->
+      <div class="movie-grid">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
@@ -69,11 +50,10 @@
 </template>
 
 <script>
-import { ref } from "vue";
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "@/api/movies";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "Popular",
@@ -82,79 +62,58 @@ export default {
     MovieCard,
     Pagination,
   },
-  setup() {
-    const movies = ref([]);
-    const currentPage = ref(1);
-    const totalPages = ref(1);
-    const viewMode = ref("table"); // 초기 상태는 Table View
-    const loading = ref(false);
-    const showScrollTopButton = ref(false);
-
-    const fetchMovies = async (page = 1, append = false) => {
-      if (loading.value) return;
-      loading.value = true;
-
-      try {
-        const data = await fetchPopularMovies(page);
-        if (append) {
-          movies.value = [...movies.value, ...data.results];
-        } else {
-          movies.value = data.results;
-        }
-        currentPage.value = page;
-        totalPages.value = data.total_pages;
-      } catch (error) {
-        console.error("영화 데이터를 가져오는 중 오류 발생:", error);
-      } finally {
-        loading.value = false;
-      }
+  data() {
+    return {
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
+      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
+      loading: false,
+      showScrollTopButton: false,
     };
+  },
+  methods: {
+    async fetchMovies(page = 1, append = false) {
+      if (this.loading) return;
+      this.loading = true;
 
-    const changeViewMode = (mode) => {
-      viewMode.value = mode;
-      if (mode === "table") {
-        document.body.style.overflow = "hidden"; // 스크롤 비활성화
+      const data = await fetchPopularMovies(page);
+
+      if (append) {
+        this.movies = [...this.movies, ...data.results];
       } else {
-        document.body.style.overflow = "auto"; // 스크롤 활성화
+        this.movies = data.results;
       }
-      movies.value = [];
-      currentPage.value = 1;
-      fetchMovies();
-    };
 
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
-
-    const handleScroll = () => {
-      if (viewMode.value !== "infinite") return; // Infinite Scroll View에서만 실행
-
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
+      this.loading = false;
+    },
+    changeViewMode(mode) {
+      this.viewMode = mode;
+      this.movies = []; // 데이터를 초기화
+      this.currentPage = 1; // 첫 페이지부터 다시 로드
+      this.fetchMovies();
+    },
+    handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
 
-      if (bottomOfWindow && currentPage.value < totalPages.value && !loading.value) {
-        fetchMovies(currentPage.value + 1, true);
+      if (bottomOfWindow && this.viewMode === "infinite" && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 로드
       }
 
-      showScrollTopButton.value = window.scrollY > 300;
-    };
-
-    fetchMovies(); // 초기 데이터 로드
-
-    window.addEventListener("scroll", handleScroll);
-
-    return {
-      movies,
-      currentPage,
-      totalPages,
-      viewMode,
-      loading,
-      showScrollTopButton,
-      changeViewMode,
-      scrollToTop,
-    };
+      this.showScrollTopButton = window.scrollY > 300;
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
   },
-  beforeUnmount() {
+  created() {
+    this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
     window.removeEventListener("scroll", this.handleScroll);
   },
 };
@@ -166,11 +125,6 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
-}
-
-.no-scroll {
-  height: 100vh;
-  overflow: hidden; /* 스크롤 비활성화 */
 }
 
 .view-toggle {
@@ -199,18 +153,6 @@ export default {
   gap: 20px;
 }
 
-.movie-table table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.movie-table th,
-.movie-table td {
-  padding: 10px;
-  text-align: center;
-  border: 1px solid #444;
-}
-
 .loading {
   text-align: center;
   margin: 20px 0;
@@ -228,4 +170,9 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
+
+.disable-scroll{
+  overflow-y: hidden;
+}
+
 </style>

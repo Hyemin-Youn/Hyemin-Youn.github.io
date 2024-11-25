@@ -1,4 +1,4 @@
-<template>
+=<template>
   <div class="slider-container">
     <!-- 왼쪽 화살표 버튼 -->
     <button class="arrow-btn left" @click="scrollLeft">
@@ -14,7 +14,12 @@
         @click="toggleWishlist(movie)"
       >
         <img :src="`https://image.tmdb.org/t/p/w500/${movie.poster_path}`" :alt="movie.title" />
-        <p>{{ movie.title }}</p>
+        <div class="movie-info">
+          <p class="movie-title">{{ movie.title }}</p>
+          <div class="movie-rating" v-if="movie.vote_average">
+            ⭐ {{ movie.vote_average }} / 10
+          </div>
+        </div>
         <span class="wishlist-icon">
           <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'"></i>
         </span>
@@ -103,30 +108,44 @@ export default {
   width: 150px;
   cursor: pointer;
   flex-shrink: 0; /* 카드 크기 고정 */
+  overflow: hidden;
 }
 
 .movie-card img {
   width: 100%;
   border-radius: 8px;
+  transition: transform 0.3s ease-in-out;
 }
 
-.movie-card p {
-  margin-top: 5px;
+.movie-card:hover img {
+  transform: scale(1.1); /* Hover 시 이미지 확대 */
+}
+
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  padding: 10px;
   text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.movie-card:hover .movie-info {
+  opacity: 1; /* Hover 시 별점 정보 표시 */
+}
+
+.movie-title {
   font-size: 14px;
   color: white;
+  margin-bottom: 5px;
 }
 
-.wishlist-icon {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 16px;
-  color: white;
-}
-
-.wishlist-icon .liked {
-  color: #e50914;
+.movie-rating {
+  font-size: 12px;
+  color: gold;
 }
 
 /* 화살표 버튼 스타일 */
@@ -158,6 +177,17 @@ export default {
 .arrow-btn.right {
   right: -10px; /* 컨테이너 오른쪽 바깥쪽에 위치 */
 }
+
+/* 좋아요 아이콘 */
+.wishlist-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 16px;
+  color: white;
+}
+
+.wishlist-icon .liked {
+  color: #e50914;
+}
 </style>
-
-

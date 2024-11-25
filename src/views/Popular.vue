@@ -24,9 +24,10 @@
       <h1>대세 콘텐츠</h1>
 
       <!-- 영화 리스트 -->
-      <div class="movie-grid">
+      <div class="movie-grid" :class="{ 'table-view': viewMode === 'table' }">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
+
 
       <!-- Pagination (Table View 전용) -->
       <Pagination
@@ -89,12 +90,18 @@ export default {
       this.totalPages = data.total_pages;
       this.loading = false;
     },
+    methods: {
     changeViewMode(mode) {
       this.viewMode = mode;
-      this.movies = []; // 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지부터 다시 로드
-      this.fetchMovies();
+      if (mode === "table") {
+        // Table View로 변경할 때 페이지네이션을 초기화
+        this.movies = [];
+        this.currentPage = 1;
+        this.fetchMovies();
+        }
+      },
     },
+
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
@@ -174,5 +181,17 @@ export default {
 .disable-scroll{
   overflow-y: hidden;
 }
+
+.movie-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Default for infinite scroll */
+}
+
+.movie-grid.table-view {
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Smaller poster size for Table View */
+  gap: 10px;
+}
+
 
 </style>

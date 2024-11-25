@@ -1,7 +1,7 @@
 <template>
   <div :class="['popular', { 'disable-scroll': viewMode === 'table' }]">
     <!-- Navbar -->
-    <Navbar class="navbar" />
+    <Navbar />
 
     <!-- View Toggle Buttons -->
     <div class="view-toggle">
@@ -21,17 +21,24 @@
 
     <!-- Main Content -->
     <div class="content">
+      <!-- <h1>대세 콘텐츠</h1> -->
+
       <!-- 영화 리스트 -->
-      <div class="movie-grid" :class="{ 'table-view': viewMode === 'table' }">
-        <MovieCard v-for="movie in displayedMovies" :key="movie.id" :movie="movie" />
+      <div
+        class="movie-grid"
+        :class="{ 'table-view': viewMode === 'table' }"
+        :style="gridStyle"
+      >
+        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
       <!-- Pagination (Table View 전용) -->
-      <div v-if="viewMode === 'table'" class="pagination">
-        <button @click="changePage(page)" :class="{ active: currentPage === page }" v-for="page in totalPages" :key="page">
-          {{ page }}
-        </button>
-      </div>
+      <Pagination
+        v-if="viewMode === 'table'"
+        :currentPage="currentPage"
+        :totalPages="totalPages"
+        @change-page="fetchMovies"
+      />
 
       <!-- Loading Spinner -->
       <div v-if="loading && viewMode === 'infinite'" class="loading">
@@ -49,6 +56,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
+import Pagination from "@/components/Pagination.vue";
 import { fetchPopularMovies } from "../api/movies";
 
 export default {
@@ -56,26 +64,28 @@ export default {
   components: {
     Navbar,
     MovieCard,
+    Pagination,
   },
   data() {
     return {
       movies: [],
       currentPage: 1,
-      totalPages: 10, // 최대 10페이지로 제한
+      totalPages: 1,
       viewMode: "table", // 기본 View 모드
       loading: false,
       showScrollTopButton: false,
-      moviesPerPage: 10, // 한 페이지에 표시할 영화 개수
+      containerHeight: 0, // 동적 높이 계산
     };
   },
   computed: {
-    displayedMovies() {
+    gridStyle() {
       if (this.viewMode === "table") {
-        const start = (this.currentPage - 1) * this.moviesPerPage;
-        const end = start + this.moviesPerPage;
-        return this.movies.slice(start, end);
+        return {
+          height: `${this.containerHeight}px`,
+          overflow: "hidden",
+        };
       }
-      return this.movies;
+      return {};
     },
   },
   methods: {
@@ -91,32 +101,44 @@ export default {
         this.movies = data.results;
       }
 
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
       this.loading = false;
+
+      if (this.viewMode === "table") {
+        this.calculateContainerHeight();
+      }
     },
     changeViewMode(mode) {
       this.viewMode = mode;
 
       if (mode === "table") {
+        // 스크롤바 제거 및 동적 높이 계산
         document.body.style.overflow = "hidden";
-        this.currentPage = 1; // 테이블 뷰에 맞게 초기화
+        this.movies = [];
+        this.currentPage = 1;
+        this.fetchMovies();
       } else {
+        // Infinite Scroll에서 스크롤바 활성화
         document.body.style.overflow = "auto";
-        this.fetchMovies(1, true); // 무한 스크롤 초기화
       }
     },
-    changePage(page) {
-      this.currentPage = page;
+    calculateContainerHeight() {
+      const rowHeight = 150; // 각 영화 카드의 높이
+      const gap = 20; // 카드 간 간격
+      const rows = Math.ceil(this.movies.length / 5); // 가로 5개씩 배치
+      this.containerHeight = rows * (rowHeight + gap) - gap; // 전체 높이 계산
     },
     handleScroll() {
-      if (this.viewMode === "infinite") {
-        const bottomOfWindow =
-          window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      if (this.viewMode !== "infinite") return;
 
-        if (bottomOfWindow && !this.loading) {
-          this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
-          this.currentPage++;
-        }
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
       }
+
       this.showScrollTopButton = window.scrollY > 300;
     },
     scrollToTop() {
@@ -125,36 +147,26 @@ export default {
   },
   created() {
     this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 등록
+    window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll); // 스크롤 이벤트 해제
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-/* Navbar 고정 */
-.navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
-/* 전체 페이지 스타일 */
 .popular {
-  padding-top: 60px; /* Navbar 높이만큼 패딩 추가 */
+  padding: 20px;
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
 }
 
-/* 뷰 전환 버튼 */
 .view-toggle {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  margin-bottom: 20px;
 }
 
 .view-toggle button {
@@ -162,6 +174,7 @@ export default {
   color: #fff;
   border: none;
   padding: 10px 20px;
+  cursor: pointer;
   margin: 0 5px;
   border-radius: 4px;
 }
@@ -170,34 +183,23 @@ export default {
   background-color: #e50914;
 }
 
-/* 영화 그리드 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 고정 열 */
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 기본 View 크기 */
   gap: 20px;
 }
 
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
+.movie-grid.table-view {
+  grid-template-columns: repeat(5, 1fr); /* Table View에서 고정된 열 크기 */
+  gap: 10px;
+}
+
+.loading {
+  text-align: center;
   margin: 20px 0;
+  color: white;
 }
 
-.pagination button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 5px 10px;
-  margin: 0 5px;
-  border-radius: 4px;
-}
-
-.pagination button.active {
-  background-color: #e50914;
-}
-
-/* TOP 버튼 */
 .scroll-top {
   position: fixed;
   bottom: 20px;
@@ -208,5 +210,9 @@ export default {
   padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.disable-scroll {
+  overflow: hidden; /* Table View에서 스크롤 제거 */
 }
 </style>

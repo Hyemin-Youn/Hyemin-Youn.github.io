@@ -79,21 +79,22 @@ export default {
   display: flex;
   align-items: center;
   margin: 10px 0;
+  padding: 0 40px; /* 버튼 바깥쪽 위치를 확보하기 위한 여백 */
 }
 
 /* 슬라이더 콘텐츠 */
 .slider-content {
   display: flex;
   gap: 15px;
-  overflow-x: auto; /* 가로 스크롤 허용 */
-  scroll-behavior: smooth; /* 부드러운 스크롤 */
+  overflow-x: auto;
+  scroll-behavior: smooth;
   padding: 10px 0;
   width: 100%;
-  scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+  scrollbar-width: none; /* Firefox 스크롤바 숨기기 */
 }
 
 .slider-content::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge에서 스크롤바 숨기기 */
+  display: none; /* Chrome, Safari, Edge 스크롤바 숨기기 */
 }
 
 /* 카드 스타일 */
@@ -148,12 +149,15 @@ export default {
   background: rgba(0, 0, 0, 0.8);
 }
 
+/* 왼쪽 화살표 버튼 */
 .arrow-btn.left {
-  left: 10px;
+  left: -30px; /* 컨테이너 왼쪽 바깥쪽에 위치 */
 }
 
+/* 오른쪽 화살표 버튼 */
 .arrow-btn.right {
-  right: 10px;
+  right: -30px; /* 컨테이너 오른쪽 바깥쪽에 위치 */
 }
 </style>
+
 

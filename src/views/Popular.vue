@@ -1,15 +1,15 @@
 <template>
-  <div class="popular" :class="{ 'no-scroll': viewMode === 'table' }">
+  <div class="popular" :class="{ 'no-scroll': viewMode === 'grid' }">
     <!-- Navbar -->
     <Navbar />
 
     <!-- View Toggle Buttons -->
     <div class="view-toggle">
       <button
-        :class="{ active: viewMode === 'table' }"
-        @click="changeViewMode('table')"
+        :class="{ active: viewMode === 'grid' }"
+        @click="changeViewMode('grid')"
       >
-        Table View
+        Grid View
       </button>
       <button
         :class="{ active: viewMode === 'infinite' }"
@@ -21,28 +21,29 @@
 
     <!-- Main Content -->
     <div class="content">
-      <h1>대세 콘텐츠</h1>
+      <h1>인기 영화</h1>
 
-      <!-- 영화 리스트 -->
-      <div class="movie-grid">
+      <!-- Grid View -->
+      <div v-if="viewMode === 'grid'" class="movie-grid">
         <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
       </div>
 
-      <!-- Pagination (Table View 전용) -->
-      <Pagination
-        v-if="viewMode === 'table'"
-        :currentPage="currentPage"
-        :totalPages="totalPages"
-        @change-page="fetchMovies"
-      />
-
-      <!-- Loading Spinner -->
-      <div v-if="loading && viewMode === 'infinite'" class="loading">
-        로딩 중...
+      <!-- Infinite Scroll View -->
+      <div v-if="viewMode === 'infinite'" class="infinite-scroll">
+        <MovieCard
+          v-for="movie in movies"
+          :key="movie.id"
+          :movie="movie"
+        />
+        <div v-if="loading" class="loading">로딩 중...</div>
       </div>
 
-      <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton && viewMode === 'infinite'" class="scroll-top" @click="scrollToTop">
+      <!-- Scroll to Top Button -->
+      <button
+        v-if="showScrollTopButton"
+        class="scroll-top"
+        @click="scrollToTop"
+      >
         위로
       </button>
     </div>
@@ -52,22 +53,20 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "../api/movies";
+import { fetchPopularMovies } from "@/api/movies";
 
 export default {
-  name: "Popular",
+  name: "PopularMovies",
   components: {
     Navbar,
     MovieCard,
-    Pagination,
   },
   data() {
     return {
       movies: [],
       currentPage: 1,
       totalPages: 1,
-      viewMode: "table", // 현재 View 모드 ('table' 또는 'infinite')
+      viewMode: "grid", // 현재 View 모드 ('grid' 또는 'infinite')
       loading: false,
       showScrollTopButton: false, // 스크롤 상단 버튼 표시 여부
     };
@@ -77,17 +76,22 @@ export default {
       if (this.loading) return;
       this.loading = true;
 
-      const data = await fetchPopularMovies(page);
+      try {
+        const data = await fetchPopularMovies(page);
 
-      if (append) {
-        this.movies = [...this.movies, ...data.results];
-      } else {
-        this.movies = data.results;
+        if (append) {
+          this.movies = [...this.movies, ...data.results];
+        } else {
+          this.movies = data.results;
+        }
+
+        this.currentPage = page;
+        this.totalPages = data.total_pages;
+      } catch (error) {
+        console.error("영화 데이터를 가져오는 중 오류 발생:", error);
+      } finally {
+        this.loading = false;
       }
-
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
-      this.loading = false;
     },
     changeViewMode(mode) {
       this.viewMode = mode;
@@ -95,30 +99,49 @@ export default {
       this.currentPage = 1;
       this.fetchMovies();
     },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    handleScroll() {
+      const scrollTop = window.scrollY;
+      this.showScrollTopButton = scrollTop > 300;
+
+      if (
+        this.viewMode === "infinite" &&
+        window.innerHeight + scrollTop >= document.body.offsetHeight - 50
+      ) {
+        if (this.currentPage < this.totalPages) {
+          this.fetchMovies(this.currentPage + 1, true);
+        }
+      }
+    },
   },
   created() {
     this.fetchMovies();
+  },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeUnmount() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
 
 <style scoped>
-/* 기본 레이아웃 */
 .popular {
   padding: 20px;
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
-  overflow-y: auto; /* 기본적으로 스크롤 가능 */
+  overflow-y: auto;
 }
 
-/* Table View에서 스크롤 제거 */
 .no-scroll {
   height: 100vh;
-  overflow: hidden; /* 스크롤 완전 제거 */
+  overflow: hidden;
 }
 
-/* View Toggle 버튼 스타일 */
 .view-toggle {
   display: flex;
   justify-content: center;
@@ -139,7 +162,6 @@ export default {
   background-color: #e50914;
 }
 
-/* 영화 카드 그리드 */
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -147,14 +169,19 @@ export default {
   margin-top: 20px;
 }
 
-/* Pagination 컴포넌트 스타일 */
+.infinite-scroll {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
 .loading {
   text-align: center;
   margin: 20px 0;
   color: white;
 }
 
-/* 맨 위로 버튼 스타일 */
 .scroll-top {
   position: fixed;
   bottom: 20px;

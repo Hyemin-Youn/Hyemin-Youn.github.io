@@ -20,3 +20,5 @@ module.exports = {
   },
 };
 
+require("dotenv").config();
+const API_KEY = process.env.TMDB_API_KEY;

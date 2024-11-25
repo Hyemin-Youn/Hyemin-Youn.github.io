@@ -4,6 +4,7 @@
       <img :src="posterUrl" :alt="movie.title" class="poster" />
       <div class="hover-info">
         <p class="rating">⭐ {{ movie.vote_average || "N/A" }} / 10</p>
+        <p class="release-date">📅 {{ formattedReleaseDate }}</p>
       </div>
     </div>
     <p class="title">{{ movie.title }}</p>
@@ -21,6 +22,11 @@ export default {
   computed: {
     posterUrl() {
       return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
+    },
+    formattedReleaseDate() {
+      if (!this.movie.release_date) return "개봉일 정보 없음";
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(this.movie.release_date).toLocaleDateString("ko-KR", options);
     },
   },
 };
@@ -56,6 +62,7 @@ export default {
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   opacity: 0;
@@ -76,5 +83,11 @@ export default {
   font-size: 16px;
   color: gold;
   font-weight: bold;
+}
+
+.release-date {
+  font-size: 14px;
+  color: #ffffff;
+  margin-top: 5px;
 }
 </style>

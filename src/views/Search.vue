@@ -125,13 +125,24 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+      this.movies = []; // 기존 데이터를 초기화
+      this.currentPage = 1; // 첫 페이지로 이동
+      this.fetchMovies(1); // 필터 변경 시 데이터 재로드
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
+      this.movies = []; // 기존 데이터를 초기화
+      this.currentPage = 1; // 첫 페이지로 이동
+      this.fetchMovies(1); // 초기화 후 데이터 재로드
     },
     handleScroll() {
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (scrollPosition >= documentHeight - 100 && !this.loading) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+      }
+
       this.showScrollTopButton = window.scrollY > 300; // 스크롤이 300px 이상일 때 TOP 버튼 표시
     },
     scrollToTop() {

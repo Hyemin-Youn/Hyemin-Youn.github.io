@@ -39,7 +39,7 @@
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import { fetchMovies } from "@/api/movies.js";
+import { fetchMovies } from "@/api/movie";
 
 export default {
   name: "Search",

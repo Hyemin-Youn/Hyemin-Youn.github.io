@@ -74,25 +74,6 @@ export default {
 
 <style scoped>
 
-.movie-card {
-  position: relative;
-  width: 150px;
-  cursor: pointer;
-  flex-shrink: 0; /* 카드의 크기가 줄어들지 않도록 설정 */
-}
-
-.movie-card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.movie-card p {
-  margin-top: 5px;
-  text-align: center;
-  font-size: 14px;
-  color: white;
-}
-
 .wishlist-icon {
   position: absolute;
   top: 10px;

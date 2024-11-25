@@ -146,4 +146,115 @@ export default {
 .slide-btn.right {
   right: 10px;
 }
+
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.poster-list {
+  display: flex;
+  gap: 10px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.poster {
+  flex: 0 0 calc(100% / 6);
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.poster:hover {
+  transform: scale(1.1); /* hover 시 확대 효과 */
+  z-index: 2; /* 다른 포스터 위로 올라옴 */
+}
+
+.poster.active {
+  transform: scale(1.1); /* 클릭된 상태에서도 확대 유지 */
+  border: 3px solid #e50914; /* 강조 색상 추가 */
+}
+
+.info {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 100%;
+  box-sizing: border-box; /* 포스터 크기에 정확히 맞춤 */
+  padding: 10px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 0 0 8px 8px; /* 포스터 아래 모서리와 일치 */
+  overflow: hidden; /* 텍스트가 튀어나오지 않도록 설정 */
+}
+
+.poster {
+  flex: 0 0 calc(100% / 6); /* 한 화면에 6개 표시 */
+  height: 300px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 8px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden; /* 포스터 내부에 모든 내용 제한 */
+}
+
+
+.poster:hover .info,
+.poster.active .info {
+  opacity: 1; /* hover와 클릭 시 정보 표시 */
+}
+
+.arrow-btn {
+  background: rgba(0, 0, 0, 0.7);
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 10;
+  margin: 0 10px;
+}
+
+.arrow-btn:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .poster {
+    flex: 0 0 calc(100% / 4); /* 태블릿: 한 화면에 2.5개 표시 (더 넓게) */
+    height: 300px; /* 높이를 유지 */
+  }
+}
+
+@media (max-width: 500px) {
+  .poster {
+    flex: 0 0 calc(100% / 2); /* 모바일: 한 화면에 1.5개 표시 (더 넓게) */
+    height: 280px; /* 높이를 유지 */
+  }
+
+  .info {
+    font-size: 0.5rem; /* 정보 텍스트 크기 */
+    padding: 6px; /* 정보 영역의 여백 */
+  }
+}
+
 </style>

@@ -90,27 +90,9 @@ export default {
   methods: {
     switchToSignup() {
       this.activeCard = "signup";
-      this.triggerCardAnimation();
     },
     switchToLogin() {
       this.activeCard = "login";
-      this.triggerCardAnimation();
-    },
-    triggerCardAnimation() {
-      const cards = document.querySelectorAll(".card");
-      cards.forEach((card) => {
-        if (card.classList.contains("active")) {
-          card.classList.remove("active");
-          card.classList.add("backward");
-        } else {
-          card.classList.remove("backward");
-          card.classList.add("enter");
-          setTimeout(() => {
-            card.classList.remove("enter");
-            card.classList.add("active");
-          }, 1000); // 애니메이션 시간을 1초로 설정
-        }
-      });
     },
     handleLogin() {
       if (this.password.length < 6) {
@@ -118,10 +100,6 @@ export default {
         return;
       }
       alert("Login successful!");
-      this.$store.dispatch("login", { email: this.email });
-      if (this.$route.path !== "/home") {
-        this.$router.push("/home");
-      }
     },
     handleRegister() {
       if (this.newPassword.length < 6) {
@@ -147,7 +125,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop');
+  background-image: url("https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop");
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -182,17 +160,6 @@ export default {
   opacity: 1;
   z-index: 2;
   transform: rotateY(0deg) translateX(0);
-}
-
-.card.backward {
-  z-index: 1;
-  transform: rotateY(-90deg) translateX(-100%);
-  opacity: 0;
-}
-
-.card.enter {
-  opacity: 0;
-  transform: rotateY(90deg) translateX(100%);
 }
 
 /* 카드 콘텐츠 */
@@ -259,124 +226,69 @@ button:hover {
   margin-top: 8px;
 }
 
-@media (max-height: 600px) {
-  #phone {
-    transform: translate(-50%, -50%) scale(0.5); /* Scale down on small screens */
+/* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+  .wrapper {
+    width: 90%;
+    height: auto;
+  }
+
+  .card {
+    width: 90%;
+    height: auto;
+    padding: 20px;
+  }
+
+  .content {
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  h2 {
+    font-size: 1.2rem;
+  }
+
+  input {
+    font-size: 0.8rem;
+  }
+
+  button {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .switch {
+    font-size: 0.7rem;
   }
 }
 
-@media (max-height: 400px) {
-  #phone {
-    transform: translate(-50%, -50%) scale(0.3); /* Further scale down */
+@media (max-width: 480px) {
+  .wrapper {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .card {
+    width: 95%;
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 1rem;
+  }
+
+  input {
+    font-size: 0.7rem;
+  }
+
+  button {
+    font-size: 0.7rem;
+    padding: 6px;
+  }
+
+  .switch {
+    font-size: 0.6rem;
   }
 }
-
-#content-wrapper {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  position:relative;
-}
-
-input {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
-  background-color: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-  height: 2.5rem;
-  padding: 0;
-  margin: 0;
-}
-
-
-.read-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-indent: 10px; /* 원하는 들여쓰기 크기로 조정하세요 */
-  color: #2b2b2b !important;
-  font-weight: 900;
-}
-
-h1 {
-  font-size:24px;
-  font-weight:800;
-  text-align:center;
-  margin-top:0;
-
-  color:#272727;
-}
-
-button {
-  display:block;
-  border-radius:50px;
-  border:none;
-  width:100%;
-  background-color: #2069ff;
-  color:#fff;
-  padding:17px;
-  text-transform:uppercase;
-  letter-spacing:2px;
-  box-shadow: 0px 10px 30px rgba(23,83,209,0.3);
-  transition: all 0.2s ease;
-}
-
-button:hover {
-  box-shadow: 0px 2px 10px rgba(23,83,209,0.4)
-}
-
-.input {
-  position: relative;
-  margin-top: 1.5rem;
-}
-
-.line-active {
-  border-bottom:1px solid #2069ff !important;
-  box-shadow: 0px 1px 0px #2069ff !important;
-}
-
-.input input {
-  background-color: transparent;
-  border: none;
-  border-bottom: 1px solid #9e9e9e;
-  border-radius: 0;
-  outline: none;
-  height: 2.5rem;
-  width: 100%;
-  font-size: 1rem;
-  padding: 0;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  box-sizing: content-box;
-  transition: all 0.3s ease;
-}
-
-.input label {
-  color: #9e9e9e;
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  font-size: 1rem;
-  cursor: text;
-  transition: transform .2s ease-out;
-  transform-origin: 0% 100%;
-  text-align: initial;
-  transform: translateY(12px);
-  pointer-events: none;
-}
-
-.label-active {
-  transform: translateY(-14px) scale(0.8) !important;
-  transform-origin: 0 0 !important;
-}
-
-.label-blue {
-  color: #2069ff !important;
-}
-
 </style>

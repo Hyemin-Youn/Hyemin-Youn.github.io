@@ -42,9 +42,14 @@ const routes = [
     component: SliderContent, 
   },
   {
-    path: '/popular',
-    name: 'Popular',
-    component: Popular,
+    path: "/popular-infinite",
+    name: "PopularInfinite",
+    component: PopularInfinite,
+  },
+  {
+    path: "/popular-table",
+    name: "PopularTable",
+    component: PopularTable,
   },
   {
     path: "/search",

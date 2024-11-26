@@ -198,7 +198,7 @@ export default {
 /* 카드 콘텐츠 */
 .content {
   position: absolute;
-  width: 80%;
+  width: 100%;
   height: 100%;
   padding: 30px;
   text-align: center;
@@ -221,7 +221,7 @@ label {
 }
 
 input {
-  width: 90%;
+  width: 100%;
   padding: 10px;
   margin-top: 6px;
   margin-bottom: 12px;
@@ -259,6 +259,18 @@ button:hover {
   margin-top: 8px;
 }
 
-
+@media (max-width: 480px) {
+  .content {
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    padding: 30px;
+    text-align: center;
+    background: #e50914;
+    color: #fff;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
 
 </style>

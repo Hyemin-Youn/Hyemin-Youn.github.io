@@ -28,14 +28,12 @@
 </template>
 
 <script>
-// import Navbar from "@/components/Navbar.vue";
-import MovieCard from "@/components/MovieCard.vue";
 import axios from "axios";
+import MovieCard from "@/components/MovieCard.vue";
 
 export default {
   name: "PopularTable",
   components: {
-    // Navbar,
     MovieCard,
   },
   data() {
@@ -43,7 +41,7 @@ export default {
       movies: [],
       currentPage: 1,
       totalPages: 1,
-      moviesPerPage: 8, // 한 페이지에 표시할 영화 수
+      moviesPerPage: 8,
     };
   },
   computed: {
@@ -60,14 +58,16 @@ export default {
           "https://api.themoviedb.org/3/movie/popular",
           {
             params: {
-              api_key: "YOUR_API_KEY", // TMDB API 키
-              language: "ko-KR", // 한국어 설정
+              api_key: "YOUR_API_KEY",
+              language: "ko-KR",
               page: this.currentPage,
             },
           }
         );
         this.movies = response.data.results;
         this.totalPages = response.data.total_pages;
+
+        console.log(this.movies); // 데이터 확인
       } catch (error) {
         console.error("Error fetching movies:", error);
       }
@@ -80,10 +80,11 @@ export default {
     },
   },
   created() {
-    this.fetchMovies(); // 컴포넌트 생성 시 첫 페이지 데이터 로드
+    this.fetchMovies();
   },
 };
 </script>
+
 
 <style scoped>
 /* Navbar 고정 */

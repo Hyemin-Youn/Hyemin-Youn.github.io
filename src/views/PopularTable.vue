@@ -1,18 +1,63 @@
 <template>
-  <div class="popular-table">
-    <!-- <Navbar /> -->
+  <div>
+    <!-- Navbar -->
+    <Navbar />
 
-    <div class="movies-container">
-      <div class="movie-grid">
-        <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
+    <!-- View Toggle Buttons -->
+    <div class="view-toggle">
+      <button
+        :class="{ active: currentView === 'table' }"
+        @click="switchView('table')"
+      >
+        📋 Table View
+      </button>
+      <button
+        :class="{ active: currentView === 'infinite' }"
+        @click="switchView('infinite')"
+      >
+        📜 무한 스크롤 View
+      </button>
+    </div>
+
+    <!-- Conditional View Rendering -->
+    <div v-if="currentView === 'table'" class="popular-table">
+      <div class="movies-container">
+        <div class="movie-grid">
+          <MovieCard
+            v-for="movie in paginatedMovies"
+            :key="movie.id"
+            :movie="movie"
+          />
+        </div>
+      </div>
+      <!-- Pagination -->
+      <div class="pagination">
+        <button
+          @click="changePage(currentPage - 1)"
+          :disabled="currentPage === 1"
+        >
+          이전
+        </button>
+        <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
+        <button
+          @click="changePage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+        >
+          다음
+        </button>
       </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="pagination">
-      <button @click="changePage(currentPage - 1)" :disabled="currentPage === 1">이전</button>
-      <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="changePage(currentPage + 1)" :disabled="currentPage === totalPages">다음</button>
+    <div v-else class="popular-infinite">
+      <div class="movie-grid">
+        <MovieCard
+          v-for="movie in movies"
+          :key="movie.id"
+          :movie="movie"
+        />
+      </div>
+      <!-- Infinite Scroll Loader -->
+      <div v-if="loading" class="loading">로딩 중...</div>
     </div>
   </div>
 </template>
@@ -25,9 +70,11 @@ export default {
   components: { Navbar, MovieCard },
   data() {
     return {
+      currentView: "table", // Default view is Table
       currentPage: 1,
-      moviesPerPage: 12, // 한 페이지에 표시할 영화 수
-      movies: [], // 전체 영화 데이터
+      moviesPerPage: 12, // Movies per page in table view
+      movies: [], // Movie data
+      loading: false, // Loading state for infinite scroll
     };
   },
   computed: {
@@ -40,27 +87,67 @@ export default {
     },
   },
   methods: {
+    switchView(view) {
+      this.currentView = view;
+    },
     changePage(page) {
       if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
       }
     },
+    async fetchMovies() {
+      this.loading = true;
+      // Simulate an API call
+      setTimeout(() => {
+        this.movies = [...Array(30)].map((_, i) => ({
+          id: i + 1,
+          title: `영화 ${i + 1}`,
+        }));
+        this.loading = false;
+      }, 1000);
+    },
   },
   created() {
-    // 예시: 영화 데이터 가져오기
-    this.movies = [...Array(30)].map((_, i) => ({ id: i + 1, title: `영화 ${i + 1}` }));
+    this.fetchMovies();
   },
 };
 </script>
 
 <style scoped>
+/* View Toggle Buttons */
+.view-toggle {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  padding: 10px;
+  background: #222;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.view-toggle button {
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.view-toggle button.active {
+  background-color: #e50914;
+  border: 2px solid #fff;
+}
+
 .popular-table {
   padding: 20px;
-  color: white;
 }
 
 .movies-container {
-  height: calc(100vh - 150px); /* Navbar와 Pagination 제외 */
+  height: calc(100vh - 150px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,7 +155,7 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* 한 줄에 6개 */
+  grid-template-columns: repeat(6, 1fr);
   gap: 15px;
 }
 
@@ -91,5 +178,15 @@ export default {
 .pagination button:disabled {
   background-color: #666;
   cursor: not-allowed;
+}
+
+.popular-infinite {
+  padding: 20px;
+}
+
+.loading {
+  text-align: center;
+  color: #fff;
+  margin-top: 20px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="popular">
     <!-- Navbar -->
-    <Navbar class="navbar" />
+    <!-- <Navbar class="navbar" /> -->
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
@@ -28,14 +28,14 @@
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue";
+// import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "PopularTable",
   components: {
-    Navbar,
+    // Navbar,
     MovieCard,
   },
   data() {
@@ -88,20 +88,29 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* 영화 그리드와 페이지네이션 사이 간격 자동 조정 */
 }
 
 .movie-grid {
+  flex-grow: 1; /* 그리드가 가능한 공간을 차지하도록 설정 */
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
-  gap: 20px;
+  gap: 10px; /* 영화 포스터 간격 좁힘 */
   padding: 20px;
+  align-items: center; /* 그리드 아이템 가운데 정렬 */
+  justify-items: center; /* 가로로 가운데 정렬 */
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #222;
+  border-radius: 10px;
 }
 
 .pagination button {
@@ -112,15 +121,37 @@ export default {
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.pagination button:disabled {
+.pagination button:hover {
+  background-color: #e50914;
+}
+
+/* .pagination button:disabled {
   background-color: #666;
   cursor: not-allowed;
-}
+} */
 
 .pagination span {
   color: #fff;
   margin: 0 10px;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr); /* 모바일 화면에서는 2열 */
+    gap: 8px; /* 모바일 화면에서 간격도 좁힘 */
+  }
+
+  .pagination button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .pagination span {
+    font-size: 14px;
+  }
 }
 </style>

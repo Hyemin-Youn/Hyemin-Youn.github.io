@@ -40,7 +40,7 @@ export default {
       movies: [], // 전체 영화 데이터
       currentPage: 1, // 현재 페이지
       totalPages: 1, // 총 페이지 수
-      moviesPerPage: 10, // 한 페이지에 표시할 영화 수
+      moviesPerPage: 9, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
@@ -115,7 +115,7 @@ export default {
 
 /* 영화 카드 */
 .movie-card {
-  width: 120px; /* 카드 크기는 그대로 유지 */
+  width: 130px; /* 카드 크기는 그대로 유지 */
   text-align: center;
   color: white;
 }

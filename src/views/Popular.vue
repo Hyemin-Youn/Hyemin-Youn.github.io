@@ -1,31 +1,26 @@
 <template>
-    <div class="view-toggle">
-      <button
-        :class="{ active: $route.name === 'PopularTable' }"
-        @click="navigateTo('PopularTable')"
-      >
-        Table View
-      </button>
-      <button
-        :class="{ active: $route.name === 'PopularInfinite' }"
-        @click="navigateTo('PopularInfinite')"
-      >
-        무한 스크롤 View
-      </button>
+    <div>
+      <button @click="viewMode = 'infinite'">무한 스크롤</button>
+      <button @click="viewMode = 'table'">테이블 뷰</button>
+  
+      <PopularInfinite v-if="viewMode === 'infinite'" />
+      <PopularTable v-if="viewMode === 'table'" />
     </div>
-    <router-view /> <!-- 라우터에 따라 적절한 컴포넌트 렌더링 -->
   </template>
   
   <script>
+  import PopularInfinite from "@/views/PopularInfinite.vue";
+  import PopularTable from "@/views/PopularTable.vue";
+  
   export default {
-    methods: {
-      navigateTo(view) {
-        if (view === 'PopularTable') {
-          this.$router.push('/popular/table');
-        } else {
-          this.$router.push('/popular/infinite');
-        }
-      },
+    components: {
+      PopularInfinite,
+      PopularTable,
+    },
+    data() {
+      return {
+        viewMode: "infinite",
+      };
     },
   };
   </script>

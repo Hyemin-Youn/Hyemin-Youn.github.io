@@ -46,7 +46,8 @@ const routes = [
   },
   {
     path: '/popular',
-    redirect: '/popular/table', // 기본적으로 무한스크롤 뷰로 리다이렉트
+    name: 'Popular',
+    component: Popular,
   },
   {
     path: '/popular/infinite',

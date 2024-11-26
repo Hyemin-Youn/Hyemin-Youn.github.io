@@ -124,7 +124,8 @@ export default {
   margin: 0 10px;
 }
 
-.disable-scroll{
-  overflow-y: hidden;
+.disable-scroll {
+  overflow-y: hidden !important;
 }
+
 </style>

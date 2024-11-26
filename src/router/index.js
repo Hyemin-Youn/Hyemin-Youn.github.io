@@ -45,7 +45,8 @@ const routes = [
   },
   {
     path: "/popular",
-    component: Popular, // Popular.vue를 통합한 새 컴포넌트를 연결
+    component: Popular,
+    redirect: "/popular/table", // 기본적으로 Table View로 리디렉션
     children: [
       {
         path: "table",
@@ -56,7 +57,7 @@ const routes = [
         component: PopularInfinite,
       },
     ],
-  },
+  },  
   {
     path: "/search",
     name: "Search",

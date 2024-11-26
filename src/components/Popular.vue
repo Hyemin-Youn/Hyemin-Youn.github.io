@@ -114,4 +114,12 @@ export default {
   transform: scale(1.05); /* 호버 시 확대 */
   box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* 호버 시 그림자 강화 */
 }
+
+@media (max-width: 768px) {
+  .view-toggle button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+}
+
 </style>

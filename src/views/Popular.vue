@@ -22,18 +22,11 @@
     <!-- Main Content -->
     <div class="content">
       <!-- 영화 리스트 -->
-      <div
-        class="movie-grid"
-        :class="{ 'table-view': viewMode === 'table' }"
-      >
-        <MovieCard
-          v-for="movie in paginatedMovies"
-          :key="movie.id"
-          :movie="movie"
-        />
+      <div class="movie-grid" :class="{ 'table-view': viewMode === 'table' }">
+        <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
       </div>
 
-      <!-- Pagination (Table View 전용) -->
+      <!-- Pagination -->
       <div v-if="viewMode === 'table'" class="pagination">
         <button
           :disabled="currentPage === 1"
@@ -81,7 +74,8 @@ export default {
       totalPages: 1,
       viewMode: "table", // 기본 View 모드
       loading: false,
-      moviesPerPage: 16, // 한 페이지에 표시할 영화 개수
+      showScrollTopButton: false,
+      moviesPerPage: 8, // 한 페이지에 표시할 영화 개수 줄임
     };
   },
   computed: {
@@ -128,12 +122,15 @@ export default {
 </script>
 
 <style scoped>
-/* Navbar 고정 */
+/* Navbar 고정 및 화면 상단에 딱 붙이기 */
 .navbar {
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   z-index: 1000;
+  background-color: #121212; /* 배경색 추가 */
+  border-bottom: 1px solid #333; /* 하단 구분선 추가 */
 }
 
 /* 전체 페이지 스타일 */
@@ -172,12 +169,9 @@ export default {
 /* 영화 그리드 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
+  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 */
   gap: 20px;
-}
-
-.movie-grid.table-view {
-  grid-template-rows: repeat(4, 1fr); /* 4줄 */
+  padding: 20px;
 }
 
 /* Pagination */
@@ -185,7 +179,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 20px 0;
+  margin: 10px 0; /* 영화 포스터 바로 아래에 위치 */
 }
 
 .pagination button {

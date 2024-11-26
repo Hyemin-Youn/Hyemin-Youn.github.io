@@ -5,7 +5,6 @@ import Wishlist from '../views/WishList.vue';
 import store from '../store';
 import MovieDetail from "@/views/MovieDetail.vue";
 import SliderContent from '../components/SliderContent.vue';
-import Popular from "@/views/Popular.vue";
 import Search from "@/views/Search.vue";
 import PopularInfinite from "@/views/PopularInfinite.vue";
 import PopularTable from "@/views/PopularTable.vue";
@@ -46,22 +45,18 @@ const routes = [
   },
   {
     path: "/popular",
-    component: Popular, // Popular.vue를 통합한 새 컴포넌트를 연결
+    component: PopularTable, // Table 뷰를 기본으로 설정
     children: [
       {
-        path: "table",
-        component: PopularTable,
-      },
-      {
         path: "infinite",
-        component: PopularInfinite,
+        component: PopularInfinite, // Infinite 뷰
       },
     ],
   },
-  {
-    path: "/",
-    redirect: "/popular/table", // 기본 경로를 Table View로 설정
-  },
+  // {
+  //   path: "/",
+  //   redirect: "/popular/table", // 기본 경로를 Table View로 설정
+  // },
   {
     path: "/search",
     name: "Search",

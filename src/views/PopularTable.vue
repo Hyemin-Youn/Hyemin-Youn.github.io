@@ -1,6 +1,6 @@
 <template>
   <div class="popular-table">
-    <Navbar />
+    <!-- <Navbar /> -->
 
     <div class="movies-container">
       <div class="movie-grid">

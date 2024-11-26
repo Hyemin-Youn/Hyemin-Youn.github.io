@@ -50,13 +50,13 @@ const routes = [
     component: Popular,
   },
   {
-    path: "/popular-infinite",
-    name: "PopularInfinite",
+    path: '/popular/infinite',
+    name: 'PopularInfinite',
     component: PopularInfinite,
   },
   {
-    path: "/popular-table",
-    name: "PopularTable",
+    path: '/popular/table',
+    name: 'PopularTable',
     component: PopularTable,
   },
   {

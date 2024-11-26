@@ -230,4 +230,14 @@ export default {
   border-radius: 4px;
   cursor: pointer;
 }
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #121212;
+  border-bottom: 1px solid #333;
+}
 </style>

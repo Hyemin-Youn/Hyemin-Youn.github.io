@@ -1,220 +1,126 @@
 <template>
   <div class="popular">
-    <div class="movie-grid" ref="gridContainer">
-      <div :class="['grid-container', currentView]">
-        <div
-          v-for="(movieGroup, index) in visibleMovieGroups"
-          :key="index"
-          :class="['movie-row', { full: movieGroup.length === rowSize }]"
-        >
-          <div
-            v-for="movie in movieGroup"
-            :key="movie.id"
-            class="movie-card"
-            @mouseup="toggleWishlist(movie)"
-          >
-            <img :src="getImageUrl(movie.poster_path)" :alt="movie.title" />
-            <div class="movie-title">{{ movie.title }}</div>
-            <div v-if="isInWishlist(movie.id)" class="wishlist-indicator">👍</div>
-          </div>
-        </div>
-      </div>
+    <!-- Navbar -->
+    <!-- <Navbar class="navbar" /> -->
+
+    <!-- 영화 리스트 -->
+    <div class="movie-grid">
+      <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
     </div>
 
-    <!-- 페이지네이션 -->
-    <div class="pagination" v-if="totalPages > 1">
-      <button @click="prevPage" :disabled="currentPage === 1">&lt; 이전</button>
-      <span>{{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">다음 &gt;</button>
+    <!-- Pagination -->
+    <div class="pagination">
+      <button
+        :disabled="currentPage === 1"
+        @click="changePage(currentPage - 1)"
+      >
+        이전
+      </button>
+      <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="changePage(currentPage + 1)"
+      >
+        다음
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+// import Navbar from "@/components/Navbar.vue";
+import MovieCard from "@/components/MovieCard.vue";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "PopularTable",
+  components: {
+    // Navbar,
+    MovieCard,
+  },
   data() {
     return {
       movies: [],
       currentPage: 1,
-      rowSize: 4,
-      moviesPerPage: 20,
-      currentView: "grid",
-      wishlist: [],
-      isMobile: window.innerWidth <= 768,
+      totalPages: 1,
+      moviesPerPage: 8, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
-    visibleMovieGroups() {
-      const startIndex = (this.currentPage - 1) * this.moviesPerPage;
-      const endIndex = startIndex + this.moviesPerPage;
-      const paginatedMovies = this.movies.slice(startIndex, endIndex);
-
-      return paginatedMovies.reduce((resultArray, item, index) => {
-        const groupIndex = Math.floor(index / this.rowSize);
-        if (!resultArray[groupIndex]) {
-          resultArray[groupIndex] = [];
-        }
-        resultArray[groupIndex].push(item);
-        return resultArray;
-      }, []);
-    },
-    totalPages() {
-      return Math.ceil(this.movies.length / this.moviesPerPage);
+    paginatedMovies() {
+      const start = (this.currentPage - 1) * this.moviesPerPage;
+      const end = start + this.moviesPerPage;
+      return this.movies.slice(start, end);
     },
   },
   methods: {
     async fetchMovies() {
-      try {
-        const response = await axios.get("https://api.themoviedb.org/3/movie/popular", {
-          params: {
-            api_key: "YOUR_TMDB_API_KEY",
-            language: "ko-KR",
-            page: this.currentPage,
-          },
-        });
-        this.movies = response.data.results;
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
+      const data = await fetchPopularMovies();
+      this.movies = data.results;
+      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
     },
-    getImageUrl(path) {
-      return `https://image.tmdb.org/t/p/w300${path}`;
-    },
-    toggleWishlist(movie) {
-      if (this.wishlist.includes(movie.id)) {
-        this.wishlist = this.wishlist.filter((id) => id !== movie.id);
-      } else {
-        this.wishlist.push(movie.id);
-      }
-    },
-    isInWishlist(movieId) {
-      return this.wishlist.includes(movieId);
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-        this.fetchMovies();
-      }
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-        this.fetchMovies();
-      }
-    },
-    handleResize() {
-      this.isMobile = window.innerWidth <= 768;
-      this.calculateLayout();
-    },
-    calculateLayout() {
-      const container = this.$refs.gridContainer;
-      if (container) {
-        const containerWidth = container.offsetWidth;
-        const containerHeight = window.innerHeight - container.offsetTop;
-        const movieCardWidth = this.isMobile ? 90 : 200;
-        const movieCardHeight = this.isMobile ? 150 : 220;
-        const horizontalGap = this.isMobile ? 10 : 15;
-        const verticalGap = -10;
-
-        this.rowSize = Math.floor(containerWidth / (movieCardWidth + horizontalGap));
-        const maxRows = Math.floor(containerHeight / (movieCardHeight + verticalGap));
-        this.moviesPerPage = this.rowSize * maxRows;
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
       }
     },
   },
-  async created() {
-    await this.fetchMovies();
-    this.calculateLayout();
-    window.addEventListener("resize", this.handleResize);
-  },
-  beforeDestroy() {
-    window.removeEventListener("resize", this.handleResize);
+  created() {
+    this.fetchMovies();
   },
 };
 </script>
 
 <style scoped>
-.popular {
-  padding: 20px;
+/* Navbar 고정 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   background-color: #121212;
-  color: white;
+  border-bottom: 1px solid #333;
+}
+
+.popular {
+  padding-top: 60px;
+  background-color: #121212;
+  color: #fff;
   min-height: 100vh;
 }
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
   gap: 20px;
   padding: 20px;
 }
 
-
-.grid-container {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  gap: 15px;
-}
-
-.movie-row {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-
-.movie-card {
-  text-align: center;
-  color: white;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-}
-
-
-.movie-card img {
-  width: 100%;
-  border-radius: 8px;
-}
-
-.movie-title {
-  margin-top: 8px;
-  font-size: 14px;
-}
-
-.wishlist-indicator {
-  position: absolute;
-  top: 5px;
-  right: 10px;
-  font-size: 16px;
-  color: red;
-}
-
 .pagination {
-  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 20px 0;
 }
 
 .pagination button {
-  padding: 10px 20px;
-  margin: 0 5px;
+  background-color: #333;
+  color: #fff;
   border: none;
-  background-color: #e50914;
-  color: white;
+  padding: 5px 10px;
+  margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
 }
 
 .pagination button:disabled {
-  background-color: #555;
+  background-color: #666;
   cursor: not-allowed;
 }
 
-
+.pagination span {
+  color: #fff;
+  margin: 0 10px;
+}
 </style>

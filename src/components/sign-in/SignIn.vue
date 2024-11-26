@@ -90,9 +90,27 @@ export default {
   methods: {
     switchToSignup() {
       this.activeCard = "signup";
+      this.triggerCardAnimation();
     },
     switchToLogin() {
       this.activeCard = "login";
+      this.triggerCardAnimation();
+    },
+    triggerCardAnimation() {
+      const cards = document.querySelectorAll(".card");
+      cards.forEach((card) => {
+        if (card.classList.contains("active")) {
+          card.classList.remove("active");
+          card.classList.add("backward");
+        } else {
+          card.classList.remove("backward");
+          card.classList.add("enter");
+          setTimeout(() => {
+            card.classList.remove("enter");
+            card.classList.add("active");
+          }, 1000); // 애니메이션 시간을 1초로 설정
+        }
+      });
     },
     handleLogin() {
       if (this.password.length < 6) {
@@ -100,6 +118,10 @@ export default {
         return;
       }
       alert("Login successful!");
+      this.$store.dispatch("login", { email: this.email });
+      if (this.$route.path !== "/home") {
+        this.$router.push("/home");
+      }
     },
     handleRegister() {
       if (this.newPassword.length < 6) {
@@ -125,7 +147,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url("https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop");
+  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop');
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -160,6 +182,17 @@ export default {
   opacity: 1;
   z-index: 2;
   transform: rotateY(0deg) translateX(0);
+}
+
+.card.backward {
+  z-index: 1;
+  transform: rotateY(-90deg) translateX(-100%);
+  opacity: 0;
+}
+
+.card.enter {
+  opacity: 0;
+  transform: rotateY(90deg) translateX(100%);
 }
 
 /* 카드 콘텐츠 */
@@ -226,69 +259,6 @@ button:hover {
   margin-top: 8px;
 }
 
-/* 모바일 반응형 스타일 */
-@media (max-width: 768px) {
-  .wrapper {
-    width: 90%;
-    height: auto;
-  }
 
-  .card {
-    width: 90%;
-    height: auto;
-    padding: 20px;
-  }
 
-  .content {
-    padding: 20px;
-    border-radius: 10px;
-  }
-
-  h2 {
-    font-size: 1.2rem;
-  }
-
-  input {
-    font-size: 0.8rem;
-  }
-
-  button {
-    font-size: 0.8rem;
-    padding: 8px;
-  }
-
-  .switch {
-    font-size: 0.7rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .wrapper {
-    width: 100%;
-    height: auto;
-    padding: 10px;
-  }
-
-  .card {
-    width: 95%;
-    padding: 15px;
-  }
-
-  h2 {
-    font-size: 1rem;
-  }
-
-  input {
-    font-size: 0.7rem;
-  }
-
-  button {
-    font-size: 0.7rem;
-    padding: 6px;
-  }
-
-  .switch {
-    font-size: 0.6rem;
-  }
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="popular">
-    <!-- Navbar -->
+
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
@@ -85,7 +85,8 @@ export default {
 }
 
 /* 페이지 전체 스타일 */
-.popular { /* Navbar 높이만큼 여백 추가 */
+.popular {
+  padding-top: 60px; /* Navbar 높이만큼 여백 추가 */
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
@@ -95,26 +96,26 @@ export default {
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 영화 포스터 */
-  gap: 20px;
-  padding: 20px;
+  gap: 10px; /* 포스터 간격을 10px로 좁힘 */
+  padding: 10px; /* 전체 여백도 줄임 */
   justify-items: center; /* 카드 가운데 정렬 */
 }
 
 /* 영화 카드 */
 .movie-card {
-  width: 120px; /* 카드의 너비를 줄임 */
+  width: 120px; /* 카드 크기는 그대로 유지 */
   text-align: center;
   color: white;
 }
 
 .movie-card img {
-  width: 100%; /* 이미지가 카드 너비에 맞게 줄어듦 */
+  width: 100%;
   border-radius: 8px;
 }
 
 .movie-title {
   margin-top: 8px;
-  font-size: 12px; /* 제목 글꼴 크기 줄임 */
+  font-size: 12px; /* 제목 글꼴 크기 */
   color: #fff;
 }
 

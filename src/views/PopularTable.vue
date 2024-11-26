@@ -145,10 +145,12 @@ export default {
 }
 
 .movie-grid {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  padding: 20px;
 }
+
 
 .grid-container {
   display: flex;
@@ -163,17 +165,16 @@ export default {
   gap: 10px;
 }
 
+
 .movie-card {
-  width: 200px;
   text-align: center;
   color: white;
-  position: relative;
-  transition: transform 0.3s;
 }
 
 .movie-card:hover {
   transform: scale(1.05);
 }
+
 
 .movie-card img {
   width: 100%;
@@ -214,4 +215,6 @@ export default {
   background-color: #555;
   cursor: not-allowed;
 }
+
+
 </style>

@@ -4,7 +4,7 @@
     <Navbar />
 
     <!-- 검색 기능 -->
-    <h1>영화 검색</h1>
+    <!-- <h1>영화 검색</h1> -->
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
       <div

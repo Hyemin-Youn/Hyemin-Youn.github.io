@@ -1,7 +1,6 @@
 <template>
     <div class="popular">
       <!-- Navbar -->
-      <Navbar class="navbar" />
   
       <!-- 영화 리스트 -->
       <div class="movie-grid">

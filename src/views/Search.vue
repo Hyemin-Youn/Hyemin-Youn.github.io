@@ -31,21 +31,12 @@
     <div class="movie-grid">
       <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
     </div>
-
-    <!-- 로딩 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
-
-    <!-- TOP 버튼 -->
-    <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
-      TOP(위로)
-    </button>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchMovies } from "@/api/movies";
 
 export default {
   name: "Search",
@@ -60,61 +51,16 @@ export default {
         rating: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4점 이하"],
         language: ["언어 (전체)", "en", "ko", "ja", "fr"],
       },
-      DEFAULT_OPTIONS: {
-        genre: "장르 (전체)",
-        rating: "평점 (전체)",
-        language: "언어 (전체)",
-      },
       selectedOptions: {
         genre: "장르 (전체)",
         rating: "평점 (전체)",
         language: "언어 (전체)",
       },
+      movies: [], // TMDB API에서 가져온 영화 목록
       activeDropdown: null,
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      loading: false,
-      showScrollTopButton: false, // TOP 버튼 표시 여부
     };
   },
-  computed: {
-    dropdownEntries() {
-      return Object.entries(this.dropdowns).map(([key, options]) => ({
-        key,
-        options,
-      }));
-    },
-  },
   methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.loading || page > this.totalPages) return; // 중복 호출 방지 및 페이지 초과 방지
-      this.loading = true;
-
-      try {
-        const filters = {
-          genre: this.selectedOptions.genre,
-          rating: this.selectedOptions.rating,
-          language: this.selectedOptions.language,
-          page,
-        };
-
-        const data = await fetchMovies(filters);
-
-        if (append) {
-          this.movies = [...this.movies, ...data.results];
-        } else {
-          this.movies = data.results;
-        }
-
-        this.currentPage = page;
-        this.totalPages = data.total_pages;
-      } catch (error) {
-        console.error("데이터 로딩 중 오류 발생:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
     },
@@ -123,37 +69,14 @@ export default {
         ...this.selectedOptions,
         [key]: option,
       };
-      this.activeDropdown = null;
-      this.movies = []; // 기존 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지로 이동
-      this.fetchMovies(1); // 필터 변경 시 데이터 재로드
     },
     clearOptions() {
-      this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.movies = []; // 기존 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지로 이동
-      this.fetchMovies(1); // 초기화 후 데이터 재로드
+      this.selectedOptions = {
+        genre: "장르 (전체)",
+        rating: "평점 (전체)",
+        language: "언어 (전체)",
+      };
     },
-    handleScroll() {
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      if (scrollPosition >= documentHeight - 100 && !this.loading) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
-      }
-
-      this.showScrollTopButton = window.scrollY > 300; // 스크롤이 300px 이상일 때 TOP 버튼 표시
-    },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" }); // 부드럽게 화면 맨 위로 이동
-    },
-  },
-  created() {
-    this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 등록
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll); // 스크롤 이벤트 해제
   },
 };
 </script>
@@ -167,10 +90,10 @@ export default {
 }
 
 .dropdown-container {
-  margin-bottom: 20px;
   display: flex;
-  gap: 15px;
   flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 20px;
 }
 
 .custom-select {
@@ -212,24 +135,44 @@ export default {
   border: none;
 }
 
+/* 영화 그리드 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 카드 최소 크기 */
   gap: 20px;
-  padding: 20px 0;
+  padding: 20px;
 }
 
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e50914;
+/* 영화 카드 */
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #222;
+  border-radius: 8px;
+  padding: 10px;
+  transition: transform 0.3s ease-in-out;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+.movie-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.movie-card .movie-title {
+  margin-top: 10px;
+  font-size: 14px;
   color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-
 </style>

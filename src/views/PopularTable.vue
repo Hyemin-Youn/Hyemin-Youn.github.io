@@ -143,11 +143,11 @@ export default {
   }
 
   .movie-card {
-    width: 70px; /* 카드 크기 더 축소 */
+    width: 60px; /* 카드 크기 더 축소 */
   }
 
   .movie-title {
-    font-size: 10px; /* 제목 글씨 크기 더 축소 */
+    font-size: 1px; /* 제목 글씨 크기 더 축소 */
   }
 }
 </style>

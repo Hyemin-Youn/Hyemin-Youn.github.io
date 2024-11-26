@@ -1,163 +1,118 @@
 <template>
   <div class="popular">
     <!-- Navbar -->
-    <Navbar />
+    <!-- <Navbar class="navbar" /> -->
 
-    <!-- View Toggle Buttons -->
-    <div class="view-toggle">
-      <button
-        :class="{ active: currentView === 'PopularTable' }"
-        @click="switchView('PopularTable')"
-      >
-        📋 Table View
-      </button>
-      <button
-        :class="{ active: currentView === 'PopularInfinite' }"
-        @click="switchView('PopularInfinite')"
-      >
-        📜 무한 스크롤 View
-      </button>
+    <!-- 영화 리스트 -->
+    <div class="movie-grid">
+      <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
     </div>
 
-    <!-- Dynamic View Rendering -->
-    <div class="view-container">
-      <component :is="currentView" />
-      <!-- Pagination only for Table View -->
-      <div
-        class="pagination"
-        v-if="currentView === 'PopularTable' && totalPages > 1"
+    <!-- Pagination -->
+    <div class="pagination">
+      <button
+        :disabled="currentPage === 1"
+        @click="changePage(currentPage - 1)"
       >
-        <button @click="prevPage" :disabled="currentPage === 1">&lt; 이전</button>
-        <span>{{ currentPage }} / {{ totalPages }}</span>
-        <button @click="nextPage" :disabled="currentPage === totalPages">다음 &gt;</button>
-      </div>
+        이전
+      </button>
+      <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="changePage(currentPage + 1)"
+      >
+        다음
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue";
-import PopularTable from "@/views/PopularTable.vue";
-import PopularInfinite from "@/views/PopularInfinite.vue";
+// import Navbar from "@/components/Navbar.vue";
+import MovieCard from "@/components/MovieCard.vue";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
-  name: "Popular",
+  name: "PopularTable",
   components: {
-    Navbar,
-    PopularTable,
-    PopularInfinite,
+    // Navbar,
+    MovieCard,
   },
   data() {
     return {
-      currentView: "PopularTable", // 기본 Table View
+      movies: [],
       currentPage: 1,
-      totalPages: 5, // 예시: 총 5페이지로 설정
+      totalPages: 1,
+      moviesPerPage: 8, // 한 페이지에 표시할 영화 수
     };
   },
-  watch: {
-    currentView(newView) {
-      if (newView === "PopularTable") {
-        document.body.style.overflow = "hidden"; // 스크롤 비활성화
-      } else {
-        document.body.style.overflow = ""; // 무한 스크롤 뷰에서는 스크롤 활성화
-      }
+  computed: {
+    paginatedMovies() {
+      const start = (this.currentPage - 1) * this.moviesPerPage;
+      const end = start + this.moviesPerPage;
+      return this.movies.slice(start, end);
     },
   },
   methods: {
-    switchView(view) {
-      this.currentView = view;
+    async fetchMovies() {
+      const data = await fetchPopularMovies();
+      this.movies = data.results;
+      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
     },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
       }
     },
   },
   created() {
-    // 페이지 로드 시 기본 스크롤 설정
-    if (this.currentView === "PopularTable") {
-      document.body.style.overflow = "hidden";
-    }
-  },
-  beforeDestroy() {
-    // 컴포넌트 파괴 시 스크롤 복구
-    document.body.style.overflow = "";
+    this.fetchMovies();
   },
 };
 </script>
 
 <style scoped>
-.popular {
+/* Navbar 고정 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
   background-color: #121212;
-  color: white;
-  min-height: 100vh;
+  border-bottom: 1px solid #333;
 }
 
-/* View Toggle Buttons */
-.view-toggle {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-  padding: 10px;
-  background: #222;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.view-toggle button {
-  background-color: #444;
+.popular {
+  padding-top: 60px;
+  background-color: #121212;
   color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin: 0 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 16px;
+  min-height: 100vh;
+  overflow: hidden; /* 새로 스크롤바 비활성화 */
 }
 
-.view-toggle button.active {
-  background-color: #e50914;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-  border: 2px solid #fff;
-}
-
-.view-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: calc(100vh - 150px); /* View Toggle와 Navbar 포함 높이를 제외 */
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
+  gap: 20px;
+  padding: 20px;
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #333;
-  border-radius: 10px;
+  margin: 20px 0;
 }
 
 .pagination button {
-  background-color: #444;
-  color: white;
+  background-color: #333;
+  color: #fff;
   border: none;
-  padding: 10px 15px;
+  padding: 5px 10px;
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.pagination button:hover {
-  background-color: #e50914;
 }
 
 .pagination button:disabled {
@@ -166,7 +121,9 @@ export default {
 }
 
 .pagination span {
-  color: white;
-  font-size: 16px;
+  color: #fff;
+  margin: 0 10px;
 }
+
+
 </style>

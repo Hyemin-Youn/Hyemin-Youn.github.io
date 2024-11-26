@@ -1,5 +1,8 @@
 <template>
-  <div class="popular-table">
+  <div class="popular">
+    <!-- Navbar -->
+    <Navbar class="navbar" />
+
     <!-- 영화 리스트 -->
     <div class="movie-grid">
       <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
@@ -7,79 +10,81 @@
 
     <!-- Pagination -->
     <div class="pagination">
-      <button @click="prevPage" :disabled="currentPage === 1">이전</button>
+      <button
+        :disabled="currentPage === 1"
+        @click="changePage(currentPage - 1)"
+      >
+        이전
+      </button>
       <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages">다음</button>
+      <button
+        :disabled="currentPage === totalPages"
+        @click="changePage(currentPage + 1)"
+      >
+        다음
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchPopularMovies } from "@/api/movies";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "PopularTable",
   components: {
+    Navbar,
     MovieCard,
-  },
-  props: {
-    initialMovies: {
-      type: Array,
-      required: true,
-    },
-    initialPage: {
-      type: Number,
-      default: 1,
-    },
-    initialTotalPages: {
-      type: Number,
-      default: 1,
-    },
   },
   data() {
     return {
-      movies: this.initialMovies,
-      currentPage: this.initialPage,
-      totalPages: this.initialTotalPages,
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
+      moviesPerPage: 8, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
     paginatedMovies() {
-      const start = (this.currentPage - 1) * 8; // 한 페이지에 8개의 영화
-      const end = start + 8;
+      const start = (this.currentPage - 1) * this.moviesPerPage;
+      const end = start + this.moviesPerPage;
       return this.movies.slice(start, end);
     },
   },
   methods: {
-    async fetchMovies(page = 1) {
-      const data = await fetchPopularMovies(page);
+    async fetchMovies() {
+      const data = await fetchPopularMovies();
       this.movies = data.results;
-      this.currentPage = page;
-      this.totalPages = data.total_pages;
+      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
     },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.fetchMovies(this.currentPage - 1);
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1);
+    changePage(page) {
+      if (page > 0 && page <= this.totalPages) {
+        this.currentPage = page;
       }
     },
   },
   created() {
-    if (!this.movies.length) {
-      this.fetchMovies(this.currentPage);
-    }
+    this.fetchMovies();
   },
 };
 </script>
 
 <style scoped>
-.popular-table {
-  padding: 20px;
+/* Navbar 고정 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #121212;
+  border-bottom: 1px solid #333;
+}
+
+.popular {
+  padding-top: 60px;
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
@@ -87,36 +92,35 @@ export default {
 
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
   gap: 20px;
-  justify-content: center;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 20px;
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .pagination button {
   background-color: #333;
-  color: white;
+  color: #fff;
   border: none;
-  padding: 10px 15px;
-  margin: 0 10px;
+  padding: 5px 10px;
+  margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
-}
-
-.pagination button:hover {
-  background-color: #e50914;
 }
 
 .pagination button:disabled {
   background-color: #666;
   cursor: not-allowed;
+}
+
+.pagination span {
+  color: #fff;
+  margin: 0 10px;
 }
 </style>

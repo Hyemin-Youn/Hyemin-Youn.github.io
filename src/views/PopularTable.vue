@@ -177,7 +177,7 @@ export default {
 
 @media (max-width: 480px) {
   .movie-grid {
-    grid-template-columns: repeat(2, 1fr); /* 모바일: 2열 */
+    grid-template-columns: repeat(3, 1fr); /* 모바일: 2열 */
     gap: 8px;
   }
 

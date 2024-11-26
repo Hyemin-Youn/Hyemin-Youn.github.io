@@ -63,11 +63,11 @@
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue";
+// import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 
 export default {
-  components: { Navbar, MovieCard },
+  components: { MovieCard },
   data() {
     return {
       currentView: "table", // Default view is Table

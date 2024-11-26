@@ -291,6 +291,11 @@ button:hover {
   }
 }
 
+  .content {
+      padding: 20px; /* 여백을 줄임 */
+      border-radius: 10px; /* 둥근 모서리 크기 축소 */
+    }
+
 @media (max-width: 480px) {
   .wrapper {
     width: 100%; /* 가장 작은 화면에서는 너비를 100%로 설정 */
@@ -315,4 +320,9 @@ button:hover {
     font-size: 0.6rem; /* 전환 텍스트 크기 더 축소 */
   }
 }
+  .content {
+      padding: 15px; /* 가장 작은 화면에서 여백을 더 줄임 */
+      border-radius: 8px; /* 둥근 모서리 크기 더 축소 */
+      text-align: center; /* 텍스트를 가운데 정렬 */
+    }
 </style>

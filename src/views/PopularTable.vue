@@ -126,7 +126,7 @@ export default {
 }
 
 /* 전역 스크롤 비활성화 */
-body {
+#app {
   overflow: hidden; /* 새로 스크롤 비활성화 */
 }
 

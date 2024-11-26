@@ -21,14 +21,14 @@
   </template>
   
   <script>
-  import Navbar from "@/components/Navbar.vue";
+//   import Navbar from "@/components/Navbar.vue";
   import MovieCard from "@/components/MovieCard.vue";
   import { fetchPopularMovies } from "../api/movies";
   
   export default {
     name: "PopularInfinite",
     components: {
-      Navbar,
+    //   Navbar,
       MovieCard,
     },
     data() {

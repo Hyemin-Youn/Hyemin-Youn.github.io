@@ -7,6 +7,9 @@ import MovieDetail from "@/views/MovieDetail.vue";
 import SliderContent from '../components/SliderContent.vue';
 import Popular from "@/views/Popular.vue";
 import Search from "@/views/Search.vue";
+import PopularInfinite from "@/views/PopularInfinite.vue";
+import PopularTable from "@/views/PopularTable.vue";
+
 
 
 

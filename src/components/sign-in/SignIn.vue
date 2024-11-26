@@ -173,7 +173,7 @@ export default {
   height: 480px;
   position: absolute;
   transform-style: preserve-3d;
-  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out; /* 애니메이션 시간을 1.2초로 늘림 */
+  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
   opacity: 0;
   z-index: 0;
 }
@@ -262,67 +262,72 @@ button:hover {
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .wrapper {
-    width: 90%; /* 모바일 화면 너비에 맞춤 */
-    height: auto; /* 높이를 자동으로 조정 */
-    padding: 10px;
-  }
-
-  .card {
-    width: 100%; /* 카드 너비를 부모 요소에 맞춤 */
+    width: 90%; /* 너비를 90%로 줄여 화면에 맞춤 */
     height: auto;
   }
 
+  .card {
+    width: 100%; /* 카드가 컨테이너 너비에 맞게 조정 */
+    height: auto;
+    padding: 20px; /* 여백 감소 */
+  }
+
   .content {
-    padding: 20px; /* 모바일에서 내부 여백을 줄임 */
+    padding: 20px; /* 콘텐츠 여백 감소 */
+    border-radius: 10px; /* 둥근 모서리 축소 */
   }
 
   h2 {
-    font-size: 1.2rem; /* 헤더 글씨 크기 축소 */
+    font-size: 1.2rem; /* 제목 글꼴 크기 감소 */
   }
 
-  input,
+  label {
+    font-size: 0.8rem; /* 라벨 글꼴 크기 감소 */
+  }
+
+  input {
+    font-size: 0.8rem; /* 입력 필드 글꼴 크기 감소 */
+  }
+
   button {
-    font-size: 0.8rem; /* 입력 필드와 버튼 크기 축소 */
-    padding: 8px;
+    font-size: 0.8rem; /* 버튼 글꼴 크기 감소 */
+    padding: 8px; /* 버튼 여백 감소 */
   }
 
   .switch {
-    font-size: 0.7rem; /* 전환 텍스트 크기 축소 */
+    font-size: 0.7rem; /* 전환 텍스트 크기 감소 */
   }
 }
 
-  .content {
-      padding: 20px; /* 여백을 줄임 */
-      border-radius: 10px; /* 둥근 모서리 크기 축소 */
-    }
-
 @media (max-width: 480px) {
   .wrapper {
-    width: 100%; /* 가장 작은 화면에서는 너비를 100%로 설정 */
-    padding: 0 10px; /* 좌우 여백 추가 */
+    width: 100%; /* 모바일 화면에서 컨테이너가 전체 화면 차지 */
+    height: auto;
+  }
+
+  .card {
+    width: 90%; /* 카드 너비를 줄여 가장자리 여백 확보 */
+    height: auto;
+    margin: 10px auto; /* 카드 사이에 여백 추가 */
   }
 
   .content {
-    padding: 15px; /* 내부 여백 축소 */
+    padding: 15px; /* 여백 추가 축소 */
+    border-radius: 8px;
   }
 
   h2 {
-    font-size: 1rem; /* 헤더 크기 더 축소 */
+    font-size: 1rem; /* 더 작은 제목 글꼴 */
   }
 
+  label,
   input,
   button {
-    font-size: 0.7rem; /* 입력 필드와 버튼 크기 더 축소 */
-    padding: 6px;
+    font-size: 0.7rem; /* 텍스트 크기 축소 */
   }
 
   .switch {
     font-size: 0.6rem; /* 전환 텍스트 크기 더 축소 */
   }
 }
-  .content {
-      padding: 15px; /* 가장 작은 화면에서 여백을 더 줄임 */
-      border-radius: 8px; /* 둥근 모서리 크기 더 축소 */
-      text-align: center; /* 텍스트를 가운데 정렬 */
-    }
 </style>

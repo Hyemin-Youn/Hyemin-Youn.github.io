@@ -103,7 +103,8 @@ export default {
 
 <style scoped>
 /* 기본 스타일 */
-.popular { /* 상단 여백 추가 */
+.popular {
+  padding-top: 60px; /* 상단 여백 추가 */
   background-color: #000; /* 배경색을 검은색으로 설정 */
   color: #fff; /* 텍스트 흰색 */
   min-height: 100vh; /* 최소 높이 100vh */

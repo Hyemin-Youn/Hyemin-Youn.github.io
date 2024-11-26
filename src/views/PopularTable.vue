@@ -107,7 +107,7 @@ export default {
 /* 영화 그리드 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 영화 포스터 */
+  grid-template-columns: repeat(5, 1fr); /* 한 줄에 4개의 영화 포스터 */
   gap: 10px; /* 포스터 간격을 10px로 좁힘 */
   padding: 10px; /* 전체 여백도 줄임 */
   justify-items: center; /* 카드 가운데 정렬 */

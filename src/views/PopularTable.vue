@@ -30,7 +30,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchPopularMovies } from "@/api/movies";
+import { fetchComedyMovies } from "@/api/movies";
 
 export default {
   name: "PopularTable",
@@ -55,21 +55,22 @@ export default {
     },
   },
   methods: {
-    // TMDB API에서 인기 영화 데이터 가져오기
+    // TMDB API에서 코미디 영화 데이터 가져오기
     async fetchMovies() {
-      const data = await fetchPopularMovies();
+      const data = await fetchComedyMovies(this.currentPage);
       this.movies = data.results; // 영화 데이터 저장
-      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage); // 총 페이지 계산
+      this.totalPages = data.total_pages; // 총 페이지 계산
     },
     // 페이지 변경
     changePage(page) {
       if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
+        this.fetchMovies(); // 페이지 변경 시 데이터 재로드
       }
     },
   },
   created() {
-    // 컴포넌트 생성 시 영화 데이터 로드
+    // 컴포넌트 생성 시 코미디 영화 데이터 로드
     this.fetchMovies();
   },
 };

@@ -158,4 +158,16 @@ export default {
   color: white;
   line-height: 40px;
 }
+
+@media (max-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 모바일에서 카드 크기 */
+    gap: 10px;
+  }
+
+  .pagination button {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+}
 </style>

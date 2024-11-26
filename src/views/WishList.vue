@@ -1,5 +1,6 @@
 <template>
   <div class="wishlist">
+    <Navbar />
     <h2>내가 찜한 콘텐츠</h2>
 
     <div v-if="wishlist.length === 0" class="empty-wishlist">
@@ -27,6 +28,7 @@ import { useStore } from "vuex";
 import Navbar from "@/components/Navbar.vue";
 
 export default {
+  name: "WishList",
   components: { Navbar },
   setup() {
     const store = useStore();

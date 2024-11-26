@@ -122,5 +122,12 @@
   .scroll-top:hover {
     background-color: #b00610;
   }
+
+  @media (max-width: 768px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 모바일에서 카드 크기 */
+    gap: 10px;
+  }
+}
   </style>
   

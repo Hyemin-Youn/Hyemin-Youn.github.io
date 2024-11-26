@@ -128,10 +128,10 @@ export default {
   background-color: #e50914;
 }
 
-.pagination button:disabled {
+/* .pagination button:disabled {
   background-color: #666;
   cursor: not-allowed;
-}
+} */
 
 .pagination span {
   color: #fff;

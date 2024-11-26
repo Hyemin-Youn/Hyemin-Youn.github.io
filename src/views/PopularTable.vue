@@ -123,11 +123,4 @@ export default {
   color: #fff;
   margin: 0 10px;
 }
-
-.disable-scroll {
-  overflow-y: hidden !important;
-}
-
-
-
 </style>

@@ -6,24 +6,22 @@
     </div>
 
     <!-- Pagination -->
-    <Pagination
-      :currentPage="currentPage"
-      :totalPages="totalPages"
-      @change-page="changePage"
-    />
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">이전</button>
+      <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">다음</button>
+    </div>
   </div>
 </template>
 
 <script>
 import MovieCard from "@/components/MovieCard.vue";
-import Pagination from "@/components/Pagination.vue";
-import { fetchPopularMovies } from "../api/movies";
+import { fetchPopularMovies } from "@/api/movies";
 
 export default {
   name: "PopularTable",
   components: {
     MovieCard,
-    Pagination,
   },
   props: {
     initialMovies: {
@@ -44,13 +42,12 @@ export default {
       movies: this.initialMovies,
       currentPage: this.initialPage,
       totalPages: this.initialTotalPages,
-      moviesPerPage: 8, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
     paginatedMovies() {
-      const start = (this.currentPage - 1) * this.moviesPerPage;
-      const end = start + this.moviesPerPage;
+      const start = (this.currentPage - 1) * 8; // 한 페이지에 8개의 영화
+      const end = start + 8;
       return this.movies.slice(start, end);
     },
   },
@@ -61,8 +58,15 @@ export default {
       this.currentPage = page;
       this.totalPages = data.total_pages;
     },
-    changePage(page) {
-      this.fetchMovies(page);
+    prevPage() {
+      if (this.currentPage > 1) {
+        this.fetchMovies(this.currentPage - 1);
+      }
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1);
+      }
     },
   },
   created() {
@@ -85,6 +89,9 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .pagination {
@@ -92,5 +99,24 @@ export default {
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+}
+
+.pagination button {
+  background-color: #333;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 0 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.pagination button:hover {
+  background-color: #e50914;
+}
+
+.pagination button:disabled {
+  background-color: #666;
+  cursor: not-allowed;
 }
 </style>

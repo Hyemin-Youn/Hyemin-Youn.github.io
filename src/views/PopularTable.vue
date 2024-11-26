@@ -30,7 +30,7 @@
 <script>
 // import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchPopularMovies } from "../api/movies";
+import axios from "axios";
 
 export default {
   name: "PopularTable",
@@ -55,18 +55,32 @@ export default {
   },
   methods: {
     async fetchMovies() {
-      const data = await fetchPopularMovies();
-      this.movies = data.results;
-      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
+      try {
+        const response = await axios.get(
+          "https://api.themoviedb.org/3/movie/popular",
+          {
+            params: {
+              api_key: "YOUR_API_KEY", // TMDB API 키
+              language: "ko-KR", // 한국어 설정
+              page: this.currentPage,
+            },
+          }
+        );
+        this.movies = response.data.results;
+        this.totalPages = response.data.total_pages;
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
     },
     changePage(page) {
       if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
+        this.fetchMovies(); // 페이지 변경 시 영화 데이터 다시 로드
       }
     },
   },
   created() {
-    this.fetchMovies();
+    this.fetchMovies(); // 컴포넌트 생성 시 첫 페이지 데이터 로드
   },
 };
 </script>
@@ -97,7 +111,7 @@ export default {
   flex-grow: 1; /* 그리드가 가능한 공간을 차지하도록 설정 */
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
-  gap: 10px; /* 영화 포스터 간격 좁힘 */
+  gap: 15px; /* 영화 포스터 간격 조정 */
   padding: 20px;
   align-items: center; /* 그리드 아이템 가운데 정렬 */
   justify-items: center; /* 가로로 가운데 정렬 */
@@ -128,10 +142,10 @@ export default {
   background-color: #e50914;
 }
 
-/* .pagination button:disabled {
+.pagination button:disabled {
   background-color: #666;
   cursor: not-allowed;
-} */
+}
 
 .pagination span {
   color: #fff;
@@ -142,7 +156,7 @@ export default {
 @media (max-width: 768px) {
   .movie-grid {
     grid-template-columns: repeat(2, 1fr); /* 모바일 화면에서는 2열 */
-    gap: 8px; /* 모바일 화면에서 간격도 좁힘 */
+    gap: 10px; /* 모바일 화면에서 간격 조정 */
   }
 
   .pagination button {

@@ -1,7 +1,6 @@
 <template>
     <div>
       <!-- Navbar -->
-      <Navbar />
   
       <!-- View Toggle Buttons -->
       <div class="view-toggle">
@@ -25,14 +24,14 @@
   </template>
   
   <script>
-  import Navbar from "@/components/Navbar.vue";
+  // import Navbar from "@/components/Navbar.vue";
   import PopularTable from "@/views/PopularTable.vue";
   import PopularInfinite from "@/views/PopularInfinite.vue";
   
   export default {
     name: "Popular",
     components: {
-      Navbar,
+      // Navbar,
       PopularTable,
       PopularInfinite,
     },

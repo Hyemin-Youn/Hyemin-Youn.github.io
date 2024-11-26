@@ -88,4 +88,14 @@ export default {
 .remove-btn:hover {
   background-color: #b00610;
 }
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  background-color: #121212; /* 배경색 추가 */
+  border-bottom: 1px solid #333; /* 하단 구분선 추가 */
+}
 </style>

@@ -88,8 +88,7 @@ export default {
 }
 
 /* 페이지 전체 스타일 */
-.popular {
-  padding-top: 60px; /* Navbar 높이만큼 여백 추가 */
+.popular { /* Navbar 높이만큼 여백 추가 */
   background-color: #121212;
   color: #fff;
   min-height: 100vh;

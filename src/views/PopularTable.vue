@@ -88,6 +88,7 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
+  overflow: hidden; /* 새로 스크롤바 비활성화 */
 }
 
 .movie-grid {
@@ -123,4 +124,10 @@ export default {
   color: #fff;
   margin: 0 10px;
 }
+
+/* 전역 스크롤 비활성화 */
+body {
+  overflow: hidden; /* 새로 스크롤 비활성화 */
+}
+
 </style>

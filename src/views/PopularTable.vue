@@ -28,12 +28,14 @@
 </template>
 
 <script>
-import axios from "axios";
+// import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
+import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "PopularTable",
   components: {
+    // Navbar,
     MovieCard,
   },
   data() {
@@ -41,7 +43,7 @@ export default {
       movies: [],
       currentPage: 1,
       totalPages: 1,
-      moviesPerPage: 8,
+      moviesPerPage: 8, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
@@ -53,29 +55,13 @@ export default {
   },
   methods: {
     async fetchMovies() {
-      try {
-        const response = await axios.get(
-          "https://api.themoviedb.org/3/movie/popular",
-          {
-            params: {
-              api_key: "YOUR_API_KEY",
-              language: "ko-KR",
-              page: this.currentPage,
-            },
-          }
-        );
-        this.movies = response.data.results;
-        this.totalPages = response.data.total_pages;
-
-        console.log(this.movies); // 데이터 확인
-      } catch (error) {
-        console.error("Error fetching movies:", error);
-      }
+      const data = await fetchPopularMovies();
+      this.movies = data.results;
+      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
     },
     changePage(page) {
       if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
-        this.fetchMovies(); // 페이지 변경 시 영화 데이터 다시 로드
       }
     },
   },
@@ -84,7 +70,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 /* Navbar 고정 */
@@ -103,29 +88,21 @@ export default {
   background-color: #121212;
   color: #fff;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 영화 그리드와 페이지네이션 사이 간격 자동 조정 */
+  overflow: hidden; /* 새로 스크롤바 비활성화 */
 }
 
 .movie-grid {
-  flex-grow: 1; /* 그리드가 가능한 공간을 차지하도록 설정 */
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
-  gap: 15px; /* 영화 포스터 간격 조정 */
+  gap: 20px;
   padding: 20px;
-  align-items: center; /* 그리드 아이템 가운데 정렬 */
-  justify-items: center; /* 가로로 가운데 정렬 */
 }
 
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
-  padding: 10px;
-  background-color: #222;
-  border-radius: 10px;
+  margin: 20px 0;
 }
 
 .pagination button {
@@ -136,11 +113,6 @@ export default {
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.pagination button:hover {
-  background-color: #e50914;
 }
 
 .pagination button:disabled {
@@ -153,20 +125,5 @@ export default {
   margin: 0 10px;
 }
 
-/* 반응형 스타일 */
-@media (max-width: 768px) {
-  .movie-grid {
-    grid-template-columns: repeat(2, 1fr); /* 모바일 화면에서는 2열 */
-    gap: 10px; /* 모바일 화면에서 간격 조정 */
-  }
 
-  .pagination button {
-    padding: 8px 12px;
-    font-size: 14px;
-  }
-
-  .pagination span {
-    font-size: 14px;
-  }
-}
 </style>

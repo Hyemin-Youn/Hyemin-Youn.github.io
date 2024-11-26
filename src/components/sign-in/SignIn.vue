@@ -169,7 +169,7 @@ export default {
 
 /* 카드 */
 .card {
-  width: 660px;
+  width: 560px;
   height: 480px;
   position: absolute;
   transform-style: preserve-3d;

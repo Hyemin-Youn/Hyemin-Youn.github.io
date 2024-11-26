@@ -1,10 +1,9 @@
-=<template>
+<template>
   <div class="search-page">
     <!-- Navbar -->
     <Navbar />
 
-    <!-- 검색 기능 -->
-    <!-- <h1>영화 검색</h1> -->
+    <!-- 필터 드롭다운 -->
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
       <div
@@ -57,19 +56,19 @@ export default {
   data() {
     return {
       dropdowns: {
-        originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
-        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
-        sorting: ["언어 (전체)", "en", "ko"],
+        genre: ["장르 (전체)", "Action", "Adventure", "Comedy", "Drama", "Family"],
+        rating: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4점 이하"],
+        language: ["언어 (전체)", "en", "ko", "ja", "fr"],
       },
       DEFAULT_OPTIONS: {
-        originalLanguage: "장르 (전체)",
-        translationLanguage: "평점 (전체)",
-        sorting: "언어 (전체)",
+        genre: "장르 (전체)",
+        rating: "평점 (전체)",
+        language: "언어 (전체)",
       },
       selectedOptions: {
-        originalLanguage: "장르 (전체)",
-        translationLanguage: "평점 (전체)",
-        sorting: "언어 (전체)",
+        genre: "장르 (전체)",
+        rating: "평점 (전체)",
+        language: "언어 (전체)",
       },
       activeDropdown: null,
       movies: [],
@@ -94,9 +93,9 @@ export default {
 
       try {
         const filters = {
-          genre: this.selectedOptions.originalLanguage,
-          rating: this.selectedOptions.translationLanguage,
-          language: this.selectedOptions.sorting,
+          genre: this.selectedOptions.genre,
+          rating: this.selectedOptions.rating,
+          language: this.selectedOptions.language,
           page,
         };
 
@@ -164,22 +163,60 @@ export default {
   background-color: #121212;
   color: white;
   min-height: 100vh;
+  padding: 20px;
 }
 
 .dropdown-container {
-  margin: 20px 0;
+  margin-bottom: 20px;
   display: flex;
   gap: 15px;
+  flex-wrap: wrap;
+}
+
+.custom-select {
+  position: relative;
+  display: inline-block;
+}
+
+.select-selected {
+  padding: 8px 16px;
   background-color: #333;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.select-items {
+  position: absolute;
+  background-color: #444;
+  border: 1px solid #ccc;
+  z-index: 1000;
+  width: 100%;
+}
+
+.select-items div {
   padding: 10px;
-  border-radius: 8px;
+  cursor: pointer;
+}
+
+.select-items div:hover {
+  background-color: #555;
+}
+
+.clear-options {
+  padding: 8px 16px;
+  background-color: #e50914;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
 }
 
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
-  padding-top: 20px;
+  padding: 20px 0;
 }
 
 .scroll-top {

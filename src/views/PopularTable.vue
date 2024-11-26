@@ -182,7 +182,7 @@ export default {
   }
 
   .movie-card {
-    width: 55px; /* 카드 크기 더 축소 */
+    width: 60px; /* 카드 크기 더 축소 */
   }
 
   .movie-title {

@@ -1,112 +1,98 @@
 <template>
-    <div class="movie-card">
-      <img :src="posterUrl" :alt="movie.title" class="poster" />
-      <div class="movie-info">
-        <p class="movie-title">{{ movie.title }}</p>
-        <p class="release-date">개봉일: {{ formattedReleaseDate }}</p>
-        <div class="movie-rating" v-if="movie.vote_average">
-          ⭐ {{ movie.vote_average }} / 10
-        </div>
+    <div>
+      <!-- Navbar -->
+      <Navbar />
+  
+      <!-- View Toggle Buttons -->
+      <div class="view-toggle">
+        <button
+          :class="{ active: currentView === 'PopularTable' }"
+          @click="switchView('PopularTable')"
+        >
+          📋 Table View
+        </button>
+        <button
+          :class="{ active: currentView === 'PopularInfinite' }"
+          @click="switchView('PopularInfinite')"
+        >
+          📜 무한 스크롤 View
+        </button>
       </div>
-      <span class="wishlist-icon" @click.stop="handleWishlist">
-        <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'"></i>
-      </span>
+  
+      <!-- Dynamic View Rendering -->
+      <component :is="currentView" />
     </div>
   </template>
   
   <script>
-  import { mapGetters, mapActions } from "vuex";
+  import Navbar from "@/components/Navbar.vue";
+  import PopularTable from "@/views/PopularTable.vue";
+  import PopularInfinite from "@/views/PopularInfinite.vue";
   
   export default {
-    props: {
-      movie: {
-        type: Object,
-        required: true,
-      },
+    name: "Popular",
+    components: {
+      Navbar,
+      PopularTable,
+      PopularInfinite,
     },
-    computed: {
-      ...mapGetters(["isInWishlist"]), // Vuex getter 연결
-      posterUrl() {
-        return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
-      },
-      formattedReleaseDate() {
-        if (!this.movie.release_date) return "알 수 없음";
-        const options = { year: "numeric", month: "long", day: "numeric" };
-        return new Date(this.movie.release_date).toLocaleDateString("ko-KR", options);
-      },
+    data() {
+      return {
+        currentView: "PopularTable", // 기본 Table View
+      };
     },
     methods: {
-      ...mapActions(["toggleWishlist"]), // Vuex action 연결
-      handleWishlist() {
-        this.toggleWishlist(this.movie); // 영화 추가/삭제 토글
+      switchView(view) {
+        this.currentView = view;
       },
     },
   };
   </script>
   
   <style scoped>
-  .movie-card {
-    position: relative;
-    width: 150px;
-    cursor: pointer;
-    flex-shrink: 0;
-    overflow: hidden;
-    text-align: center;
-  }
-  
-  .poster {
-    width: 100%;
-    border-radius: 8px;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .movie-card:hover .poster {
-    transform: scale(1.1);
-  }
-  
-  .movie-info {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.7);
+  /* View Toggle Buttons */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
     padding: 10px;
-    text-align: center;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
+    background: #222; /* 검정 배경 */
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
   }
   
-  .movie-card:hover .movie-info {
-    opacity: 1;
-  }
-  
-  .movie-title {
-    font-size: 14px;
-    color: white;
-    margin-bottom: 5px;
-  }
-  
-  .release-date {
-    font-size: 12px;
-    color: #b3b3b3;
-    margin-bottom: 5px;
-  }
-  
-  .movie-rating {
-    font-size: 12px;
-    color: gold;
-  }
-  
-  .wishlist-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
+  .view-toggle button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 8px; /* 둥근 버튼 */
+    cursor: pointer;
+    transition: all 0.3s ease;
     font-size: 16px;
-    color: white;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 아이콘과 텍스트 간격 */
   }
   
-  .wishlist-icon .liked {
-    color: #e50914;
+  .view-toggle button.active {
+    background-color: #e50914; /* 활성화된 버튼 색상 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* 활성화된 버튼 그림자 */
+    border: 2px solid #fff; /* 강조된 테두리 */
+  }
+  
+  .view-toggle button:first-child {
+    background-color: #1e90ff; /* Table View 버튼 기본 색상 */
+  }
+  
+  .view-toggle button:first-child.active {
+    background-color: #104e8b; /* Table View 활성화 상태 색상 */
+  }
+  
+  .view-toggle button:hover {
+    transform: scale(1.05); /* 호버 시 확대 */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* 호버 시 그림자 강화 */
   }
   </style>
   

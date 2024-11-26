@@ -50,7 +50,7 @@ const routes = [
   //   component: Popular,
   // },
   {
-    path: '/popular',
+    path: '/popular/infinite',
     name: 'PopularInfinite',
     component: PopularInfinite,
   },

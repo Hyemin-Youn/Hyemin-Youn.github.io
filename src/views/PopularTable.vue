@@ -74,15 +74,15 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* 영화 그리드와 페이지네이션 사이 간격 자동 조정 */
+  justify-content: space-between; /* 영화 그리드와 페이지네이션 간격 자동 조정 */
 }
 
 .movie-grid {
   flex-grow: 1; /* 그리드가 가능한 공간을 차지하도록 설정 */
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 5열 고정 */
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 반응형 5열 */
   gap: 20px; /* 영화 포스터 간격 */
-  padding: 30px;
+  padding: 20px 30px; /* 좌우 간격 조정 */
   align-items: center; /* 그리드 아이템 가운데 정렬 */
   justify-items: center; /* 가로로 가운데 정렬 */
 }
@@ -119,10 +119,16 @@ export default {
 }
 
 /* 반응형 스타일 */
+@media (max-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 중간 크기 화면에서 4열 */
+  }
+}
+
 @media (max-width: 768px) {
   .movie-grid {
     grid-template-columns: repeat(2, 1fr); /* 모바일 화면에서는 2열 */
-    gap: 15px;
+    gap: 15px; /* 모바일 화면에서 간격 좁힘 */
   }
 
   .pagination button {

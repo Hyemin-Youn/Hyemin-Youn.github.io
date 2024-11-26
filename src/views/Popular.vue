@@ -19,7 +19,7 @@
     },
     data() {
       return {
-        viewMode: "infinite",
+        viewMode: "table",
       };
     },
   };

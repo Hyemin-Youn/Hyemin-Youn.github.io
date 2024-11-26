@@ -45,18 +45,18 @@ const routes = [
   },
   {
     path: "/popular",
-    component: PopularTable, // Table 뷰를 기본으로 설정
+    component: Popular, // Popular.vue를 통합한 새 컴포넌트를 연결
     children: [
       {
+        path: "table",
+        component: PopularTable,
+      },
+      {
         path: "infinite",
-        component: PopularInfinite, // Infinite 뷰
+        component: PopularInfinite,
       },
     ],
   },
-  // {
-  //   path: "/",
-  //   redirect: "/popular/table", // 기본 경로를 Table View로 설정
-  // },
   {
     path: "/search",
     name: "Search",

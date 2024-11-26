@@ -25,9 +25,11 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isInWishlist"]), // Vuex getter 연결
+    ...mapGetters(["isInWishlist"]),
     posterUrl() {
-      return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
+      return this.movie.poster_path
+        ? `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`
+        : "/path/to/default-poster.jpg"; // 기본 이미지
     },
     formattedReleaseDate() {
       if (!this.movie.release_date) return "알 수 없음";
@@ -36,9 +38,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["toggleWishlist"]), // Vuex action 연결
+    ...mapActions(["toggleWishlist"]),
     handleWishlist() {
-      this.toggleWishlist(this.movie); // 영화 추가/삭제 토글
+      this.toggleWishlist(this.movie);
     },
   },
 };
@@ -49,7 +51,6 @@ export default {
   position: relative;
   width: 150px;
   cursor: pointer;
-  flex-shrink: 0;
   overflow: hidden;
   text-align: center;
 }
@@ -83,13 +84,11 @@ export default {
 .movie-title {
   font-size: 14px;
   color: white;
-  margin-bottom: 5px;
 }
 
 .release-date {
   font-size: 12px;
   color: #b3b3b3;
-  margin-bottom: 5px;
 }
 
 .movie-rating {

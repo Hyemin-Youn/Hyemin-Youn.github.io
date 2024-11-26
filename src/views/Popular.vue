@@ -50,48 +50,49 @@
   </script>
   
   <style scoped>
-/* View Toggle Buttons */
-.view-toggle {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-  padding: 10px;
-  background: #000; /* 배경색을 검정으로 변경 */
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 유지 */
-}
-
-.view-toggle button {
-  background-color: #333;
-  color: #fff;
-  border: none;
-  padding: 10px 20px;
-  margin: 0 10px;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px; /* 아이콘과 텍스트 간격 */
-}
-
-.view-toggle button.active {
-  background-color: #e50914; /* 활성화 상태 */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-  border: 2px solid #fff;
-}
-
-.view-toggle button:first-child {
-  background-color: #1e90ff; /* Table View 기본 버튼 색 */
-}
-
-.view-toggle button:first-child.active {
-  background-color: #104e8b;
-}
-
-.view-toggle button:hover {
-  transform: scale(1.05); /* 호버 시 확대 */
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
-}
-</style>
+  /* View Toggle Buttons */
+  .view-toggle {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    padding: 10px;
+    background: #222; /* 검정 배경 */
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+  }
+  
+  .view-toggle button {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 10px;
+    border-radius: 8px; /* 둥근 버튼 */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 아이콘과 텍스트 간격 */
+  }
+  
+  .view-toggle button.active {
+    background-color: #e50914; /* 활성화된 버튼 색상 */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* 활성화된 버튼 그림자 */
+    border: 2px solid #fff; /* 강조된 테두리 */
+  }
+  
+  .view-toggle button:first-child {
+    background-color: #1e90ff; /* Table View 버튼 기본 색상 */
+  }
+  
+  .view-toggle button:first-child.active {
+    background-color: #104e8b; /* Table View 활성화 상태 색상 */
+  }
+  
+  .view-toggle button:hover {
+    transform: scale(1.05); /* 호버 시 확대 */
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.4); /* 호버 시 그림자 강화 */
+  }
+  </style>
+  

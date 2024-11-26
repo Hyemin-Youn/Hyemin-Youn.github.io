@@ -22,11 +22,15 @@
     <!-- Main Content -->
     <div class="content">
       <!-- 영화 리스트 -->
-      <div class="movie-grid" :class="{ 'table-view': viewMode === 'table' }">
+      <div
+        class="movie-grid"
+        :class="{ 'table-view': viewMode === 'table' }"
+        :style="gridStyle"
+      >
         <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
       </div>
 
-      <!-- Pagination -->
+      <!-- Pagination (Table View 전용) -->
       <div v-if="viewMode === 'table'" class="pagination">
         <button
           :disabled="currentPage === 1"
@@ -75,7 +79,7 @@ export default {
       viewMode: "table", // 기본 View 모드
       loading: false,
       showScrollTopButton: false,
-      moviesPerPage: 8, // 한 페이지에 표시할 영화 개수 줄임
+      moviesPerPage: 8, // 한 페이지에 표시할 영화 개수
     };
   },
   computed: {
@@ -84,16 +88,32 @@ export default {
       const end = start + this.moviesPerPage;
       return this.movies.slice(start, end);
     },
+    gridStyle() {
+      if (this.viewMode === "table") {
+        return {
+          gridTemplateColumns: "repeat(4, 1fr)", // 테이블 뷰에서 4열 고정
+          gridAutoRows: "auto",
+          height: "auto", // 모든 내용 표시
+        };
+      }
+      return {};
+    },
   },
   methods: {
-    async fetchMovies(page = 1) {
+    async fetchMovies(page = 1, append = false) {
       if (this.loading) return;
 
       this.loading = true;
       const data = await fetchPopularMovies(page);
 
-      this.movies = data.results;
-      this.totalPages = Math.ceil(data.results.length / this.moviesPerPage); // 페이지 수 계산
+      if (append) {
+        this.movies = [...this.movies, ...data.results];
+      } else {
+        this.movies = data.results;
+      }
+
+      this.currentPage = page;
+      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
       this.loading = false;
     },
     changeViewMode(mode) {
@@ -169,9 +189,13 @@ export default {
 /* 영화 그리드 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개씩 */
   gap: 20px;
   padding: 20px;
+}
+
+.movie-grid.table-view {
+  grid-template-columns: repeat(4, 1fr); /* 테이블 뷰에서 고정 열 크기 */
+  gap: 20px;
 }
 
 /* Pagination */
@@ -179,7 +203,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0; /* 영화 포스터 바로 아래에 위치 */
+  margin: 20px 0;
 }
 
 .pagination button {
@@ -200,5 +224,29 @@ export default {
 .pagination span {
   color: #fff;
   margin: 0 10px;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  margin: 20px 0;
+  color: white;
+}
+
+/* TOP 버튼 */
+.scroll-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #e50914;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.scroll-top:hover {
+  background-color: #b00610;
 }
 </style>

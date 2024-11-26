@@ -1,8 +1,5 @@
 <template>
   <div class="popular">
-    <!-- Navbar -->
-    <!-- <Navbar class="navbar" /> -->
-
     <!-- 영화 리스트 -->
     <div class="movie-grid">
       <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
@@ -28,14 +25,12 @@
 </template>
 
 <script>
-// import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { fetchPopularMovies } from "../api/movies";
 
 export default {
   name: "PopularTable",
   components: {
-    // Navbar,
     MovieCard,
   },
   data() {
@@ -72,17 +67,6 @@ export default {
 </script>
 
 <style scoped>
-/* Navbar 고정 */
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background-color: #121212;
-  border-bottom: 1px solid #333;
-}
-
 .popular {
   padding-top: 60px;
   background-color: #121212;
@@ -96,9 +80,9 @@ export default {
 .movie-grid {
   flex-grow: 1; /* 그리드가 가능한 공간을 차지하도록 설정 */
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
-  gap: 10px; /* 영화 포스터 간격 좁힘 */
-  padding: 20px;
+  grid-template-columns: repeat(5, 1fr); /* 5열 고정 */
+  gap: 20px; /* 영화 포스터 간격 */
+  padding: 30px;
   align-items: center; /* 그리드 아이템 가운데 정렬 */
   justify-items: center; /* 가로로 가운데 정렬 */
 }
@@ -107,7 +91,7 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 10px 0;
+  margin: 20px 0;
   padding: 10px;
   background-color: #222;
   border-radius: 10px;
@@ -117,7 +101,7 @@ export default {
   background-color: #333;
   color: #fff;
   border: none;
-  padding: 5px 10px;
+  padding: 10px 15px;
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;
@@ -128,21 +112,17 @@ export default {
   background-color: #e50914;
 }
 
-/* .pagination button:disabled {
-  background-color: #666;
-  cursor: not-allowed;
-} */
-
 .pagination span {
   color: #fff;
   margin: 0 10px;
+  font-size: 16px;
 }
 
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .movie-grid {
     grid-template-columns: repeat(2, 1fr); /* 모바일 화면에서는 2열 */
-    gap: 8px; /* 모바일 화면에서 간격도 좁힘 */
+    gap: 15px;
   }
 
   .pagination button {

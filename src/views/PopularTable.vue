@@ -159,15 +159,34 @@ export default {
   line-height: 40px;
 }
 
+
 @media (max-width: 768px) {
   .movie-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* 모바일에서 카드 크기 */
+    grid-template-columns: repeat(3, 1fr); /* 태블릿: 3열 */
     gap: 10px;
   }
 
-  .pagination button {
-    padding: 8px 12px;
-    font-size: 14px;
+  .movie-card {
+    width: 90px; /* 카드 크기 축소 */
+  }
+
+  .movie-title {
+    font-size: 11px; /* 제목 글씨 크기 축소 */
+  }
+}
+
+@media (max-width: 480px) {
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr); /* 모바일: 2열 */
+    gap: 8px;
+  }
+
+  .movie-card {
+    width: 80px; /* 카드 크기 더 축소 */
+  }
+
+  .movie-title {
+    font-size: 10px; /* 제목 글씨 더 축소 */
   }
 }
 </style>

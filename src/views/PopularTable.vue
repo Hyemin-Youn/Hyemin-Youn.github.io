@@ -52,11 +52,22 @@ export default {
     },
   },
   methods: {
-    // TMDB API에서 인기 영화 데이터 가져오기
+    // TMDB API에서 여러 페이지의 데이터를 가져와 병합
     async fetchMovies() {
-      const data = await fetchPopularMovies();
-      this.movies = data.results; // 영화 데이터 저장
-      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage); // 총 페이지 계산
+      try {
+        const totalPagesToFetch = 3; // 가져올 페이지 수
+        let allMovies = [];
+
+        for (let page = 1; page <= totalPagesToFetch; page++) {
+          const data = await fetchPopularMovies(page);
+          allMovies = [...allMovies, ...data.results];
+        }
+
+        this.movies = allMovies;
+        this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
+      } catch (error) {
+        console.error("Error fetching movies:", error);
+      }
     },
     // 페이지 변경
     changePage(page) {
@@ -71,6 +82,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 /* Navbar 상단 고정 */

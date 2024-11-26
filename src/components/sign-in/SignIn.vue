@@ -258,4 +258,61 @@ button:hover {
   font-size: 0.8rem;
   margin-top: 8px;
 }
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .wrapper {
+    width: 90%; /* 모바일 화면 너비에 맞춤 */
+    height: auto; /* 높이를 자동으로 조정 */
+    padding: 10px;
+  }
+
+  .card {
+    width: 100%; /* 카드 너비를 부모 요소에 맞춤 */
+    height: auto;
+  }
+
+  .content {
+    padding: 20px; /* 모바일에서 내부 여백을 줄임 */
+  }
+
+  h2 {
+    font-size: 1.2rem; /* 헤더 글씨 크기 축소 */
+  }
+
+  input,
+  button {
+    font-size: 0.8rem; /* 입력 필드와 버튼 크기 축소 */
+    padding: 8px;
+  }
+
+  .switch {
+    font-size: 0.7rem; /* 전환 텍스트 크기 축소 */
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    width: 100%; /* 가장 작은 화면에서는 너비를 100%로 설정 */
+    padding: 0 10px; /* 좌우 여백 추가 */
+  }
+
+  .content {
+    padding: 15px; /* 내부 여백 축소 */
+  }
+
+  h2 {
+    font-size: 1rem; /* 헤더 크기 더 축소 */
+  }
+
+  input,
+  button {
+    font-size: 0.7rem; /* 입력 필드와 버튼 크기 더 축소 */
+    padding: 6px;
+  }
+
+  .switch {
+    font-size: 0.6rem; /* 전환 텍스트 크기 더 축소 */
+  }
+}
 </style>

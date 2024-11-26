@@ -198,7 +198,7 @@ export default {
 /* 카드 콘텐츠 */
 .content {
   position: absolute;
-  width: 90%;
+  width: 80%;
   height: 100%;
   padding: 30px;
   text-align: center;

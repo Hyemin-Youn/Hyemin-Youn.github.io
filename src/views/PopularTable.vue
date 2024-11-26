@@ -147,7 +147,7 @@ export default {
   }
 
   .movie-title {
-    font-size: 1px; /* 제목 글씨 크기 더 축소 */
+    font-size: 0.5px; /* 제목 글씨 크기 더 축소 */
   }
 }
 </style>

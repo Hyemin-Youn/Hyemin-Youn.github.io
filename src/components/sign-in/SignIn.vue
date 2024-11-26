@@ -259,4 +259,124 @@ button:hover {
   margin-top: 8px;
 }
 
+@media (max-height: 600px) {
+  #phone {
+    transform: translate(-50%, -50%) scale(0.5); /* Scale down on small screens */
+  }
+}
+
+@media (max-height: 400px) {
+  #phone {
+    transform: translate(-50%, -50%) scale(0.3); /* Further scale down */
+  }
+}
+
+#content-wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position:relative;
+}
+
+input {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #000;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  height: 2.5rem;
+  padding: 0;
+  margin: 0;
+}
+
+
+.read-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-indent: 10px; /* 원하는 들여쓰기 크기로 조정하세요 */
+  color: #2b2b2b !important;
+  font-weight: 900;
+}
+
+h1 {
+  font-size:24px;
+  font-weight:800;
+  text-align:center;
+  margin-top:0;
+
+  color:#272727;
+}
+
+button {
+  display:block;
+  border-radius:50px;
+  border:none;
+  width:100%;
+  background-color: #2069ff;
+  color:#fff;
+  padding:17px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  box-shadow: 0px 10px 30px rgba(23,83,209,0.3);
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  box-shadow: 0px 2px 10px rgba(23,83,209,0.4)
+}
+
+.input {
+  position: relative;
+  margin-top: 1.5rem;
+}
+
+.line-active {
+  border-bottom:1px solid #2069ff !important;
+  box-shadow: 0px 1px 0px #2069ff !important;
+}
+
+.input input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #9e9e9e;
+  border-radius: 0;
+  outline: none;
+  height: 2.5rem;
+  width: 100%;
+  font-size: 1rem;
+  padding: 0;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  box-sizing: content-box;
+  transition: all 0.3s ease;
+}
+
+.input label {
+  color: #9e9e9e;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  font-size: 1rem;
+  cursor: text;
+  transition: transform .2s ease-out;
+  transform-origin: 0% 100%;
+  text-align: initial;
+  transform: translateY(12px);
+  pointer-events: none;
+}
+
+.label-active {
+  transform: translateY(-14px) scale(0.8) !important;
+  transform-origin: 0 0 !important;
+}
+
+.label-blue {
+  color: #2069ff !important;
+}
+
 </style>

@@ -1,7 +1,5 @@
 <template>
   <div class="popular">
-    <!-- Navbar -->
-    <Navbar />
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
@@ -28,14 +26,12 @@
 </template>
 
 <script>
-import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { fetchPopularMovies } from "@/api/movies";
 
 export default {
   name: "PopularTable",
   components: {
-    Navbar,
     MovieCard,
   },
   data() {
@@ -98,10 +94,10 @@ export default {
 /* 영화 그리드 */
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 반응형 4열 그리드 */
+  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개의 영화 포스터 */
   gap: 20px;
   padding: 20px;
-  justify-items: center; /* 영화 카드 가운데 정렬 */
+  justify-items: center; /* 카드 가운데 정렬 */
 }
 
 /* 영화 카드 */

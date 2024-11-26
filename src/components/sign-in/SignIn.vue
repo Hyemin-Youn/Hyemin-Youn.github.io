@@ -169,8 +169,8 @@ export default {
 
 /* 카드 */
 .card {
-  width: 360px;
-  height: 480px;
+  width: 660px;
+  height: 780px;
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;

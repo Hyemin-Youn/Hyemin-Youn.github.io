@@ -1,8 +1,5 @@
 <template>
   <div class="popular">
-    <!-- Navbar -->
-    <!-- <Navbar class="navbar" /> -->
-
     <!-- 영화 리스트 -->
     <div class="movie-grid">
       <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
@@ -10,17 +7,11 @@
 
     <!-- Pagination -->
     <div class="pagination">
-      <button
-        :disabled="currentPage === 1"
-        @click="changePage(currentPage - 1)"
-      >
+      <button :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
         이전
       </button>
       <span>페이지 {{ currentPage }} / {{ totalPages }}</span>
-      <button
-        :disabled="currentPage === totalPages"
-        @click="changePage(currentPage + 1)"
-      >
+      <button :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
         다음
       </button>
     </div>
@@ -28,26 +19,23 @@
 </template>
 
 <script>
-// import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchPopularMovies } from "../api/movies";
+import { fetchPopularMovies } from "@/api/movies";
 
 export default {
   name: "PopularTable",
   components: {
-    // Navbar,
     MovieCard,
   },
   data() {
     return {
-      movies: [], // 전체 영화 데이터
-      currentPage: 1, // 현재 페이지
-      totalPages: 10, // 총 페이지 수
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
       moviesPerPage: 8, // 한 페이지에 표시할 영화 수
     };
   },
   computed: {
-    // 현재 페이지의 영화 데이터를 계산
     paginatedMovies() {
       const start = (this.currentPage - 1) * this.moviesPerPage;
       const end = start + this.moviesPerPage;
@@ -56,20 +44,19 @@ export default {
   },
   methods: {
     async fetchMovies() {
-      // 영화 데이터를 가져오는 함수
-      const data = await fetchPopularMovies();
-      this.movies = data.results; // 전체 영화 데이터 저장
-      this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage); // 총 페이지 계산
+      const data = await fetchPopularMovies(this.currentPage);
+      this.movies = data.results;
+      this.totalPages = data.total_pages;
     },
     changePage(page) {
-      // 페이지 변경 메서드
       if (page > 0 && page <= this.totalPages) {
         this.currentPage = page;
+        this.fetchMovies();
       }
     },
   },
   created() {
-    this.fetchMovies(); // 컴포넌트가 생성될 때 데이터 로드
+    this.fetchMovies();
   },
 };
 </script>
@@ -85,7 +72,7 @@ export default {
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4열 고정 */
-  gap: 20px; /* 카드 간격 */
+  gap: 20px;
   padding: 20px;
 }
 
@@ -93,14 +80,14 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin: 20px 0;
 }
 
 .pagination button {
   background-color: #333;
   color: #fff;
   border: none;
-  padding: 10px 15px;
+  padding: 5px 10px;
   margin: 0 5px;
   border-radius: 4px;
   cursor: pointer;

@@ -42,6 +42,11 @@ const routes = [
     component: SliderContent, 
   },
   {
+    path: '/popular',
+    name: 'Popular',
+    component: Popular,
+  },
+  {
     path: "/popular-infinite",
     name: "PopularInfinite",
     component: PopularInfinite,

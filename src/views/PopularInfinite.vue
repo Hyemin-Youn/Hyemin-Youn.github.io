@@ -1,7 +1,7 @@
 <template>
     <div class="popular">
       <!-- Navbar -->
-      <Navbar class="navbar" />
+      <!-- <Navbar class="navbar" /> -->
   
       <!-- 영화 리스트 -->
       <div class="movie-grid">
@@ -21,14 +21,14 @@
   </template>
   
   <script>
-  import Navbar from "@/components/Navbar.vue";
+//   import Navbar from "@/components/Navbar.vue";
   import MovieCard from "@/components/MovieCard.vue";
   import { fetchPopularMovies } from "../api/movies";
   
   export default {
     name: "PopularInfinite",
     components: {
-      Navbar,
+    //   Navbar,
       MovieCard,
     },
     data() {

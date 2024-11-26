@@ -130,4 +130,5 @@ export default {
   overflow: hidden; /* 새로 스크롤 비활성화 */
 }
 
+
 </style>

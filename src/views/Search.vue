@@ -164,8 +164,27 @@ export default {
   color: white;
   min-height: 100vh;
   padding: 20px;
+  padding-top: 80px; /* Navbar 높이만큼 여백 추가 */
 }
 
+/* Navbar 고정 스타일 */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #121212;
+  z-index: 1000; /* 상단 고정을 유지하고 다른 요소 위에 표시 */
+  padding: 10px 20px;
+  border-bottom: 1px solid #333;
+}
+
+.navbar h1 {
+  margin: 0;
+  color: white;
+}
+
+/* Dropdown 및 기타 요소 스타일 */
 .dropdown-container {
   margin-bottom: 20px;
   display: flex;
@@ -231,13 +250,4 @@ export default {
   cursor: pointer;
 }
 
-.navbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 1000;
-  background-color: #121212;
-  border-bottom: 1px solid #333;
-}
 </style>

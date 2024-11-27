@@ -1,3 +1,5 @@
+import { createStore } from 'vuex';
+
 const store = createStore({
   state: {
     wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트

@@ -15,6 +15,17 @@
       <button @click="handleSearch">검색</button>
     </div>
 
+    <!-- 최근 검색어 목록 -->
+    <div class="recent-searches" v-if="recentSearches.length">
+      <h3>최근 검색어</h3>
+      <ul>
+        <li v-for="(search, index) in recentSearches" :key="index">
+          <span @click="searchFromHistory(search)">{{ search }}</span>
+          <button class="delete-btn" @click="deleteSearchHistory(index)">X</button>
+        </li>
+      </ul>
+    </div>
+
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
       <div
@@ -64,7 +75,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import { fetchMovies, searchMovies } from "@/api/movies";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Search",
@@ -97,6 +108,7 @@ export default {
     };
   },
   computed: {
+    ...mapGetters(["recentSearches"]), // 최근 검색어 가져오기
     dropdownEntries() {
       return Object.entries(this.dropdowns).map(([key, options]) => ({
         key,
@@ -105,7 +117,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addSearchHistory", "setSearchResults"]),
+    ...mapActions(["addSearchHistory", "setSearchResults", "deleteSearchHistory"]),
     async fetchMovies(page = 1, append = false) {
       if (this.loading) return;
       this.loading = true;
@@ -135,11 +147,9 @@ export default {
     async handleSearch() {
       if (!this.searchQuery.trim()) return;
 
-      console.log("검색 시작:", this.searchQuery);
       this.loading = true;
-
       try {
-        this.addSearchHistory(this.searchQuery);
+        this.addSearchHistory(this.searchQuery); // 검색어 저장
         const data = await searchMovies(this.searchQuery, 1);
         this.movies = data || [];
         this.currentPage = 1;
@@ -150,6 +160,13 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    searchFromHistory(query) {
+      this.searchQuery = query;
+      this.handleSearch();
+    },
+    deleteSearchHistory(index) {
+      this.$store.commit("DELETE_SEARCH_HISTORY", index);
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -221,6 +238,45 @@ export default {
 
 .search-bar button:hover {
   background-color: #0056b3;
+}
+
+.recent-searches {
+  margin: 20px auto;
+  max-width: 70%;
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.recent-searches ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-searches li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.recent-searches li span {
+  cursor: pointer;
+}
+
+.recent-searches li .delete-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.recent-searches li .delete-btn:hover {
+  background: darkred;
 }
 
 .dropdown-container {

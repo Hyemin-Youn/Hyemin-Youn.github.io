@@ -258,7 +258,7 @@ export default {
   height: 100%;
   padding: 20px;
   text-align: center;
-  background: #070101;
+  background: #e50914;
   color: #fff;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -374,7 +374,7 @@ button:hover {
       max-width: 350px; /* 최대 350px로 제한 */
       margin: 0 auto; /* 중앙 정렬 */
       padding: 20px; /* 내부 여백 */
-      background-color: red; /* 카드 배경색 */
+      background-color: rgb(22, 3, 16); /* 카드 배경색 */
       border-radius: 10px; /* 둥근 모서리 */
       height: auto;
   }

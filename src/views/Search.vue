@@ -43,8 +43,13 @@
     <div v-if="loading" class="loading">로딩 중...</div>
 
     <!-- 데이터가 없는 경우 -->
-    <div v-if="!loading && movies.length === 0" class="no-results">
+    <div v-if="!loading && movies.length === 0 && !errorMessage" class="no-results">
       검색 결과가 없습니다.
+    </div>
+
+    <!-- 에러 메시지 -->
+    <div v-if="errorMessage" class="error-message">
+      {{ errorMessage }}
     </div>
   </div>
 </template>
@@ -61,7 +66,7 @@ export default {
     MovieCard,
   },
   computed: {
-    ...mapGetters(["movies", "loading", "searchHistory", "wishlist"]),
+    ...mapGetters(["movies", "loading", "searchHistory", "wishlist", "errorMessage"]),
     searchQuery: {
       get() {
         return this.$store.getters.searchQuery;

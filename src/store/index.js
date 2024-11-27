@@ -17,6 +17,7 @@ const store = createStore({
     totalPages: 1,
     loading: false,
     searchQuery: "",
+    errorMessage: "", // 에러 메시지 추가
   },
   mutations: {
     setUser(state, user) {
@@ -75,6 +76,9 @@ const store = createStore({
     SET_SEARCH_QUERY(state, query) {
       state.searchQuery = query;
     },
+    SET_ERROR(state, message) {
+      state.errorMessage = message;
+    },
   },
   actions: {
     toggleWishlist({ commit }, movie) {
@@ -92,16 +96,15 @@ const store = createStore({
     async fetchMovies({ state, commit }, { page = 1, append = false }) {
       if (state.loading) return;
       commit("SET_LOADING", true);
+      commit("SET_ERROR", ""); // 기존 에러 메시지 초기화
       try {
         const filters = {
-          genre: state.selectedOptions.originalLanguage,
-          rating: state.selectedOptions.translationLanguage,
-          language: state.selectedOptions.sorting,
-          query: state.searchQuery,
+          query: encodeURIComponent(state.searchQuery), // URL 인코딩 추가
           page,
         };
-        const apiKey = "your_tmdb_api_key"; // API 키
+        const apiKey = "your_tmdb_api_key"; // 실제 TMDb API 키
         const url = `https://api.themoviedb.org/3/search/movie?query=${filters.query}&page=${filters.page}&api_key=${apiKey}`;
+        console.log("API 요청 URL:", url); // 디버깅용 로그
         const response = await fetch(url);
         if (!response.ok) throw new Error("API 호출 실패");
         const data = await response.json();
@@ -115,7 +118,8 @@ const store = createStore({
           totalPages: data.total_pages,
         });
       } catch (error) {
-        console.error("영화 데이터를 불러오는 중 오류 발생:", error);
+        console.error("API 호출 실패:", error);
+        commit("SET_ERROR", "영화 데이터를 불러오는 중 오류가 발생했습니다.");
       } finally {
         commit("SET_LOADING", false);
       }
@@ -134,6 +138,7 @@ const store = createStore({
     totalPages: (state) => state.totalPages,
     loading: (state) => state.loading,
     searchQuery: (state) => state.searchQuery,
+    errorMessage: (state) => state.errorMessage, // 에러 메시지 getter
   },
 });
 

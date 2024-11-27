@@ -1,28 +1,18 @@
 <template>
   <div class="movie-card">
     <img
-:src="posterUrl"
-:alt="movie.title"
-class="poster"
->
+      :src="posterUrl"
+      :alt="movie.title"
+      class="poster"
+    >
     <div class="movie-info">
-      <p class="movie-title">
-{{ movie.title }}
-</p>
-      <p class="release-date">
-개봉일: {{ formattedReleaseDate }}
-</p>
-      <div
-v-if="movie.vote_average"
-class="movie-rating"
->
+      <p class="movie-title">{{ movie.title }}</p>
+      <p class="release-date">개봉일: {{ formattedReleaseDate }}</p>
+      <div v-if="movie.vote_average" class="movie-rating">
         ⭐ {{ movie.vote_average }} / 10
       </div>
     </div>
-    <span
-class="wishlist-icon"
-@click.stop="handleWishlist"
->
+    <span class="wishlist-icon" @click.stop="handleWishlist">
       <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'" />
     </span>
   </div>
@@ -39,7 +29,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isInWishlist"]), // Vuex getter 연결
+    ...mapGetters(["isInWishlist"]), // Vuex Getter 연결
     posterUrl() {
       return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
     },
@@ -50,9 +40,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["toggleWishlist"]), // Vuex action 연결
+    ...mapActions(["toggleWishlist"]), // Vuex Action 연결
     handleWishlist() {
-      this.toggleWishlist(this.movie); // 영화 추가/삭제 토글
+      this.toggleWishlist(this.movie); // 영화 찜/찜 해제 토글
     },
   },
 };

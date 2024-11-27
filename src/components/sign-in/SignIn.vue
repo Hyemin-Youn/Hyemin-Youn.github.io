@@ -206,7 +206,7 @@ export default {
 
 /* 컨테이너 */
 .wrapper {
-  width: 100%;
+  width: 90%;
   max-width: 600px; /* 데스크톱에서는 최대 600px */
   height: auto; /* 높이를 콘텐츠에 따라 조정 */
   position: absolute;
@@ -279,7 +279,7 @@ label {
 
 input {
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   margin-top: 6px;
   margin-bottom: 12px;
   border: none;
@@ -345,11 +345,11 @@ button:hover {
 @media (max-width: 480px) {
   .wrapper {
     width: 100%; /* 모바일 화면에서 전체 너비 사용 */
-    padding: 20px;
+    padding: 10px;
   }
 
   .content {
-    padding: 10px; /* 모바일 콘텐츠 여백 축소 */
+    padding: 40px; /* 모바일 콘텐츠 여백 축소 */
   }
 
   h2 {
@@ -357,7 +357,7 @@ button:hover {
   }
 
   input {
-    font-size: 0.5rem; /* 입력 필드 글자 크기 축소 */
+    font-size: 0.8rem; /* 입력 필드 글자 크기 축소 */
     padding: 8px;
   }
 

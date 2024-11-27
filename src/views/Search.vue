@@ -213,6 +213,78 @@ export default {
 </script>
 
 <style scoped>
+.search-page {
+  background-color: #121212;
+  color: white;
+  min-height: 100vh;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.search-bar input {
+  width: 70%;
+  padding: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}
+
+.recent-searches {
+  margin: 20px auto;
+  max-width: 70%;
+  background: #1e1e1e;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.recent-searches ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-searches li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  color: white;
+}
+
+.recent-searches li span {
+  cursor: pointer;
+}
+
+.recent-searches li .delete-btn {
+  background: red;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 2px 6px;
+  cursor: pointer;
+}
+
+.recent-searches li .delete-btn:hover {
+  background: darkred;
+}
+
 .poster-container {
   position: relative;
 }
@@ -236,12 +308,40 @@ export default {
   transform: scale(1.1);
 }
 
-@media (max-width: 768px) {
-  .movie-card {
-    padding: 5px;
-  }
-  .movie-poster {
-    height: 150px;
-  }
+.dropdown-container {
+  margin: 20px 0;
+  display: flex;
+  gap: 15px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  text-align: center;
+  background-color: #1e1e1e;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.movie-poster {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  object-fit: cover;
+}
+
+.movie-title {
+  font-size: 14px;
+  color: white;
+}
+
+.loading {
+  text-align: center;
+  margin: 20px 0;
 }
 </style>

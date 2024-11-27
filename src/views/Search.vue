@@ -1,36 +1,49 @@
-=<template>
+<template>
   <div class="search-page">
     <!-- Navbar -->
     <Navbar />
 
     <!-- 검색 기능 -->
-    <!-- <h1>영화 검색</h1> -->
-    <div class="dropdown-container">
-      <label>선호하는 설정을 선택하세요</label>
-      <div
-        v-for="dropdown in dropdownEntries"
-        :key="dropdown.key"
-        class="custom-select"
-      >
-        <div class="select-selected" @click="toggleDropdown(dropdown.key)">
-          {{ selectedOptions[dropdown.key] }}
-        </div>
-        <div v-if="activeDropdown === dropdown.key" class="select-items">
-          <div
-            v-for="option in dropdown.options"
-            :key="option"
-            @click="selectOption(dropdown.key, option)"
-          >
-            {{ option }}
-          </div>
-        </div>
-      </div>
-      <button class="clear-options" @click="clearOptions">초기화</button>
+    <div class="search-bar">
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="영화 제목을 검색하세요"
+        @keydown.enter="handleSearch"
+      />
+      <button @click="handleSearch">검색</button>
+    </div>
+
+    <!-- 최근 검색어 -->
+    <div v-if="recentSearches.length" class="recent-searches">
+      <h2>최근 검색어</h2>
+      <ul>
+        <li v-for="(query, index) in recentSearches" :key="index" @click="searchFromHistory(query)">
+          {{ query }}
+        </li>
+      </ul>
     </div>
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+      <MovieCard
+        v-for="movie in movies"
+        :key="movie.id"
+        :movie="movie"
+        @toggleWishlist="toggleWishlist(movie)"
+        @addViewHistory="addViewHistory(movie)"
+      />
+    </div>
+
+    <!-- 즐겨찾기 영화 -->
+    <div v-if="wishlist.length" class="wishlist">
+      <h2>즐겨찾기한 영화</h2>
+      <ul>
+        <li v-for="movie in wishlist" :key="movie.id">
+          {{ movie.title }}
+          <button @click="toggleWishlist(movie)">즐겨찾기 제거</button>
+        </li>
+      </ul>
     </div>
 
     <!-- 로딩 표시 -->
@@ -46,7 +59,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
-import { fetchMovies } from "@/api/movies";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Search",
@@ -56,105 +69,54 @@ export default {
   },
   data() {
     return {
-      dropdowns: {
-        originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
-        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
-        sorting: ["언어 (전체)", "en", "ko"],
-      },
-      DEFAULT_OPTIONS: {
-        originalLanguage: "장르 (전체)",
-        translationLanguage: "평점 (전체)",
-        sorting: "언어 (전체)",
-      },
-      selectedOptions: {
-        originalLanguage: "장르 (전체)",
-        translationLanguage: "평점 (전체)",
-        sorting: "언어 (전체)",
-      },
-      activeDropdown: null,
+      searchQuery: "",
       movies: [],
       currentPage: 1,
       totalPages: 1,
       loading: false,
-      showScrollTopButton: false, // TOP 버튼 표시 여부
+      showScrollTopButton: false,
     };
   },
   computed: {
-    dropdownEntries() {
-      return Object.entries(this.dropdowns).map(([key, options]) => ({
-        key,
-        options,
-      }));
+    ...mapGetters(["searchHistory", "wishlist", "viewHistory"]),
+    recentSearches() {
+      return this.searchHistory.slice().reverse(); // 최신순
     },
   },
   methods: {
-    async fetchMovies(page = 1, append = false) {
-      if (this.loading || page > this.totalPages) return; // 중복 호출 방지 및 페이지 초과 방지
+    ...mapActions(["addSearchHistory", "toggleWishlist", "addViewHistory"]),
+    async handleSearch() {
+      if (!this.searchQuery.trim()) return;
+
+      // 검색 기록 저장
+      this.addSearchHistory(this.searchQuery);
+
+      // 검색 API 호출 (fetchMovies를 대체할 API 사용 가능)
       this.loading = true;
-
       try {
-        const filters = {
-          genre: this.selectedOptions.originalLanguage,
-          rating: this.selectedOptions.translationLanguage,
-          language: this.selectedOptions.sorting,
-          page,
-        };
-
-        const data = await fetchMovies(filters);
-
-        if (append) {
-          this.movies = [...this.movies, ...data.results];
-        } else {
-          this.movies = data.results;
-        }
-
-        this.currentPage = page;
+        const data = await fetchMovies({ query: this.searchQuery });
+        this.movies = data.results;
         this.totalPages = data.total_pages;
+        this.currentPage = 1;
       } catch (error) {
-        console.error("데이터 로딩 중 오류 발생:", error);
+        console.error("검색 중 오류 발생:", error);
       } finally {
         this.loading = false;
       }
     },
-    toggleDropdown(key) {
-      this.activeDropdown = this.activeDropdown === key ? null : key;
+    searchFromHistory(query) {
+      this.searchQuery = query;
+      this.handleSearch();
     },
-    selectOption(key, option) {
-      this.selectedOptions = {
-        ...this.selectedOptions,
-        [key]: option,
-      };
-      this.activeDropdown = null;
-      this.movies = []; // 기존 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지로 이동
-      this.fetchMovies(1); // 필터 변경 시 데이터 재로드
+    toggleWishlist(movie) {
+      this.$store.dispatch("toggleWishlist", movie); // 즐겨찾기 추가/제거
     },
-    clearOptions() {
-      this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.movies = []; // 기존 데이터를 초기화
-      this.currentPage = 1; // 첫 페이지로 이동
-      this.fetchMovies(1); // 초기화 후 데이터 재로드
-    },
-    handleScroll() {
-      const scrollPosition = window.innerHeight + window.scrollY;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      if (scrollPosition >= documentHeight - 100 && !this.loading) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
-      }
-
-      this.showScrollTopButton = window.scrollY > 300; // 스크롤이 300px 이상일 때 TOP 버튼 표시
+    addViewHistory(movie) {
+      this.$store.dispatch("addViewHistory", movie); // 시청 기록 추가
     },
     scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" }); // 부드럽게 화면 맨 위로 이동
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
-  },
-  created() {
-    this.fetchMovies(); // 초기 데이터 로드
-    window.addEventListener("scroll", this.handleScroll); // 스크롤 이벤트 등록
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll); // 스크롤 이벤트 해제
   },
 };
 </script>
@@ -166,13 +128,37 @@ export default {
   min-height: 100vh;
 }
 
-.dropdown-container {
-  margin: 20px 0;
+.search-bar {
   display: flex;
-  gap: 15px;
-  background-color: #333;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.search-bar input {
+  width: 70%;
   padding: 10px;
-  border-radius: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.search-bar button {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #0056b3;
+}
+
+.recent-searches,
+.wishlist {
+  margin-top: 20px;
+  padding: 0 20px;
 }
 
 .movie-grid {

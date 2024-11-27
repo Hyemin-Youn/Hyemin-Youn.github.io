@@ -1,10 +1,10 @@
 <template>
   <div class="movie-card">
     <img
-      :src="posterUrl"
-      :alt="movie.title"
-      class="poster"
-    >
+:src="posterUrl"
+:alt="movie.title"
+class="poster"
+>
     <div class="movie-info">
       <p class="movie-title">
 {{ movie.title }}
@@ -39,7 +39,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(["isInWishlist"]), // Vuex Getter 연결
+    ...mapGetters(["isInWishlist"]), // Vuex getter 연결
     posterUrl() {
       return `https://image.tmdb.org/t/p/w500/${this.movie.poster_path}`;
     },
@@ -50,9 +50,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["toggleWishlist"]), // Vuex Action 연결
+    ...mapActions(["toggleWishlist"]), // Vuex action 연결
     handleWishlist() {
-      this.toggleWishlist(this.movie); // 영화 찜/찜 해제 토글
+      this.toggleWishlist(this.movie); // 영화 추가/삭제 토글
     },
   },
 };

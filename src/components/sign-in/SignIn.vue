@@ -8,43 +8,49 @@
         :class="{ active: activeCard === 'login', backward: activeCard === 'signup' }"
       >
         <div class="content">
-          <h2>로그인</h2>
+          <h2>Login</h2>
           <form @submit.prevent="handleLogin">
-            <label for="email">이메일</label>
+            <label for="email">Email</label>
             <input
-              id="email"
-              v-model="email"
-              type="email"
-              required
-              aria-label="이메일 주소를 입력하세요"
-            />
+id="email"
+v-model="email"
+type="email"
+required
+>
 
-            <label for="password">비밀번호</label>
+            <label for="password">Password</label>
             <input
-              id="password"
-              v-model="password"
-              type="password"
-              required
-              aria-label="비밀번호를 입력하세요"
-            />
+id="password"
+v-model="password"
+type="password"
+required
+>
 
-            <p v-if="loginError" class="error">{{ loginError }}</p>
+            <p
+v-if="loginError"
+class="error"
+>
+{{ loginError }}
+</p>
 
             <div class="remember-me">
               <input
-                id="rememberMe"
-                v-model="rememberMe"
-                type="checkbox"
-              />
-              <label for="rememberMe">로그인 상태 유지</label>
+id="rememberMe"
+v-model="rememberMe"
+type="checkbox"
+>
+              <label for="rememberMe">Remember Me</label>
             </div>
 
-            <button type="submit" :disabled="isLoading">
-              {{ isLoading ? '처리 중...' : '로그인' }}
-            </button>
+            <button type="submit">
+Sign In
+</button>
           </form>
-          <p class="switch" @click="switchToSignup">
-            계정이 없으신가요? <b>회원가입</b>
+          <p
+class="switch"
+@click="switchToSignup"
+>
+            Don't have an account? <b>Sign up</b>
           </p>
         </div>
       </div>
@@ -55,54 +61,60 @@
         :class="{ active: activeCard === 'signup', backward: activeCard === 'login' }"
       >
         <div class="content">
-          <h2>회원가입</h2>
+          <h2>Sign Up</h2>
           <form @submit.prevent="handleRegister">
-            <label for="newEmail">이메일</label>
+            <label for="newEmail">Email</label>
             <input
-              id="newEmail"
-              v-model="newEmail"
-              type="email"
-              required
-              aria-label="이메일 주소를 입력하세요"
-            />
+id="newEmail"
+v-model="newEmail"
+type="email"
+required
+>
 
-            <label for="newPassword">비밀번호</label>
+            <label for="newPassword">Password</label>
             <input
-              id="newPassword"
-              v-model="newPassword"
-              type="password"
-              required
-              aria-label="비밀번호를 입력하세요"
-            />
+id="newPassword"
+v-model="newPassword"
+type="password"
+required
+>
 
-            <label for="confirmPassword">비밀번호 확인</label>
+            <label for="confirmPassword">Confirm Password</label>
             <input
               id="confirmPassword"
               v-model="confirmPassword"
               type="password"
               required
-              aria-label="비밀번호를 다시 입력하세요"
-            />
+            >
 
-            <p v-if="signupError" class="error">{{ signupError }}</p>
+            <p
+v-if="signupError"
+class="error"
+>
+{{ signupError }}
+</p>
 
             <div class="terms">
               <input
-                id="terms"
-                v-model="termsAccepted"
-                type="checkbox"
-              />
-              <label for="terms">
-                <b>이용 약관</b>을 읽고 동의합니다.
-              </label>
+id="terms"
+v-model="termsAccepted"
+type="checkbox"
+>
+              <label for="terms">I have read the <b>Terms and Conditions</b></label>
             </div>
 
-            <button type="submit" :disabled="!termsAccepted || isLoading">
-              {{ isLoading ? '처리 중...' : '회원가입' }}
-            </button>
+            <button
+type="submit"
+:disabled="!termsAccepted"
+>
+Register
+</button>
           </form>
-          <p class="switch" @click="switchToLogin">
-            이미 계정이 있으신가요? <b>로그인</b>
+          <p
+class="switch"
+@click="switchToLogin"
+>
+            Already have an account? <b>Sign in</b>
           </p>
         </div>
       </div>
@@ -124,7 +136,6 @@ export default {
       confirmPassword: "",
       termsAccepted: false,
       signupError: "",
-      isLoading: false, // 로딩 상태
     };
   },
   methods: {
@@ -154,34 +165,26 @@ export default {
     },
     handleLogin() {
       if (this.password.length < 6) {
-        this.loginError = "비밀번호는 최소 6자리 이상이어야 합니다.";
+        this.loginError = "Password must be at least 6 characters long.";
         return;
       }
-      this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false;
-        alert("로그인에 성공했습니다!");
-        this.$store.dispatch("login", { email: this.email });
-        if (this.$route.path !== "/home") {
-          this.$router.push("/home");
-        }
-      }, 2000); // 로딩 시뮬레이션
+      alert("Login successful!");
+      this.$store.dispatch("login", { email: this.email });
+      if (this.$route.path !== "/home") {
+        this.$router.push("/home");
+      }
     },
     handleRegister() {
       if (this.newPassword.length < 6) {
-        this.signupError = "비밀번호는 최소 6자리 이상이어야 합니다.";
+        this.signupError = "Password must be at least 6 characters long.";
         return;
       }
       if (this.newPassword !== this.confirmPassword) {
-        this.signupError = "비밀번호가 일치하지 않습니다.";
+        this.signupError = "Passwords do not match.";
         return;
       }
-      this.isLoading = true;
-      setTimeout(() => {
-        this.isLoading = false;
-        alert("회원가입에 성공했습니다!");
-        this.switchToLogin();
-      }, 2000); // 로딩 시뮬레이션
+      alert("Registration successful!");
+      this.switchToLogin();
     },
   },
 };
@@ -221,7 +224,7 @@ export default {
   height: 480px;
   position: absolute;
   transform-style: preserve-3d;
-  transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
   opacity: 0;
   z-index: 0;
 }
@@ -254,7 +257,6 @@ export default {
   color: #fff;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(5px);
 }
 
 /* 텍스트 스타일 */
@@ -267,8 +269,6 @@ label {
   display: block;
   margin-top: 10px;
   font-size: 0.9rem;
-  color: #ffffff;
-  font-weight: bold;
 }
 
 input {
@@ -290,12 +290,10 @@ button {
   border-radius: 5px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: transform 0.2s ease-in-out;
 }
 
 button:hover {
   background-color: #a10610;
-  transform: scale(1.05);
 }
 
 .switch {
@@ -313,12 +311,17 @@ button:hover {
 }
 
 @media (max-width: 480px) {
-  .wrapper {
-    width: 70%;
-    height: auto;
-  }
   .content {
-    width: 70%;
+    position: absolute;
+    width: 80%;
+    height: 100%;
+    padding: 30px;
+    text-align: center;
+    background: #e50914;
+    color: #fff;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
+
 </style>

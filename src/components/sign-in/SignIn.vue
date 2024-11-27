@@ -198,7 +198,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop');
+  background-image: url('https://unsplash.com/ko/%EC%82%AC%EC%A7%84/photography-of-cinema-atsUqIm3wxo');
   background-size: cover;
   background-position: center;
   z-index: -1;

@@ -15,6 +15,20 @@
       <button @click="handleSearch">검색</button>
     </div>
 
+    <!-- 최근 검색어 -->
+    <div class="recent-searches" v-if="recentSearches.length">
+      <h2>최근 검색어</h2>
+      <ul>
+        <li
+          v-for="(query, index) in recentSearches"
+          :key="index"
+          @click="handleSearchFromHistory(query)"
+        >
+          {{ query }}
+        </li>
+      </ul>
+    </div>
+
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
       <div
@@ -102,6 +116,9 @@ export default {
         options,
       }));
     },
+    recentSearches() {
+      return this.$store.getters.recentSearches;
+    },
   },
   methods: {
     async fetchMovies(page = 1, append = false) {
@@ -133,6 +150,9 @@ export default {
     async handleSearch() {
       if (!this.searchQuery.trim()) return;
 
+      // 최근 검색어 저장
+      this.$store.dispatch("addSearchHistory", this.searchQuery);
+
       this.loading = true;
       try {
         const data = await searchMovies(this.searchQuery, 1); // 영화 제목 검색
@@ -144,6 +164,10 @@ export default {
       } finally {
         this.loading = false;
       }
+    },
+    handleSearchFromHistory(query) {
+      this.searchQuery = query;
+      this.handleSearch();
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -182,6 +206,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .search-page {

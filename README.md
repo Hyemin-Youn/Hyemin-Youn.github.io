@@ -125,9 +125,14 @@ The project uses **dotenv** to manage environment variables. To set up your envi
 ## License
 This project is licensed under the MIT License.
 
+사진: <a href="https://unsplash.com/ko/%EC%82%AC%EC%A7%84/photography-of-cinema-atsUqIm3wxo?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>의<a href="https://unsplash.com/ko/@myke_simon?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Myke Simon</a>
+      
+
 ## Customize configuration
 For more configuration options, see the [Vue CLI Configuration Reference](https://cli.vuejs.org/config/).
 
 ---
 
 [!homepage screenshot](./screenshots/homepage.png)
+
+---

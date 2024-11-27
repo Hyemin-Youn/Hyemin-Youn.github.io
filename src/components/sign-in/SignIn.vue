@@ -349,7 +349,7 @@ button:hover {
   }
 
   .content {
-    padding: 10px; /* 모바일 콘텐츠 여백 축소 */
+    padding: 30px; /* 모바일 콘텐츠 여백 축소 */
   }
 
   h2 {
@@ -357,7 +357,7 @@ button:hover {
   }
 
   input {
-    font-size: 0.8rem; /* 입력 필드 글자 크기 축소 */
+    font-size: 0.5rem; /* 입력 필드 글자 크기 축소 */
     padding: 8px;
   }
 

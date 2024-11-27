@@ -1,10 +1,16 @@
 <template>
   <div class="slider-container">
-    <button class="arrow-btn left" @click="scrollLeft">
-      <i class="fas fa-chevron-left"></i>
+    <button
+class="arrow-btn left"
+@click="scrollLeft"
+>
+      <i class="fas fa-chevron-left" />
     </button>
 
-    <div class="slider-content" ref="slider">
+    <div
+ref="slider"
+class="slider-content"
+>
       <MovieCard
         v-for="movie in movies"
         :key="movie.id"
@@ -12,8 +18,11 @@
       />
     </div>
 
-    <button class="arrow-btn right" @click="scrollRight">
-      <i class="fas fa-chevron-right"></i>
+    <button
+class="arrow-btn right"
+@click="scrollRight"
+>
+      <i class="fas fa-chevron-right" />
     </button>
   </div>
 </template>
@@ -23,14 +32,14 @@ import { ref } from "vue";
 import MovieCard from "@/components/MovieCard.vue";
 
 export default {
+  components: {
+    MovieCard,
+  },
   props: {
     movies: {
       type: Array,
       required: true,
     },
-  },
-  components: {
-    MovieCard,
   },
   setup() {
     const slider = ref(null);

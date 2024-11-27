@@ -1,6 +1,12 @@
 <template>
-    <div v-if="movie" class="movie-detail">
-      <img :src="makeImagePath(movie.backdrop_path, 'w1280')" alt="Movie Background" />
+    <div
+v-if="movie"
+class="movie-detail"
+>
+      <img
+:src="makeImagePath(movie.backdrop_path, 'w1280')"
+alt="Movie Background"
+>
       <div class="content">
         <h2>{{ movie.title }}</h2>
         <p>{{ movie.overview }}</p>

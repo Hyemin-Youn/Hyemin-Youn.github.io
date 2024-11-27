@@ -3,14 +3,21 @@
     <Navbar />
 
     <div class="home">
-      <div v-if="isLoading" class="loading-overlay">
+      <div
+v-if="isLoading"
+class="loading-overlay"
+>
         <p>로딩중...</p>
       </div>
 
       <div v-else>
         <Banner :heroMovie="heroMovie" />
         
-        <div v-for="category in movieCategories" :key="category.name" class="movie-category">
+        <div
+v-for="category in movieCategories"
+:key="category.name"
+class="movie-category"
+>
           <h3>{{ category.title }}</h3>
           <SliderContent :movies="category.movies" />
         </div>

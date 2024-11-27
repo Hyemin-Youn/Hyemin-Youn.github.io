@@ -10,15 +10,24 @@
         type="text"
         placeholder="영화 제목을 검색하세요"
         @keydown.enter="handleSearch"
-      />
-      <button @click="handleSearch">검색</button>
+      >
+      <button @click="handleSearch">
+검색
+</button>
     </div>
 
     <!-- 최근 검색어 -->
-    <div v-if="recentSearches.length" class="recent-searches">
+    <div
+v-if="recentSearches.length"
+class="recent-searches"
+>
       <h2>최근 검색어</h2>
       <ul>
-        <li v-for="(query, index) in recentSearches" :key="index" @click="searchFromHistory(query)">
+        <li
+v-for="(query, index) in recentSearches"
+:key="index"
+@click="searchFromHistory(query)"
+>
           {{ query }}
         </li>
       </ul>
@@ -36,21 +45,38 @@
     </div>
 
     <!-- 즐겨찾기 영화 -->
-    <div v-if="wishlist.length" class="wishlist">
+    <div
+v-if="wishlist.length"
+class="wishlist"
+>
       <h2>즐겨찾기한 영화</h2>
       <ul>
-        <li v-for="movie in wishlist" :key="movie.id">
+        <li
+v-for="movie in wishlist"
+:key="movie.id"
+>
           {{ movie.title }}
-          <button @click="toggleWishlist(movie)">즐겨찾기 제거</button>
+          <button @click="toggleWishlist(movie)">
+즐겨찾기 제거
+</button>
         </li>
       </ul>
     </div>
 
     <!-- 로딩 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
+    <div
+v-if="loading"
+class="loading"
+>
+로딩 중...
+</div>
 
     <!-- TOP 버튼 -->
-    <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+    <button
+v-if="showScrollTopButton"
+class="scroll-top"
+@click="scrollToTop"
+>
       TOP(위로)
     </button>
   </div>

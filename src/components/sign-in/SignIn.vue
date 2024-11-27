@@ -11,21 +11,45 @@
           <h2>Login</h2>
           <form @submit.prevent="handleLogin">
             <label for="email">Email</label>
-            <input id="email" v-model="email" type="email" required />
+            <input
+id="email"
+v-model="email"
+type="email"
+required
+>
 
             <label for="password">Password</label>
-            <input id="password" v-model="password" type="password" required />
+            <input
+id="password"
+v-model="password"
+type="password"
+required
+>
 
-            <p v-if="loginError" class="error">{{ loginError }}</p>
+            <p
+v-if="loginError"
+class="error"
+>
+{{ loginError }}
+</p>
 
             <div class="remember-me">
-              <input id="rememberMe" v-model="rememberMe" type="checkbox" />
+              <input
+id="rememberMe"
+v-model="rememberMe"
+type="checkbox"
+>
               <label for="rememberMe">Remember Me</label>
             </div>
 
-            <button type="submit">Sign In</button>
+            <button type="submit">
+Sign In
+</button>
           </form>
-          <p class="switch" @click="switchToSignup">
+          <p
+class="switch"
+@click="switchToSignup"
+>
             Don't have an account? <b>Sign up</b>
           </p>
         </div>
@@ -40,10 +64,20 @@
           <h2>Sign Up</h2>
           <form @submit.prevent="handleRegister">
             <label for="newEmail">Email</label>
-            <input id="newEmail" v-model="newEmail" type="email" required />
+            <input
+id="newEmail"
+v-model="newEmail"
+type="email"
+required
+>
 
             <label for="newPassword">Password</label>
-            <input id="newPassword" v-model="newPassword" type="password" required />
+            <input
+id="newPassword"
+v-model="newPassword"
+type="password"
+required
+>
 
             <label for="confirmPassword">Confirm Password</label>
             <input
@@ -51,18 +85,35 @@
               v-model="confirmPassword"
               type="password"
               required
-            />
+            >
 
-            <p v-if="signupError" class="error">{{ signupError }}</p>
+            <p
+v-if="signupError"
+class="error"
+>
+{{ signupError }}
+</p>
 
             <div class="terms">
-              <input id="terms" v-model="termsAccepted" type="checkbox" />
+              <input
+id="terms"
+v-model="termsAccepted"
+type="checkbox"
+>
               <label for="terms">I have read the <b>Terms and Conditions</b></label>
             </div>
 
-            <button type="submit" :disabled="!termsAccepted">Register</button>
+            <button
+type="submit"
+:disabled="!termsAccepted"
+>
+Register
+</button>
           </form>
-          <p class="switch" @click="switchToLogin">
+          <p
+class="switch"
+@click="switchToLogin"
+>
             Already have an account? <b>Sign in</b>
           </p>
         </div>

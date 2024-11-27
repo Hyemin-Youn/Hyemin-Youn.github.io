@@ -1,84 +1,66 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import Home from '../views/Home.vue';
-import SignIn from '../components/sign-in/SignIn.vue';
-import Wishlist from '../views/WishList.vue';
-import store from '../store';
-import MovieDetail from "@/views/MovieDetail.vue";
-import SliderContent from '../components/SliderContent.vue';
-import Search from "@/views/Search.vue";
-import PopularInfinite from "@/views/PopularInfinite.vue";
-import PopularTable from "@/views/PopularTable.vue";
-import Popular from "@/components/Popular.vue";
+import { createStore } from 'vuex';
 
-
-
-
-const routes = [
-  { 
-    path: '/signin', 
-    name: 'SignIn', 
-    component: SignIn,
-    meta: { hideNavbar: true }, // Navbar를 숨기기 위한 메타 데이터
+const store = createStore({
+  state: {
+    wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트
+    searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [], // 검색 기록
+    isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false, // 로그인 여부
+    userPreferences: JSON.parse(localStorage.getItem("userPreferences")) || {}, // 사용자 설정
+    viewHistory: JSON.parse(localStorage.getItem("viewHistory")) || [], // 시청 기록
   },
-  { 
-    path: '/home', 
-    name: 'Home', 
-    component: Home,
-    meta: { requiresAuth: true },
+  mutations: {
+    TOGGLE_WISHLIST(state, movie) {
+      const existingIndex = state.wishlist.findIndex((item) => item.id === movie.id);
+      if (existingIndex === -1) {
+        state.wishlist.push(movie);
+      } else {
+        state.wishlist.splice(existingIndex, 1);
+      }
+      localStorage.setItem("wishlist", JSON.stringify(state.wishlist));
+    },
+    ADD_SEARCH_HISTORY(state, query) {
+      if (!state.searchHistory.includes(query)) {
+        state.searchHistory.push(query);
+        if (state.searchHistory.length > 10) state.searchHistory.shift(); // 최대 10개 저장
+        localStorage.setItem("searchHistory", JSON.stringify(state.searchHistory));
+      }
+    },
+    SET_LOGGED_IN(state, status) {
+      state.isLoggedIn = status;
+      localStorage.setItem("isLoggedIn", JSON.stringify(status));
+    },
+    ADD_VIEW_HISTORY(state, movie) {
+      state.viewHistory.push({
+        ...movie,
+        viewedAt: new Date().toISOString(),
+      });
+      localStorage.setItem("viewHistory", JSON.stringify(state.viewHistory));
+    },
   },
-  { 
-    path: '/', 
-    redirect: '/signin',
-  },  
-  {
-    path: "/movies/:id",
-    component: MovieDetail 
+  actions: {
+    toggleWishlist({ commit }, movie) {
+      commit("TOGGLE_WISHLIST", movie);
+    },
+    addSearchHistory({ commit }, query) {
+      commit("ADD_SEARCH_HISTORY", query);
+    },
+    setLoggedIn({ commit }, status) {
+      commit("SET_LOGGED_IN", status);
+    },
+    addViewHistory({ commit }, movie) {
+      commit("ADD_VIEW_HISTORY", movie);
+    },
   },
-  {
-    path: '/wishlist',
-    name: 'Wishlist',
-    component: Wishlist 
+  getters: {
+    wishlist: (state) => state.wishlist,
+    searchHistory: (state) => state.searchHistory,
+    isLoggedIn: (state) => state.isLoggedIn,
+    viewHistory: (state) => state.viewHistory,
+    // 추가된 getter: 특정 id가 wishlist에 포함되었는지 확인
+    isInWishlist: (state) => (id) => {
+      return state.wishlist.some((movie) => movie.id === id);
+    },
   },
-  {
-    path: "/slider",
-    name: 'SliderContent',
-    component: SliderContent, 
-  },
-  {
-    path: "/popular",
-    component: Popular,
-    redirect: "/popular/table", // 기본적으로 Table View로 리디렉션
-    children: [
-      {
-        path: "table",
-        component: PopularTable,
-      },
-      {
-        path: "infinite",
-        component: PopularInfinite,
-      },
-    ],
-  },  
-  {
-    path: "/search",
-    name: "Search",
-    component: Search,
-  },
-];
-
-const router = createRouter({
-  history: createWebHashHistory(),
-  routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isAuthenticated = store.getters.isAuthenticated;
-
-  if (to.name === 'SignIn' && isAuthenticated) {
-    next('/home'); // 인증된 사용자가 로그인 페이지로 접근할 때
-  } else {
-    next(); // 나머지 경우는 통과
-  }
-});
-
-export default router;
+export default store;

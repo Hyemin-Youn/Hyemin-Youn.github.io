@@ -5,16 +5,27 @@
   
       <!-- 영화 리스트 -->
       <div class="movie-grid">
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
+        <MovieCard
+v-for="movie in movies"
+:key="movie.id"
+:movie="movie"
+/>
       </div>
   
       <!-- Loading Spinner -->
-      <div v-if="loading" class="loading">
+      <div
+v-if="loading"
+class="loading"
+>
         로딩 중...
       </div>
   
       <!-- 맨 위로 올라가기 버튼 -->
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
+      <button
+v-if="showScrollTopButton"
+class="scroll-top"
+@click="scrollToTop"
+>
         TOP(위로)
       </button>
     </div>
@@ -40,6 +51,13 @@
         showScrollTopButton: false,
       };
     },
+    created() {
+      this.fetchMovies();
+      window.addEventListener("scroll", this.handleScroll);
+    },
+    beforeDestroy() {
+      window.removeEventListener("scroll", this.handleScroll);
+    },
     methods: {
       async fetchMovies(page = 1) {
         if (this.loading || page > this.totalPages) return;
@@ -64,13 +82,6 @@
       scrollToTop() {
         window.scrollTo({ top: 0, behavior: "smooth" });
       },
-    },
-    created() {
-      this.fetchMovies();
-      window.addEventListener("scroll", this.handleScroll);
-    },
-    beforeDestroy() {
-      window.removeEventListener("scroll", this.handleScroll);
     },
   };
   </script>

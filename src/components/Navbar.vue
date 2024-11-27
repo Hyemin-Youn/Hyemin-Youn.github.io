@@ -2,14 +2,34 @@
   <nav :class="['navbar', { 'navbar-scrolled': isScrolled }]">
     <div class="navbar-left">
       <router-link to="/home">
-        <img src="@/assets/logo.png" alt="Logo" class="logo" />
+        <img
+src="@/assets/logo.png"
+alt="Logo"
+class="logo"
+>
       </router-link>
 
       <ul class="nav-links">
-        <li><router-link to="/home">홈</router-link></li>
-        <li><router-link to="/popular">대세 콘텐츠</router-link></li>
-        <li><router-link to="/search">찾아보기</router-link></li>
-        <li><router-link to="/wishlist">내가 찜한 리스트</router-link></li>
+        <li>
+<router-link to="/home">
+홈
+</router-link>
+</li>
+        <li>
+<router-link to="/popular">
+대세 콘텐츠
+</router-link>
+</li>
+        <li>
+<router-link to="/search">
+찾아보기
+</router-link>
+</li>
+        <li>
+<router-link to="/wishlist">
+내가 찜한 리스트
+</router-link>
+</li>
       </ul>
     </div>
 
@@ -19,7 +39,7 @@
         alt="Profile"
         class="profile-icon"
         @click="logout"
-      />
+      >
     </div>
   </nav>
 </template>

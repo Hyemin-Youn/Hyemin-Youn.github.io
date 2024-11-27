@@ -51,11 +51,6 @@ export default {
       }
     },
   },
-  methods: {
-    switchView(view) {
-      this.currentView = view;
-    },
-  },
   created() {
     if (this.currentView === "PopularTable") {
       document.body.style.overflow = "hidden";
@@ -63,6 +58,11 @@ export default {
   },
   beforeDestroy() {
     document.body.style.overflow = "";
+  },
+  methods: {
+    switchView(view) {
+      this.currentView = view;
+    },
   },
 };
 </script>

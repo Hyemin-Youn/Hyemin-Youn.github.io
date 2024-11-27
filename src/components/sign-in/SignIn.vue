@@ -398,7 +398,7 @@ button:hover {
     max-width: 400px;
     padding: 20px; /* 기존 padding을 줄임 */
     margin: 0 auto;
-    background-color: red;
+    background-color: rgb(0, 0, 0);
 }
 
 /*prompt engineering 답변*/

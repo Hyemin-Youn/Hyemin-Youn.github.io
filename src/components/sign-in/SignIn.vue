@@ -311,17 +311,15 @@ button:hover {
 }
 
 @media (max-width: 480px) {
-  .content {
-    position: absolute;
-    width: 60%;
-    height: 100%;
-    padding: 30px;
-    text-align: center;
-    background: #e50914;
-    color: #fff;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
+  .card {
+  width: 560px;
+  height: 480px;
+  position: absolute;
+  transform-style: preserve-3d;
+  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
+  opacity: 0;
+  z-index: 0;
+}
 }
 
 </style>

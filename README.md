@@ -125,7 +125,8 @@ The project uses **dotenv** to manage environment variables. To set up your envi
 ## License
 This project is licensed under the MIT License.
 
-사진: <a href="https://unsplash.com/ko/%EC%82%AC%EC%A7%84/photography-of-cinema-atsUqIm3wxo?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>의<a href="https://unsplash.com/ko/@myke_simon?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Myke Simon</a>
+사진: <a href="https://unsplash.com/ko/%EC%82%AC%EC%A7%84/%EC%9D%80%EC%83%89%EA%B3%BC-%EA%B2%80%EC%9D%80%EC%83%89-%EB%85%B8%ED%8A%B8%EB%B6%81-%EC%BB%B4%ED%93%A8%ED%84%B0%EB%A5%BC-%EC%82%AC%EC%9A%A9%ED%95%98%EB%8A%94-%EC%82%AC%EB%9E%8C-jtmwD4i4v1U?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>의<a href="https://unsplash.com/ko/@charlesdeluvio?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">charlesdeluvio</a>
+      
       
 
 ## Customize configuration

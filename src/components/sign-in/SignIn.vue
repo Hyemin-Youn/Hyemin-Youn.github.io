@@ -388,7 +388,7 @@ button:hover {
       margin-top: 10px; /* 버튼 위쪽 간격 */
       padding: 10px 20px; /* 버튼 내부 여백 */
       width: 100%; /* 버튼을 컨테이너 너비에 맞춤 */
-      background-color: darkred; /* 버튼 배경색 */
+      background-color: rgb(4, 0, 0); /* 버튼 배경색 */
       color: white; /* 버튼 텍스트 색 */
       border: none; /* 버튼 테두리 제거 */
       border-radius: 5px; /* 버튼 모서리 둥글게 */
@@ -398,7 +398,7 @@ button:hover {
     max-width: 400px;
     padding: 20px; /* 기존 padding을 줄임 */
     margin: 0 auto;
-    background-color: rgb(0, 0, 0);
+    background-color: rgb(226, 26, 26);
 }
 
 /*prompt engineering 답변*/

@@ -206,7 +206,7 @@ export default {
 
 /* 컨테이너 */
 .wrapper {
-  width: 90%;
+  width: 100%;
   max-width: 600px; /* 데스크톱에서는 최대 600px */
   height: auto; /* 높이를 콘텐츠에 따라 조정 */
   position: absolute;
@@ -279,7 +279,7 @@ label {
 
 input {
   width: 100%;
-  padding: 10px;
+  padding: 20px;
   margin-top: 6px;
   margin-bottom: 12px;
   border: none;

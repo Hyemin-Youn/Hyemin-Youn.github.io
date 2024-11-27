@@ -2,7 +2,15 @@
   <div class="popular">
     <!-- 영화 리스트 -->
     <div class="movie-grid">
+<<<<<<< HEAD
       <MovieCard v-for="movie in paginatedMovies" :key="movie.id" :movie="movie" />
+=======
+      <MovieCard
+v-for="movie in paginatedMovies"
+:key="movie.id"
+:movie="movie"
+/>
+>>>>>>> main
     </div>
 
     <!-- 페이지네이션 -->
@@ -49,6 +57,18 @@ export default {
       return this.movies.slice(start, end);
     },
   },
+<<<<<<< HEAD
+=======
+  created() {
+    // 컴포넌트 생성 시 영화 데이터 로드 및 resize 이벤트 리스너 추가
+    this.fetchMovies();
+    window.addEventListener("resize", this.handleResize);
+  },
+  beforeDestroy() {
+    // 컴포넌트 파괴 시 이벤트 리스너 제거
+    window.removeEventListener("resize", this.handleResize);
+  },
+>>>>>>> main
   methods: {
     // TMDB API에서 여러 페이지의 데이터를 가져와 병합
     async fetchMovies() {
@@ -89,6 +109,7 @@ export default {
       this.totalPages = Math.ceil(this.movies.length / this.moviesPerPage);
     },
   },
+<<<<<<< HEAD
   created() {
     // 컴포넌트 생성 시 영화 데이터 로드 및 resize 이벤트 리스너 추가
     this.fetchMovies();
@@ -98,6 +119,8 @@ export default {
     // 컴포넌트 파괴 시 이벤트 리스너 제거
     window.removeEventListener("resize", this.handleResize);
   },
+=======
+>>>>>>> main
 };
 </script>
 

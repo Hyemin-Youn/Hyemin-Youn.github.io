@@ -1,8 +1,24 @@
 <template>
     <div class="pagination">
+<<<<<<< HEAD
       <button @click="prevPage" :disabled="currentPage === 1">이전</button>
       <span>{{ currentPage }} / {{ totalPages }}</span>
       <button @click="nextPage" :disabled="currentPage === totalPages">다음</button>
+=======
+      <button
+:disabled="currentPage === 1"
+@click="prevPage"
+>
+이전
+</button>
+      <span>{{ currentPage }} / {{ totalPages }}</span>
+      <button
+:disabled="currentPage === totalPages"
+@click="nextPage"
+>
+다음
+</button>
+>>>>>>> main
     </div>
   </template>
   

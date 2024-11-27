@@ -313,7 +313,7 @@ button:hover {
 @media (max-width: 480px) {
   .content {
     position: absolute;
-    width: 100%;
+    width: 60%;
     height: 100%;
     padding: 30px;
     text-align: center;

@@ -314,7 +314,7 @@ button:hover {
 
 @media (max-width: 480px) {
   .wrapper {
-    width: 90%;
+    width: 70%;
     height: auto;
   }
   .content {

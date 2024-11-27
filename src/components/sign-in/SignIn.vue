@@ -205,29 +205,23 @@ export default {
 }
 
 /* 컨테이너 */
-/* 컨테이너 */
 .wrapper {
-  width: 90%; /* 화면 너비의 90%를 차지하도록 수정 */
-  max-width: 600px; /* 최대 너비는 600px로 제한 */
-  height: auto; /* 높이를 콘텐츠에 맞게 조정 */
+  width: 600px;
+  height: 520px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   perspective: 1000px;
-  padding: 20px; /* 여백 추가 */
-  box-sizing: border-box;
 }
 
 /* 카드 */
 .card {
-  width: 100%; /* 카드가 wrapper에 맞게 늘어나도록 수정 */
-  max-width: 560px; /* 최대 너비 제한 */
-  height: auto; /* 카드 높이를 콘텐츠에 맞게 조정 */
+  width: 560px;
+  height: 480px;
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
@@ -235,66 +229,122 @@ export default {
   z-index: 0;
 }
 
+.card.active {
+  opacity: 1;
+  z-index: 2;
+  transform: rotateY(0deg) translateX(0);
+}
+
+.card.backward {
+  z-index: 1;
+  transform: rotateY(-90deg) translateX(-100%);
+  opacity: 0;
+}
+
+.card.enter {
+  opacity: 0;
+  transform: rotateY(90deg) translateX(100%);
+}
+
 /* 카드 콘텐츠 */
 .content {
-  position: relative;
+  position: absolute;
   width: 100%;
-  height: auto; /* 콘텐츠 높이를 자동으로 조정 */
-  padding: 20px;
+  height: 100%;
+  padding: 30px;
   text-align: center;
   background: #e50914;
   color: #fff;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
-  box-sizing: border-box;
 }
 
-/* 입력 필드 */
+/* 텍스트 스타일 */
+h2 {
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
 input {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   margin-top: 6px;
   margin-bottom: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.3); /* 경계선 추가 */
+  border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
-/* 버튼 */
 button {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background-color: #bf0812;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 button:hover {
   background-color: #a10610;
 }
 
-/* 모바일 반응형 */
+.switch {
+  margin-top: 15px;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.8rem;
+}
+
+.error {
+  color: yellow;
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
+
 @media (max-width: 480px) {
-  .wrapper {
-    width: 100%; /* 모바일 화면에서 전체 너비 사용 */
-    padding: 15px; /* 여백 감소 */
+  .card {
+    width: 90%; /* 모바일 화면의 90%를 차지 */
+    height: auto; /* 콘텐츠 높이에 따라 자동 조정 */
+    position: relative; /* 위치를 고정하지 않고 상대적 배치 */
+    transform: none; /* 3D 변환 제거 */
+    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
+    opacity: 1; /* 항상 보이도록 설정 */
+    margin: 20px auto; /* 위아래 여백 추가 및 가운데 정렬 */
+    z-index: 2; /* 카드가 위로 보이도록 설정 */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+    border-radius: 10px; /* 모서리를 부드럽게 */
   }
 
   .content {
-    padding: 20px;
+    padding: 20px; /* 여백 조정 */
+    box-sizing: border-box; /* 여백 포함하여 크기 계산 */
   }
 
   input {
-    padding: 10px;
-    font-size: 0.9rem;
+    font-size: 1rem; /* 모바일에서 입력 필드 글자 크기 조정 */
+    padding: 10px; /* 입력 필드 내 여백 추가 */
   }
 
   button {
-    padding: 10px;
-    font-size: 0.9rem;
+    font-size: 1rem; /* 버튼 글자 크기 조정 */
+    padding: 12px; /* 버튼 크기 조정 */
+  }
+
+  h2 {
+    font-size: 1.5rem; /* 제목 크기 조정 */
+    margin-bottom: 10px;
   }
 }
+
+
+
+</style>

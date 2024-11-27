@@ -393,6 +393,30 @@ button:hover {
       border: none; /* 버튼 테두리 제거 */
       border-radius: 5px; /* 버튼 모서리 둥글게 */
   }
+  .container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px; /* 기존 padding을 줄임 */
+    margin: 0 auto;
+    background-color: red;
+}
 
+/*prompt engineering 답변*/
+input,
+button {
+    width: 100%;
+    margin: 8px 0; /* 위아래 간격 최소화 */
+    padding: 8px;   /* 내부 공간 줄임 */
+    font-size: 14px; /* 글꼴 크기 줄임 */
+}
+
+.checkbox-label {
+    margin-left: 5px;
+}
+
+.terms {
+    font-size: 12px; /* 텍스트 크기 줄임 */
+    line-height: 1.2; /* 줄 간격 축소 */
+}
 
 </style>

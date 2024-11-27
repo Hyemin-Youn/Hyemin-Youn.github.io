@@ -319,6 +319,7 @@ button:hover {
   }
   .content {
     padding: 20px;
+    width: 70%;
   }
 }
 </style>

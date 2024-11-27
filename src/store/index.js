@@ -2,60 +2,46 @@ import { createStore } from 'vuex';
 
 const store = createStore({
   state: {
-    wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트
-    searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [], // 검색 기록
-    isLoggedIn: JSON.parse(localStorage.getItem("isLoggedIn")) || false, // 로그인 여부
-    userPreferences: JSON.parse(localStorage.getItem("userPreferences")) || {}, // 사용자 설정
-    viewHistory: JSON.parse(localStorage.getItem("viewHistory")) || [], // 시청 기록
+    user: JSON.parse(localStorage.getItem('user')) || null,
+    isAuthenticated: !!localStorage.getItem('user'),
+    wishlist: JSON.parse(localStorage.getItem('wishlist')) || [], // 찜한 리스트
   },
   mutations: {
-    TOGGLE_WISHLIST(state, movie) {
-      const existingIndex = state.wishlist.findIndex((item) => item.id === movie.id);
-      if (existingIndex === -1) {
-        state.wishlist.push(movie);
+    setUser(state, user) {
+      state.user = user;
+      state.isAuthenticated = !!user;
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
       } else {
-        state.wishlist.splice(existingIndex, 1);
-      }
-      localStorage.setItem("wishlist", JSON.stringify(state.wishlist));
-    },
-    ADD_SEARCH_HISTORY(state, query) {
-      if (!state.searchHistory.includes(query)) {
-        state.searchHistory.push(query);
-        if (state.searchHistory.length > 10) state.searchHistory.shift(); // 최대 10개 저장
-        localStorage.setItem("searchHistory", JSON.stringify(state.searchHistory));
+        localStorage.removeItem('user');
       }
     },
-    SET_LOGGED_IN(state, status) {
-      state.isLoggedIn = status;
-      localStorage.setItem("isLoggedIn", JSON.stringify(status));
+    logout(state) {
+      state.user = null;
+      state.isAuthenticated = false;
+      localStorage.removeItem('user');
     },
-    ADD_VIEW_HISTORY(state, movie) {
-      state.viewHistory.push({
-        ...movie,
-        viewedAt: new Date().toISOString(),
-      });
-      localStorage.setItem("viewHistory", JSON.stringify(state.viewHistory));
+    ADD_TO_WISHLIST(state, movie) {
+      if (!state.wishlist.find((item) => item.id === movie.id)) {
+        state.wishlist.push(movie);
+        localStorage.setItem('wishlist', JSON.stringify(state.wishlist)); // 로컬스토리지 동기화
+      }
+    },
+    REMOVE_FROM_WISHLIST(state, movieId) {
+      state.wishlist = state.wishlist.filter((item) => item.id !== movieId);
+      localStorage.setItem('wishlist', JSON.stringify(state.wishlist)); // 로컬스토리지 동기화
     },
   },
   actions: {
-    toggleWishlist({ commit }, movie) {
-      commit("TOGGLE_WISHLIST", movie);
+    addToWishList({ commit }, movie) {
+      commit('ADD_TO_WISHLIST', movie);
     },
-    addSearchHistory({ commit }, query) {
-      commit("ADD_SEARCH_HISTORY", query);
-    },
-    setLoggedIn({ commit }, status) {
-      commit("SET_LOGGED_IN", status);
-    },
-    addViewHistory({ commit }, movie) {
-      commit("ADD_VIEW_HISTORY", movie);
+    removeFromWishList({ commit }, movieId) {
+      commit('REMOVE_FROM_WISHLIST', movieId);
     },
   },
   getters: {
     wishlist: (state) => state.wishlist,
-    searchHistory: (state) => state.searchHistory,
-    isLoggedIn: (state) => state.isLoggedIn,
-    viewHistory: (state) => state.viewHistory,
   },
 });
 

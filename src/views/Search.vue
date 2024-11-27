@@ -107,7 +107,7 @@ export default {
   methods: {
     ...mapActions(["addSearchHistory", "setSearchResults"]),
     async fetchMovies(page = 1, append = false) {
-      if (this.loading) return; // 중복 호출 방지
+      if (this.loading) return;
       this.loading = true;
 
       const filters = {
@@ -135,16 +135,18 @@ export default {
     async handleSearch() {
       if (!this.searchQuery.trim()) return;
 
+      console.log("검색 시작:", this.searchQuery);
       this.loading = true;
+
       try {
-        this.addSearchHistory(this.searchQuery); // 검색어 저장
-        const data = await searchMovies(this.searchQuery, 1); // 영화 제목 검색
-        this.movies = data.results || [];
+        this.addSearchHistory(this.searchQuery);
+        const data = await searchMovies(this.searchQuery, 1);
+        this.movies = data || [];
         this.currentPage = 1;
         this.totalPages = data.total_pages || 1;
-        this.setSearchResults(this.movies); // 검색 결과 저장
+        this.setSearchResults(this.movies);
       } catch (error) {
-        console.error("검색 중 오류 발생:", error);
+        console.error("검색 중 오류 발생:", error.message);
       } finally {
         this.loading = false;
       }
@@ -158,27 +160,27 @@ export default {
         [key]: option,
       };
       this.activeDropdown = null;
-      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+      this.fetchMovies(1);
     },
     clearOptions() {
       this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
+      this.fetchMovies(1);
     },
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
       if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+        this.fetchMovies(this.currentPage + 1, true);
       }
     },
     getPosterUrl(path) {
       return path
         ? `https://image.tmdb.org/t/p/w500/${path}`
-        : "default_poster.png"; // 기본 포스터
+        : "default_poster.png";
     },
   },
   created() {
-    this.fetchMovies(); // 초기 데이터 로드
+    this.fetchMovies();
     window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
@@ -186,7 +188,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .search-page {

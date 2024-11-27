@@ -5,8 +5,8 @@ const store = createStore({
     user: JSON.parse(localStorage.getItem("user")) || null,
     isAuthenticated: !!localStorage.getItem("user"),
     wishlist: JSON.parse(localStorage.getItem("wishlist")) || [],
-    recentSearches: JSON.parse(localStorage.getItem("recentSearches")) || [], // 최근 검색어
-    searchResults: JSON.parse(localStorage.getItem("searchResults")) || [], // 검색 결과
+    recentSearches: JSON.parse(localStorage.getItem("recentSearches")) || [],
+    searchResults: JSON.parse(localStorage.getItem("searchResults")) || [],
   },
   mutations: {
     setUser(state, user) {
@@ -61,6 +61,7 @@ const store = createStore({
       commit("ADD_SEARCH_HISTORY", query);
     },
     setSearchResults({ commit }, results) {
+      console.log("검색 결과 저장 중:", results);
       commit("SET_SEARCH_RESULTS", results);
     },
   },

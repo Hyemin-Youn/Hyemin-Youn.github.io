@@ -2,11 +2,16 @@
     <div class="recent-searches">
       <h3>최근 검색어</h3>
       <ul v-if="recentSearchesSafe.length > 0">
-        <li v-for="(search, index) in recentSearchesSafe" :key="index">
+        <li
+v-for="(search, index) in recentSearchesSafe"
+:key="index"
+>
           {{ search }}
         </li>
       </ul>
-      <p v-else>최근 검색 기록이 없습니다.</p>
+      <p v-else>
+최근 검색 기록이 없습니다.
+</p>
     </div>
   </template>
   

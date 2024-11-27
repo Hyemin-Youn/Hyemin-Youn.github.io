@@ -279,7 +279,7 @@ label {
 
 input {
   width: 100%;
-  padding: 10px;
+  padding: 20px;
   margin-top: 6px;
   margin-bottom: 12px;
   border: none;
@@ -350,6 +350,7 @@ button:hover {
 
   .content {
     padding: 50px; /* 모바일 콘텐츠 여백 축소 */
+    margin:20px; /*외부 여백*/
   }
 
   h2 {

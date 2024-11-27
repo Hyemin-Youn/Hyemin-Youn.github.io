@@ -279,7 +279,7 @@ label {
 
 input {
   width: 100%;
-  padding: 20px;
+  padding: 10px;
   margin-top: 6px;
   margin-bottom: 12px;
   border: none;
@@ -345,7 +345,7 @@ button:hover {
 @media (max-width: 480px) {
   .wrapper {
     width: 100%; /* 모바일 화면에서 전체 너비 사용 */
-    padding: 10px;
+    padding: 20px;
   }
 
   .content {
@@ -354,17 +354,17 @@ button:hover {
   }
 
   h2 {
-    font-size: 1rem; /* 제목 크기 더 축소 */
+    font-size: 1.1rem; /* 제목 크기 더 축소 */
   }
 
   input {
-    font-size: 0.8rem; /* 입력 필드 글자 크기 축소 */
+    font-size: 0.9rem; /* 입력 필드 글자 크기 축소 */
     padding: 8px;
   }
 
   button {
-    font-size: 0.8rem; /* 버튼 글자 크기 축소 */
-    padding: 8px;
+    font-size: 0.9rem; /* 버튼 글자 크기 축소 */
+    padding: 10px;
   }
 }
 

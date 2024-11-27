@@ -58,11 +58,20 @@
     <!-- 영화 리스트 -->
     <div class="movie-grid">
       <div class="movie-card" v-for="movie in movies" :key="movie.id">
-        <img
-          class="movie-poster"
-          :src="getPosterUrl(movie.poster_path)"
-          :alt="movie.title"
-        />
+        <div class="poster-container">
+          <img
+            class="movie-poster"
+            :src="getPosterUrl(movie.poster_path)"
+            :alt="movie.title"
+          />
+          <button
+            class="favorite-btn"
+            :class="{ favorited: isInWishlist(movie.id) }"
+            @click="toggleWishlist(movie)"
+          >
+            ❤
+          </button>
+        </div>
         <div class="movie-title">{{ movie.title }}</div>
       </div>
     </div>
@@ -108,7 +117,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["recentSearches"]), // 최근 검색어 가져오기
+    ...mapGetters(["recentSearches", "wishlist", "isInWishlist"]),
     dropdownEntries() {
       return Object.entries(this.dropdowns).map(([key, options]) => ({
         key,
@@ -117,7 +126,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["addSearchHistory", "setSearchResults", "deleteSearchHistory"]),
+    ...mapActions(["addSearchHistory", "setSearchResults", "toggleWishlist", "deleteSearchHistory"]),
     async fetchMovies(page = 1, append = false) {
       if (this.loading) return;
       this.loading = true;
@@ -164,9 +173,6 @@ export default {
     searchFromHistory(query) {
       this.searchQuery = query;
       this.handleSearch();
-    },
-    deleteSearchHistory(index) {
-      this.$store.commit("DELETE_SEARCH_HISTORY", index);
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -277,6 +283,29 @@ export default {
 
 .recent-searches li .delete-btn:hover {
   background: darkred;
+}
+
+.poster-container {
+  position: relative;
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+}
+
+.favorite-btn.favorited {
+  color: red;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
 }
 
 .dropdown-container {

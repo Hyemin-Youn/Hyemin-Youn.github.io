@@ -7,15 +7,6 @@ const store = createStore({
     wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트
     searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [], // 검색 기록
     viewHistory: JSON.parse(localStorage.getItem("viewHistory")) || [], // 시청 기록
-    selectedOptions: {
-      originalLanguage: "장르 (전체)",
-      translationLanguage: "평점 (전체)",
-      sorting: "언어 (전체)",
-    },
-    movies: [],
-    currentPage: 1,
-    totalPages: 1,
-    loading: false,
   },
   mutations: {
     setUser(state, user) {
@@ -38,12 +29,14 @@ const store = createStore({
       );
 
       if (existingMovieIndex === -1) {
+        // 영화가 리스트에 없다면 추가
         state.wishlist.push(movie);
       } else {
+        // 영화가 리스트에 있으면 제거
         state.wishlist.splice(existingMovieIndex, 1);
       }
 
-      localStorage.setItem("wishlist", JSON.stringify(state.wishlist));
+      localStorage.setItem("wishlist", JSON.stringify(state.wishlist)); // 로컬스토리지 동기화
     },
     ADD_SEARCH_HISTORY(state, query) {
       if (!state.searchHistory.includes(query)) {
@@ -57,22 +50,6 @@ const store = createStore({
         localStorage.setItem("viewHistory", JSON.stringify(state.viewHistory));
       }
     },
-    SET_SELECTED_OPTIONS(state, { key, value }) {
-      state.selectedOptions[key] = value;
-    },
-    SET_MOVIES(state, movies) {
-      state.movies = movies;
-    },
-    APPEND_MOVIES(state, movies) {
-      state.movies = [...state.movies, ...movies];
-    },
-    SET_PAGINATION(state, { currentPage, totalPages }) {
-      state.currentPage = currentPage;
-      state.totalPages = totalPages;
-    },
-    SET_LOADING(state, loading) {
-      state.loading = loading;
-    },
   },
   actions: {
     toggleWishlist({ commit }, movie) {
@@ -84,36 +61,6 @@ const store = createStore({
     addViewHistory({ commit }, movie) {
       commit("ADD_VIEW_HISTORY", movie);
     },
-    setSelectedOptions({ commit }, { key, value }) {
-      commit("SET_SELECTED_OPTIONS", { key, value });
-    },
-    async fetchMovies({ state, commit }, { page = 1, append = false }) {
-      if (state.loading) return;
-      commit("SET_LOADING", true);
-      try {
-        const filters = {
-          genre: state.selectedOptions.originalLanguage,
-          rating: state.selectedOptions.translationLanguage,
-          language: state.selectedOptions.sorting,
-          page,
-        };
-        // Replace this with your actual API call
-        const data = await fetchMovies(filters);
-        if (append) {
-          commit("APPEND_MOVIES", data.results);
-        } else {
-          commit("SET_MOVIES", data.results);
-        }
-        commit("SET_PAGINATION", {
-          currentPage: page,
-          totalPages: data.total_pages,
-        });
-      } catch (error) {
-        console.error("영화 데이터를 불러오는 중 오류 발생:", error);
-      } finally {
-        commit("SET_LOADING", false);
-      }
-    },
   },
   getters: {
     wishlist: (state) => state.wishlist,
@@ -122,11 +69,6 @@ const store = createStore({
     },
     searchHistory: (state) => state.searchHistory,
     viewHistory: (state) => state.viewHistory,
-    selectedOptions: (state) => state.selectedOptions,
-    movies: (state) => state.movies,
-    currentPage: (state) => state.currentPage,
-    totalPages: (state) => state.totalPages,
-    loading: (state) => state.loading,
   },
 });
 

@@ -64,6 +64,7 @@
 <script>
 import Navbar from "@/components/Navbar.vue";
 import { fetchMovies, searchMovies } from "@/api/movies";
+import { mapActions } from "vuex";
 
 export default {
   name: "Search",
@@ -104,6 +105,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(["addSearchHistory", "setSearchResults"]),
     async fetchMovies(page = 1, append = false) {
       if (this.loading) return; // 중복 호출 방지
       this.loading = true;
@@ -135,10 +137,12 @@ export default {
 
       this.loading = true;
       try {
+        this.addSearchHistory(this.searchQuery); // 검색어 저장
         const data = await searchMovies(this.searchQuery, 1); // 영화 제목 검색
         this.movies = data.results || [];
         this.currentPage = 1;
         this.totalPages = data.total_pages || 1;
+        this.setSearchResults(this.movies); // 검색 결과 저장
       } catch (error) {
         console.error("검색 중 오류 발생:", error);
       } finally {
@@ -182,6 +186,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .search-page {

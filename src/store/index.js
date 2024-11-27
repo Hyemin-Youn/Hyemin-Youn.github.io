@@ -4,7 +4,9 @@ const store = createStore({
   state: {
     user: JSON.parse(localStorage.getItem("user")) || null,
     isAuthenticated: !!localStorage.getItem("user"),
-    wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트
+    wishlist: JSON.parse(localStorage.getItem("wishlist")) || [],
+    recentSearches: JSON.parse(localStorage.getItem("recentSearches")) || [], // 최근 검색어
+    searchResults: JSON.parse(localStorage.getItem("searchResults")) || [], // 검색 결과
   },
   mutations: {
     setUser(state, user) {
@@ -27,19 +29,39 @@ const store = createStore({
       );
 
       if (existingMovieIndex === -1) {
-        // 영화가 리스트에 없다면 추가
         state.wishlist.push(movie);
       } else {
-        // 영화가 리스트에 있으면 제거
         state.wishlist.splice(existingMovieIndex, 1);
       }
 
-      localStorage.setItem("wishlist", JSON.stringify(state.wishlist)); // 로컬스토리지 동기화
+      localStorage.setItem("wishlist", JSON.stringify(state.wishlist));
+    },
+    ADD_SEARCH_HISTORY(state, query) {
+      if (!state.recentSearches.includes(query)) {
+        state.recentSearches.unshift(query);
+        if (state.recentSearches.length > 10) {
+          state.recentSearches.pop();
+        }
+        localStorage.setItem(
+          "recentSearches",
+          JSON.stringify(state.recentSearches)
+        );
+      }
+    },
+    SET_SEARCH_RESULTS(state, results) {
+      state.searchResults = results;
+      localStorage.setItem("searchResults", JSON.stringify(results));
     },
   },
   actions: {
     toggleWishlist({ commit }, movie) {
       commit("TOGGLE_WISHLIST", movie);
+    },
+    addSearchHistory({ commit }, query) {
+      commit("ADD_SEARCH_HISTORY", query);
+    },
+    setSearchResults({ commit }, results) {
+      commit("SET_SEARCH_RESULTS", results);
     },
   },
   getters: {
@@ -47,6 +69,8 @@ const store = createStore({
     isInWishlist: (state) => (id) => {
       return state.wishlist.some((movie) => movie.id === id);
     },
+    recentSearches: (state) => state.recentSearches,
+    searchResults: (state) => state.searchResults,
   },
 });
 

@@ -1,7 +1,45 @@
+<template>
+  <div class="search-page" @scroll="handleScroll">
+    <!-- Navbar -->
+    <Navbar />
+
+    <!-- 검색 기능 -->
+    <h1>영화 검색</h1>
+    <div class="dropdown-container">
+      <label>선호하는 설정을 선택하세요</label>
+      <div v-for="dropdown in dropdownEntries" :key="dropdown.key" class="custom-select">
+        <div class="select-selected" @click="toggleDropdown(dropdown.key)">
+          {{ selectedOptions[dropdown.key] }}
+        </div>
+        <div v-if="activeDropdown === dropdown.key" class="select-items">
+          <div
+            v-for="option in dropdown.options"
+            :key="option"
+            @click="selectOption(dropdown.key, option)"
+          >
+            {{ option }}
+          </div>
+        </div>
+      </div>
+      <button class="clear-options" @click="clearOptions">초기화</button>
+    </div>
+
+    <!-- 영화 리스트 -->
+    <div class="movie-grid">
+      <div class="movie-card" v-for="movie in movies" :key="movie.id">
+        <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
+        <div class="movie-title">{{ movie.title }}</div>
+      </div>
+    </div>
+
+    <!-- 로딩 중 표시 -->
+    <div v-if="loading" class="loading">로딩 중...</div>
+  </div>
+</template>
+
 <script>
 import Navbar from "@/components/Navbar.vue";
-import { mapActions, mapGetters, mapState } from "vuex";
-
+import { fetchMovies } from "@/api/movies";
 export default {
   name: "Search",
   components: {
@@ -9,82 +47,91 @@ export default {
   },
   data() {
     return {
-      searchQuery: "",
+      dropdowns: {
+        originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
+        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
+        sorting: ["언어 (전체)", "en", "ko"],
+      },
+      DEFAULT_OPTIONS: {
+        originalLanguage: "장르 (전체)",
+        translationLanguage: "평점 (전체)",
+        sorting: "언어 (전체)",
+      },
+      selectedOptions: {
+        originalLanguage: "장르 (전체)",
+        translationLanguage: "평점 (전체)",
+        sorting: "언어 (전체)",
+      },
       activeDropdown: null,
-      dropdowns: [
-        {
-          key: "genre",
-          label: "장르 (전체)",
-          options: [
-            { label: "전체", value: "all" },
-            { label: "액션", value: "28" },
-            { label: "코미디", value: "35" },
-            { label: "모험", value: "12" },
-          ],
-        },
-        {
-          key: "rating",
-          label: "평점 (전체)",
-          options: [
-            { label: "전체", value: "all" },
-            { label: "7점 이상", value: "7" },
-            { label: "8점 이상", value: "8" },
-          ],
-        },
-        {
-          key: "language",
-          label: "언어 (전체)",
-          options: [
-            { label: "전체", value: "all" },
-            { label: "영어", value: "en" },
-            { label: "한국어", value: "ko" },
-          ],
-        },
-      ],
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
+      loading: false,
     };
   },
   computed: {
-    ...mapState(["filters"]),
-    ...mapGetters(["searchHistory", "wishlist", "movies", "loading"]),
-  },
-  created() {
-    // created를 methods 위로 이동
-    this.fetchMovies();
+    dropdownEntries() {
+      return Object.entries(this.dropdowns).map(([key, options]) => ({
+        key,
+        options,
+      }));
+    },
   },
   methods: {
-    ...mapActions(["addSearchHistory", "toggleWishlist", "fetchMovies"]),
-    handleSearch() {
-      if (this.searchQuery.trim()) {
-        this.addSearchHistory(this.searchQuery);
-        this.fetchMovies({ query: this.searchQuery });
+    async fetchMovies(page = 1, append = false) {
+      if (this.loading) return; // 중복 호출 방지
+      this.loading = true;
+      const filters = {
+        genre: this.selectedOptions.originalLanguage,
+        rating: this.selectedOptions.translationLanguage,
+        language: this.selectedOptions.sorting,
+        page,
+      };
+      const data = await fetchMovies(filters);
+      if (append) {
+        this.movies = [...this.movies, ...data.results];
+      } else {
+        this.movies = data.results;
       }
-    },
-    searchFromHistory(query) {
-      this.searchQuery = query;
-      this.handleSearch();
-    },
-    setFilter(key, value) {
-      this.$store.dispatch("setFilter", { key, value });
-      this.activeDropdown = null;
-    },
-    clearFilters() {
-      this.dropdownEntries.forEach(({ key }) => {
-        this.setFilter(key, "all");
-      });
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
+      this.loading = false;
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
     },
+    selectOption(key, option) {
+      this.selectedOptions = {
+        ...this.selectedOptions,
+        [key]: option,
+      };
+      this.activeDropdown = null;
+      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+    },
+    clearOptions() {
+      this.selectedOptions = { ...this.DEFAULT_OPTIONS };
+      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
+    },
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+      }
+    },
     getPosterUrl(path) {
-      return path ? `https://image.tmdb.org/t/p/w500/${path}` : "default_poster.png";
+      return `https://image.tmdb.org/t/p/w500/${path}`;
     },
-    isInWishlist(id) {
-      return this.wishlist.some((movie) => movie.id === id);
-    },
+  },
+  created() {
+    this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
-
 
 <style scoped>
 .search-page {

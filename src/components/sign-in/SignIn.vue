@@ -350,7 +350,7 @@ button:hover {
 
   .content {
     padding: 50px; /* 모바일 콘텐츠 여백 축소 */
-    margin:20px; /*외부 여백*/
+    margin:20px auto; /*외부 여백*/
   }
 
   h2 {

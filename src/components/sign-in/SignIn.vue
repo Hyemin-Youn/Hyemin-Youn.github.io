@@ -206,7 +206,7 @@ export default {
 
 /* 컨테이너 */
 .wrapper {
-  width: 100%;
+  width: 90%;
   max-width: 600px; /* 데스크톱에서는 최대 600px */
   height: auto; /* 높이를 콘텐츠에 따라 조정 */
   position: absolute;
@@ -349,7 +349,7 @@ button:hover {
   }
 
   .content {
-    padding: 40px; /* 모바일 콘텐츠 여백 축소 */
+    padding: 50px; /* 모바일 콘텐츠 여백 축소 */
   }
 
   h2 {

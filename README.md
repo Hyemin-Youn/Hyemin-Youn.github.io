@@ -116,12 +116,10 @@ The project uses **dotenv** to manage environment variables. To set up your envi
    VUE_APP_API_KEY=<your_api_key>
    VUE_APP_BASE_URL=<api_base_url>
    ```
-
 ---
 
 ## Contributors
-- **Hyemin Youn**: Developer and Maintainer
-
+- **Hyemin Youn**: Developer and maintainer.
 ---
 
 ## License
@@ -132,8 +130,4 @@ For more configuration options, see the [Vue CLI Configuration Reference](https:
 
 ---
 
-## Contributors
-- **Hyemin Youn**: Developer and maintainer.
-
-
-
+[!homepage screenshot](./screenshots/homepage.png)

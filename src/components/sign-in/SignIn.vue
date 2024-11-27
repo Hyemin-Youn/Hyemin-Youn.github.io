@@ -376,11 +376,12 @@ button:hover {
       padding: 20px; /* 내부 여백 */
       background-color: red; /* 카드 배경색 */
       border-radius: 10px; /* 둥근 모서리 */
+      height: auto;
   }
 
   /* 버튼과 "Remember Me" 간 간격 조정 */
   .remember-me {
-      margin-bottom: 10px; /* Remember Me와 버튼 사이 간격 */
+      margin-bottom: 5px; /* Remember Me와 버튼 사이 간격 */
   }
 
   button {

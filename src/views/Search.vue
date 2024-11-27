@@ -1,8 +1,5 @@
 <template>
-  <div
-class="search-page"
-@scroll="handleScroll"
->
+  <div class="search-page">
     <!-- Navbar -->
     <Navbar />
 
@@ -13,24 +10,19 @@ class="search-page"
         type="text"
         placeholder="영화 제목을 검색하세요"
         @keydown.enter="handleSearch"
-      >
-      <button @click="handleSearch">
-검색
-</button>
+      />
+      <button @click="handleSearch">검색</button>
     </div>
 
     <!-- 최근 검색어 -->
-    <div
-v-if="recentSearches.length"
-class="recent-searches"
->
+    <div v-if="recentSearches.length" class="recent-searches">
       <h2>최근 검색어</h2>
       <ul>
         <li
-v-for="(query, index) in recentSearches"
-:key="index"
-@click="searchFromHistory(query)"
->
+          v-for="(query, index) in recentSearches"
+          :key="index"
+          @click="searchFromHistory(query)"
+        >
           {{ query }}
         </li>
       </ul>
@@ -41,20 +33,20 @@ v-for="(query, index) in recentSearches"
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
       <div
-v-for="dropdown in dropdownEntries"
-:key="dropdown.key"
-class="custom-select"
->
+        v-for="dropdown in dropdownEntries"
+        :key="dropdown.key"
+        class="custom-select"
+      >
         <div
-class="select-selected"
-@click="toggleDropdown(dropdown.key)"
->
+          class="select-selected"
+          @click="toggleDropdown(dropdown.key)"
+        >
           {{ selectedOptions[dropdown.key] }}
         </div>
         <div
-v-if="activeDropdown === dropdown.key"
-class="select-items"
->
+          v-if="activeDropdown === dropdown.key"
+          class="select-items"
+        >
           <div
             v-for="option in dropdown.options"
             :key="option"
@@ -64,12 +56,7 @@ class="select-items"
           </div>
         </div>
       </div>
-      <button
-class="clear-options"
-@click="clearOptions"
->
-초기화
-</button>
+      <button class="clear-options" @click="clearOptions">초기화</button>
     </div>
 
     <!-- 영화 리스트 -->
@@ -84,38 +71,33 @@ class="clear-options"
     </div>
 
     <!-- 즐겨찾기 영화 -->
-    <div
-v-if="wishlist.length"
-class="wishlist"
->
+    <div v-if="wishlist.length" class="wishlist">
       <h2>즐겨찾기한 영화</h2>
       <ul>
         <li
-v-for="movie in wishlist"
-:key="movie.id"
->
+          v-for="movie in wishlist"
+          :key="movie.id"
+        >
           {{ movie.title }}
-          <button @click="toggleWishlist(movie)">
-즐겨찾기 제거
-</button>
+          <button @click="toggleWishlist(movie)">즐겨찾기 제거</button>
         </li>
       </ul>
     </div>
 
     <!-- 로딩 중 표시 -->
-    <div
-v-if="loading"
-class="loading"
->
-로딩 중...
-</div>
+    <div v-if="loading" class="loading">로딩 중...</div>
+
+    <!-- 데이터가 없는 경우 -->
+    <div v-if="!loading && movies.length === 0" class="no-results">
+      검색 결과가 없습니다.
+    </div>
 
     <!-- TOP 버튼 -->
     <button
-v-if="showScrollTopButton"
-class="scroll-top"
-@click="scrollToTop"
->
+      v-if="showScrollTopButton"
+      class="scroll-top"
+      @click="scrollToTop"
+    >
       TOP(위로)
     </button>
   </div>
@@ -125,7 +107,6 @@ class="scroll-top"
 import Navbar from "@/components/Navbar.vue";
 import MovieCard from "@/components/MovieCard.vue";
 import { mapActions, mapGetters } from "vuex";
-import { fetchMovies } from "@/api/movies";
 
 export default {
   name: "Search",
@@ -152,10 +133,10 @@ export default {
         sorting: "언어 (전체)",
       },
       activeDropdown: null,
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      loading: false,
+      movies: [], // 영화 리스트
+      currentPage: 1, // 현재 페이지
+      totalPages: 1, // 전체 페이지 수
+      loading: false, // 로딩 상태
       showScrollTopButton: false,
     };
   },
@@ -180,17 +161,33 @@ export default {
 
       this.loading = true;
       try {
-        const filters = {
-          genre: this.selectedOptions.originalLanguage,
-          rating: this.selectedOptions.translationLanguage,
-          language: this.selectedOptions.sorting,
-        };
-        const data = await fetchMovies({ query: this.searchQuery, ...filters });
+        const data = await this.fetchMovies(this.searchQuery, 1);
         this.movies = data.results;
         this.totalPages = data.total_pages;
         this.currentPage = 1;
       } catch (error) {
         console.error("검색 중 오류 발생:", error);
+      } finally {
+        this.loading = false;
+      }
+    },
+    async fetchMovies(query, page = 1) {
+      // TMDb API 호출
+      const apiKey = "your_tmdb_api_key"; // API 키
+      const url = `https://api.themoviedb.org/3/search/movie?query=${query}&page=${page}&api_key=${apiKey}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("API 호출 실패");
+      return await response.json();
+    },
+    async loadMoreMovies() {
+      if (this.currentPage >= this.totalPages || this.loading) return;
+      this.loading = true;
+      try {
+        const data = await this.fetchMovies(this.searchQuery, this.currentPage + 1);
+        this.movies = [...this.movies, ...data.results];
+        this.currentPage += 1;
+      } catch (error) {
+        console.error("추가 영화 로드 중 오류 발생:", error);
       } finally {
         this.loading = false;
       }
@@ -226,13 +223,12 @@ export default {
     handleScroll() {
       const bottomOfWindow =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-      if (bottomOfWindow && this.currentPage < this.totalPages) {
-        this.fetchMovies(this.currentPage + 1, true);
+      if (bottomOfWindow) {
+        this.loadMoreMovies();
       }
     },
   },
   created() {
-    this.handleSearch();
     window.addEventListener("scroll", this.handleScroll);
   },
   beforeDestroy() {
@@ -240,6 +236,7 @@ export default {
   },
 };
 </script>
+
 
 <style scoped>
 .search-page {

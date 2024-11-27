@@ -206,8 +206,9 @@ export default {
 
 /* 컨테이너 */
 .wrapper {
-  width: 600px;
-  height: 520px;
+  width: 90%;
+  max-width: 600px; /* 데스크톱에서는 최대 600px */
+  height: auto; /* 높이를 콘텐츠에 따라 조정 */
   position: absolute;
   top: 50%;
   left: 50%;
@@ -220,27 +221,32 @@ export default {
 
 /* 카드 */
 .card {
-  width: 560px;
-  height: 480px;
+  width: 100%; /* wrapper에 맞게 크기 조정 */
+  max-width: 560px; /* 데스크톱에서 최대 너비 */
+  height: auto; /* 높이를 콘텐츠에 따라 자동 조정 */
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
   opacity: 0;
   z-index: 0;
+  margin: 20px auto; /* 화면 중앙 정렬 */
 }
 
+/* 활성 카드 */
 .card.active {
   opacity: 1;
   z-index: 2;
   transform: rotateY(0deg) translateX(0);
 }
 
+/* 뒤로 이동 */
 .card.backward {
   z-index: 1;
   transform: rotateY(-90deg) translateX(-100%);
   opacity: 0;
 }
 
+/* 카드 애니메이션 진입 */
 .card.enter {
   opacity: 0;
   transform: rotateY(90deg) translateX(100%);
@@ -248,15 +254,15 @@ export default {
 
 /* 카드 콘텐츠 */
 .content {
-  position: absolute;
   width: 100%;
   height: 100%;
-  padding: 30px;
+  padding: 20px;
   text-align: center;
   background: #e50914;
   color: #fff;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  box-sizing: border-box;
 }
 
 /* 텍스트 스타일 */
@@ -309,4 +315,56 @@ button:hover {
   font-size: 0.8rem;
   margin-top: 8px;
 }
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .wrapper {
+    width: 95%; /* 작은 화면에서 wrapper 너비 확대 */
+    padding: 10px; /* 여백 추가 */
+  }
+
+  .content {
+    padding: 15px; /* 콘텐츠 여백 감소 */
+  }
+
+  h2 {
+    font-size: 1.2rem; /* 제목 크기 축소 */
+  }
+
+  input {
+    font-size: 0.8rem; /* 입력 필드 글자 크기 축소 */
+    padding: 8px; /* 입력 필드 여백 축소 */
+  }
+
+  button {
+    font-size: 0.8rem; /* 버튼 글자 크기 축소 */
+    padding: 8px; /* 버튼 여백 축소 */
+  }
+}
+
+@media (max-width: 480px) {
+  .wrapper {
+    width: 100%; /* 모바일 화면에서 전체 너비 사용 */
+    padding: 10px;
+  }
+
+  .content {
+    padding: 10px; /* 모바일 콘텐츠 여백 축소 */
+  }
+
+  h2 {
+    font-size: 1rem; /* 제목 크기 더 축소 */
+  }
+
+  input {
+    font-size: 0.8rem; /* 입력 필드 글자 크기 축소 */
+    padding: 8px;
+  }
+
+  button {
+    font-size: 0.8rem; /* 버튼 글자 크기 축소 */
+    padding: 8px;
+  }
+}
+
 </style>

@@ -34,13 +34,12 @@
 
     <!-- 로딩 중 표시 -->
     <div v-if="loading" class="loading">로딩 중...</div>
-    <div v-if="!loading && movies.length === 0" class="no-results">검색 결과가 없습니다.</div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-
+import { fetchMovies } from "@/api/movies";
 export default {
   name: "Search",
   components: {
@@ -49,19 +48,19 @@ export default {
   data() {
     return {
       dropdowns: {
-        originalLanguage: ["언어 (전체)", "en", "ko", "ja", "fr"],
-        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4점 이하"],
-        sorting: ["장르 (전체)", "28", "12", "16", "35", "80"], // TMDb 장르 ID
+        originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
+        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
+        sorting: ["언어 (전체)", "en", "ko"],
       },
       DEFAULT_OPTIONS: {
-        originalLanguage: "언어 (전체)",
+        originalLanguage: "장르 (전체)",
         translationLanguage: "평점 (전체)",
-        sorting: "장르 (전체)",
+        sorting: "언어 (전체)",
       },
       selectedOptions: {
-        originalLanguage: "언어 (전체)",
+        originalLanguage: "장르 (전체)",
         translationLanguage: "평점 (전체)",
-        sorting: "장르 (전체)",
+        sorting: "언어 (전체)",
       },
       activeDropdown: null,
       movies: [],
@@ -83,36 +82,20 @@ export default {
       if (this.loading) return; // 중복 호출 방지
       this.loading = true;
       const filters = {
-        language: this.selectedOptions.originalLanguage === "언어 (전체)" ? null : this.selectedOptions.originalLanguage,
-        with_genres: this.selectedOptions.sorting === "장르 (전체)" ? null : this.selectedOptions.sorting,
-        'vote_average.gte': this.selectedOptions.translationLanguage === "평점 (전체)" ? null : parseFloat(this.selectedOptions.translationLanguage.split("~")[0]),
+        genre: this.selectedOptions.originalLanguage,
+        rating: this.selectedOptions.translationLanguage,
+        language: this.selectedOptions.sorting,
         page,
       };
-
-      // API 호출
-      const apiKey = "your_tmdb_api_key"; // 실제 TMDb API 키
-      const url = new URL("https://api.themoviedb.org/3/discover/movie");
-      url.searchParams.append("api_key", apiKey);
-      url.searchParams.append("page", page);
-      if (filters.language) url.searchParams.append("language", filters.language);
-      if (filters.with_genres) url.searchParams.append("with_genres", filters.with_genres);
-      if (filters["vote_average.gte"]) url.searchParams.append("vote_average.gte", filters["vote_average.gte"]);
-
-      try {
-        const response = await fetch(url.toString());
-        const data = await response.json();
-        if (append) {
-          this.movies = [...this.movies, ...data.results];
-        } else {
-          this.movies = data.results;
-        }
-        this.currentPage = data.page;
-        this.totalPages = data.total_pages;
-      } catch (error) {
-        console.error("영화 데이터를 불러오는 중 오류 발생:", error);
-      } finally {
-        this.loading = false;
+      const data = await fetchMovies(filters);
+      if (append) {
+        this.movies = [...this.movies, ...data.results];
+      } else {
+        this.movies = data.results;
       }
+      this.currentPage = page;
+      this.totalPages = data.total_pages;
+      this.loading = false;
     },
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
@@ -137,7 +120,7 @@ export default {
       }
     },
     getPosterUrl(path) {
-      return path ? `https://image.tmdb.org/t/p/w500/${path}` : "default_poster.png";
+      return `https://image.tmdb.org/t/p/w500/${path}`;
     },
   },
   created() {
@@ -156,59 +139,22 @@ export default {
   color: white;
   min-height: 100vh;
 }
-
-.search-bar {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
-}
-
-.search-bar input {
-  width: 70%;
-  padding: 10px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.search-bar button {
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.search-bar button:hover {
-  background-color: #0056b3;
-}
-
-.recent-searches,
-.wishlist {
-  margin-top: 20px;
-  padding: 0 20px;
-}
-
 .dropdown-container {
   margin: 20px 0;
   display: flex;
   gap: 15px;
 }
-
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
 }
-
 .movie-card {
   text-align: center;
   background-color: #1e1e1e;
   padding: 10px;
   border-radius: 8px;
 }
-
 .movie-poster {
   width: 100%;
   height: 200px;
@@ -216,26 +162,12 @@ export default {
   margin-bottom: 10px;
   object-fit: cover;
 }
-
 .movie-title {
   font-size: 14px;
   color: white;
 }
-
 .loading {
   text-align: center;
   margin: 20px 0;
-}
-
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e50914;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
 }
 </style>

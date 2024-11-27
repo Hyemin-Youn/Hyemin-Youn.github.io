@@ -96,17 +96,14 @@ const store = createStore({
     async fetchMovies({ state, commit }, { page = 1, append = false }) {
       if (state.loading) return;
       commit("SET_LOADING", true);
-      commit("SET_ERROR", ""); // 기존 에러 메시지 초기화
+      commit("SET_ERROR", ""); // 에러 메시지 초기화
       try {
-        const filters = {
-          query: encodeURIComponent(state.searchQuery), // URL 인코딩 추가
-          page,
-        };
+        const encodedQuery = encodeURIComponent(state.searchQuery); // URL 인코딩
         const apiKey = "your_tmdb_api_key"; // 실제 TMDb API 키
-        const url = `https://api.themoviedb.org/3/search/movie?query=${filters.query}&page=${filters.page}&api_key=${apiKey}`;
+        const url = `https://api.themoviedb.org/3/search/movie?query=${encodedQuery}&page=${page}&api_key=${apiKey}`;
         console.log("API 요청 URL:", url); // 디버깅용 로그
         const response = await fetch(url);
-        if (!response.ok) throw new Error("API 호출 실패");
+        if (!response.ok) throw new Error(response.status); // 상태 코드로 에러 확인
         const data = await response.json();
         if (append) {
           commit("APPEND_MOVIES", data.results);
@@ -119,7 +116,13 @@ const store = createStore({
         });
       } catch (error) {
         console.error("API 호출 실패:", error);
-        commit("SET_ERROR", "영화 데이터를 불러오는 중 오류가 발생했습니다.");
+        if (error.message === "401") {
+          commit("SET_ERROR", "API 키가 유효하지 않습니다.");
+        } else if (error.message === "404") {
+          commit("SET_ERROR", "검색 결과가 없습니다.");
+        } else {
+          commit("SET_ERROR", "영화 데이터를 불러오는 중 오류가 발생했습니다.");
+        }
       } finally {
         commit("SET_LOADING", false);
       }

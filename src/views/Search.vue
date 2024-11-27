@@ -97,6 +97,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .search-page {
   background-color: #121212;

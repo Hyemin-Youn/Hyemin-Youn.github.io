@@ -6,13 +6,23 @@
       class="poster"
     >
     <div class="movie-info">
-      <p class="movie-title">{{ movie.title }}</p>
-      <p class="release-date">개봉일: {{ formattedReleaseDate }}</p>
-      <div v-if="movie.vote_average" class="movie-rating">
+      <p class="movie-title">
+{{ movie.title }}
+</p>
+      <p class="release-date">
+개봉일: {{ formattedReleaseDate }}
+</p>
+      <div
+v-if="movie.vote_average"
+class="movie-rating"
+>
         ⭐ {{ movie.vote_average }} / 10
       </div>
     </div>
-    <span class="wishlist-icon" @click.stop="handleWishlist">
+    <span
+class="wishlist-icon"
+@click.stop="handleWishlist"
+>
       <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'" />
     </span>
   </div>

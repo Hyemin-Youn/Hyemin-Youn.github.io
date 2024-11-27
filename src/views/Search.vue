@@ -1,81 +1,3 @@
-<template>
-  <div class="search-page">
-    <!-- Navbar -->
-    <Navbar />
-
-    <!-- 검색창 -->
-    <div class="search-bar">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="영화 제목을 검색하세요"
-        @keydown.enter="handleSearch"
-      />
-      <button @click="handleSearch">검색</button>
-    </div>
-
-    <!-- 최근 검색어 -->
-    <div v-if="searchHistory.length" class="recent-searches">
-      <h2>최근 검색어</h2>
-      <ul>
-        <li
-          v-for="(query, index) in searchHistory"
-          :key="index"
-          @click="searchFromHistory(query)"
-        >
-          {{ query }}
-        </li>
-      </ul>
-    </div>
-
-    <!-- 필터 -->
-    <div class="dropdown-container">
-      <label>선호하는 설정을 선택하세요</label>
-      <div v-for="dropdown in dropdownEntries" :key="dropdown.key" class="custom-select">
-        <div class="select-selected" @click="toggleDropdown(dropdown.key)">
-          {{ filters[dropdown.key] === "all" ? dropdown.label : filters[dropdown.key] }}
-        </div>
-        <div v-if="activeDropdown === dropdown.key" class="select-items">
-          <div
-            v-for="option in dropdown.options"
-            :key="option.value"
-            @click="setFilter(dropdown.key, option.value)"
-          >
-            {{ option.label }}
-          </div>
-        </div>
-      </div>
-      <button class="clear-options" @click="clearFilters">초기화</button>
-    </div>
-
-    <!-- 영화 리스트 -->
-    <div class="movie-grid">
-      <div class="movie-card" v-for="movie in movies" :key="movie.id">
-        <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
-        <div class="movie-title">{{ movie.title }}</div>
-        <button @click="toggleWishlist(movie)">
-          {{ isInWishlist(movie.id) ? "즐겨찾기 제거" : "즐겨찾기 추가" }}
-        </button>
-      </div>
-    </div>
-
-    <!-- 즐겨찾기 -->
-    <div v-if="wishlist.length" class="wishlist">
-      <h2>즐겨찾기한 영화</h2>
-      <ul>
-        <li v-for="movie in wishlist" :key="movie.id">
-          {{ movie.title }}
-          <button @click="toggleWishlist(movie)">즐겨찾기 제거</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- 로딩 중 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
-    <div v-if="!loading && movies.length === 0" class="no-results">검색 결과가 없습니다.</div>
-  </div>
-</template>
-
 <script>
 import Navbar from "@/components/Navbar.vue";
 import { mapActions, mapGetters, mapState } from "vuex";
@@ -125,6 +47,10 @@ export default {
     ...mapState(["filters"]),
     ...mapGetters(["searchHistory", "wishlist", "movies", "loading"]),
   },
+  created() {
+    // created를 methods 위로 이동
+    this.fetchMovies();
+  },
   methods: {
     ...mapActions(["addSearchHistory", "toggleWishlist", "fetchMovies"]),
     handleSearch() {
@@ -156,11 +82,9 @@ export default {
       return this.wishlist.some((movie) => movie.id === id);
     },
   },
-  created() {
-    this.fetchMovies();
-  },
 };
 </script>
+
 
 <style scoped>
 .search-page {

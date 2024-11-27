@@ -10,12 +10,17 @@
         type="text"
         placeholder="영화 제목을 검색하세요"
         @keydown.enter="handleSearch"
-      />
-      <button @click="handleSearch">검색</button>
+      >
+      <button @click="handleSearch">
+검색
+</button>
     </div>
 
     <!-- 최근 검색어 -->
-    <div v-if="recentSearches.length" class="recent-searches">
+    <div
+v-if="recentSearches.length"
+class="recent-searches"
+>
       <h2>최근 검색어</h2>
       <ul>
         <li
@@ -56,7 +61,12 @@
           </div>
         </div>
       </div>
-      <button class="clear-options" @click="clearOptions">초기화</button>
+      <button
+class="clear-options"
+@click="clearOptions"
+>
+초기화
+</button>
     </div>
 
     <!-- 영화 리스트 -->
@@ -71,7 +81,10 @@
     </div>
 
     <!-- 즐겨찾기 영화 -->
-    <div v-if="wishlist.length" class="wishlist">
+    <div
+v-if="wishlist.length"
+class="wishlist"
+>
       <h2>즐겨찾기한 영화</h2>
       <ul>
         <li
@@ -79,16 +92,26 @@
           :key="movie.id"
         >
           {{ movie.title }}
-          <button @click="toggleWishlist(movie)">즐겨찾기 제거</button>
+          <button @click="toggleWishlist(movie)">
+즐겨찾기 제거
+</button>
         </li>
       </ul>
     </div>
 
     <!-- 로딩 중 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
+    <div
+v-if="loading"
+class="loading"
+>
+로딩 중...
+</div>
 
     <!-- 데이터가 없는 경우 -->
-    <div v-if="!loading && movies.length === 0" class="no-results">
+    <div
+v-if="!loading && movies.length === 0"
+class="no-results"
+>
       검색 결과가 없습니다.
     </div>
 
@@ -133,10 +156,10 @@ export default {
         sorting: "언어 (전체)",
       },
       activeDropdown: null,
-      movies: [], // 영화 리스트
-      currentPage: 1, // 현재 페이지
-      totalPages: 1, // 전체 페이지 수
-      loading: false, // 로딩 상태
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
+      loading: false,
       showScrollTopButton: false,
     };
   },
@@ -146,11 +169,17 @@ export default {
       return this.searchHistory.slice().reverse(); // 최신순
     },
     dropdownEntries() {
-      return Object.entries(this.dropdowns).map(([key, options]) => ({
+      return Object.entries(this.dropdown).map(([key, options]) => ({
         key,
         options,
       }));
     },
+  },
+  created() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
     ...mapActions(["addSearchHistory", "toggleWishlist", "addViewHistory"]),
@@ -172,7 +201,6 @@ export default {
       }
     },
     async fetchMovies(query, page = 1) {
-      // TMDb API 호출
       const apiKey = "your_tmdb_api_key"; // API 키
       const url = `https://api.themoviedb.org/3/search/movie?query=${query}&page=${page}&api_key=${apiKey}`;
       const response = await fetch(url);
@@ -228,15 +256,8 @@ export default {
       }
     },
   },
-  created() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
 };
 </script>
-
 
 <style scoped>
 .search-page {

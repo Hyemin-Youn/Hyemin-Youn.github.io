@@ -4,9 +4,9 @@ const store = createStore({
   state: {
     user: JSON.parse(localStorage.getItem("user")) || null,
     isAuthenticated: !!localStorage.getItem("user"),
-    wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트
-    searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [], // 검색 기록
-    viewHistory: JSON.parse(localStorage.getItem("viewHistory")) || [], // 시청 기록
+    wishlist: JSON.parse(localStorage.getItem("wishlist")) || [],
+    searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [],
+    viewHistory: JSON.parse(localStorage.getItem("viewHistory")) || [],
     selectedOptions: {
       originalLanguage: "장르 (전체)",
       translationLanguage: "평점 (전체)",
@@ -16,6 +16,7 @@ const store = createStore({
     currentPage: 1,
     totalPages: 1,
     loading: false,
+    searchQuery: "",
   },
   mutations: {
     setUser(state, user) {
@@ -36,13 +37,11 @@ const store = createStore({
       const existingMovieIndex = state.wishlist.findIndex(
         (item) => item.id === movie.id
       );
-
       if (existingMovieIndex === -1) {
         state.wishlist.push(movie);
       } else {
         state.wishlist.splice(existingMovieIndex, 1);
       }
-
       localStorage.setItem("wishlist", JSON.stringify(state.wishlist));
     },
     ADD_SEARCH_HISTORY(state, query) {
@@ -73,6 +72,9 @@ const store = createStore({
     SET_LOADING(state, loading) {
       state.loading = loading;
     },
+    SET_SEARCH_QUERY(state, query) {
+      state.searchQuery = query;
+    },
   },
   actions: {
     toggleWishlist({ commit }, movie) {
@@ -95,10 +97,14 @@ const store = createStore({
           genre: state.selectedOptions.originalLanguage,
           rating: state.selectedOptions.translationLanguage,
           language: state.selectedOptions.sorting,
+          query: state.searchQuery,
           page,
         };
-        // Replace this with your actual API call
-        const data = await fetchMovies(filters);
+        const apiKey = "your_tmdb_api_key"; // API 키
+        const url = `https://api.themoviedb.org/3/search/movie?query=${filters.query}&page=${filters.page}&api_key=${apiKey}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("API 호출 실패");
+        const data = await response.json();
         if (append) {
           commit("APPEND_MOVIES", data.results);
         } else {
@@ -127,6 +133,7 @@ const store = createStore({
     currentPage: (state) => state.currentPage,
     totalPages: (state) => state.totalPages,
     loading: (state) => state.loading,
+    searchQuery: (state) => state.searchQuery,
   },
 });
 

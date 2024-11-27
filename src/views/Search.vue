@@ -10,17 +10,12 @@
         type="text"
         placeholder="영화 제목을 검색하세요"
         @keydown.enter="handleSearch"
-      >
-      <button @click="handleSearch">
-검색
-</button>
+      />
+      <button @click="handleSearch">검색</button>
     </div>
 
     <!-- 최근 검색어 -->
-    <div
-v-if="recentSearches.length"
-class="recent-searches"
->
+    <div v-if="recentSearches.length" class="recent-searches">
       <h2>최근 검색어</h2>
       <ul>
         <li
@@ -31,42 +26,6 @@ class="recent-searches"
           {{ query }}
         </li>
       </ul>
-    </div>
-
-    <!-- 드롭다운 필터 -->
-    <h1>영화 검색</h1>
-    <div class="dropdown-container">
-      <label>선호하는 설정을 선택하세요</label>
-      <div
-        v-for="dropdown in dropdownEntries"
-        :key="dropdown.key"
-        class="custom-select"
-      >
-        <div
-          class="select-selected"
-          @click="toggleDropdown(dropdown.key)"
-        >
-          {{ selectedOptions[dropdown.key] }}
-        </div>
-        <div
-          v-if="activeDropdown === dropdown.key"
-          class="select-items"
-        >
-          <div
-            v-for="option in dropdown.options"
-            :key="option"
-            @click="selectOption(dropdown.key, option)"
-          >
-            {{ option }}
-          </div>
-        </div>
-      </div>
-      <button
-class="clear-options"
-@click="clearOptions"
->
-초기화
-</button>
     </div>
 
     <!-- 영화 리스트 -->
@@ -80,49 +39,13 @@ class="clear-options"
       />
     </div>
 
-    <!-- 즐겨찾기 영화 -->
-    <div
-v-if="wishlist.length"
-class="wishlist"
->
-      <h2>즐겨찾기한 영화</h2>
-      <ul>
-        <li
-          v-for="movie in wishlist"
-          :key="movie.id"
-        >
-          {{ movie.title }}
-          <button @click="toggleWishlist(movie)">
-즐겨찾기 제거
-</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- 로딩 중 표시 -->
-    <div
-v-if="loading"
-class="loading"
->
-로딩 중...
-</div>
+    <!-- 로딩 중 -->
+    <div v-if="loading" class="loading">로딩 중...</div>
 
     <!-- 데이터가 없는 경우 -->
-    <div
-v-if="!loading && movies.length === 0"
-class="no-results"
->
+    <div v-if="!loading && movies.length === 0" class="no-results">
       검색 결과가 없습니다.
     </div>
-
-    <!-- TOP 버튼 -->
-    <button
-      v-if="showScrollTopButton"
-      class="scroll-top"
-      @click="scrollToTop"
-    >
-      TOP(위로)
-    </button>
   </div>
 </template>
 
@@ -137,124 +60,34 @@ export default {
     Navbar,
     MovieCard,
   },
-  data() {
-    return {
-      searchQuery: "",
-      dropdowns: {
-        originalLanguage: ["장르 (전체)", "Action", "Adventure", "Comedy", "Crime", "Family"],
-        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4~5", "4점 이하"],
-        sorting: ["언어 (전체)", "en", "ko"],
-      },
-      DEFAULT_OPTIONS: {
-        originalLanguage: "장르 (전체)",
-        translationLanguage: "평점 (전체)",
-        sorting: "언어 (전체)",
-      },
-      selectedOptions: {
-        originalLanguage: "장르 (전체)",
-        translationLanguage: "평점 (전체)",
-        sorting: "언어 (전체)",
-      },
-      activeDropdown: null,
-      movies: [],
-      currentPage: 1,
-      totalPages: 1,
-      loading: false,
-      showScrollTopButton: false,
-    };
-  },
   computed: {
-    ...mapGetters(["searchHistory", "wishlist", "viewHistory"]),
+    ...mapGetters(["movies", "loading", "searchHistory", "wishlist"]),
+    searchQuery: {
+      get() {
+        return this.$store.getters.searchQuery;
+      },
+      set(value) {
+        this.$store.commit("SET_SEARCH_QUERY", value);
+      },
+    },
     recentSearches() {
-      return this.searchHistory.slice().reverse(); // 최신순
+      return this.searchHistory.slice().reverse();
     },
-    dropdownEntries() {
-      return Object.entries(this.dropdown).map(([key, options]) => ({
-        key,
-        options,
-      }));
-    },
-  },
-  created() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
   },
   methods: {
-    ...mapActions(["addSearchHistory", "toggleWishlist", "addViewHistory"]),
+    ...mapActions(["fetchMovies", "addSearchHistory", "toggleWishlist", "addViewHistory"]),
     async handleSearch() {
       if (!this.searchQuery.trim()) return;
-
       this.addSearchHistory(this.searchQuery);
-
-      this.loading = true;
-      try {
-        const data = await this.fetchMovies(this.searchQuery, 1);
-        this.movies = data.results;
-        this.totalPages = data.total_pages;
-        this.currentPage = 1;
-      } catch (error) {
-        console.error("검색 중 오류 발생:", error);
-      } finally {
-        this.loading = false;
-      }
-    },
-    async fetchMovies(query, page = 1) {
-      const apiKey = "your_tmdb_api_key"; // API 키
-      const url = `https://api.themoviedb.org/3/search/movie?query=${query}&page=${page}&api_key=${apiKey}`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("API 호출 실패");
-      return await response.json();
-    },
-    async loadMoreMovies() {
-      if (this.currentPage >= this.totalPages || this.loading) return;
-      this.loading = true;
-      try {
-        const data = await this.fetchMovies(this.searchQuery, this.currentPage + 1);
-        this.movies = [...this.movies, ...data.results];
-        this.currentPage += 1;
-      } catch (error) {
-        console.error("추가 영화 로드 중 오류 발생:", error);
-      } finally {
-        this.loading = false;
-      }
+      await this.fetchMovies({ page: 1 });
     },
     searchFromHistory(query) {
       this.searchQuery = query;
       this.handleSearch();
     },
-    toggleWishlist(movie) {
-      this.$store.dispatch("toggleWishlist", movie);
-    },
-    addViewHistory(movie) {
-      this.$store.dispatch("addViewHistory", movie);
-    },
-    toggleDropdown(key) {
-      this.activeDropdown = this.activeDropdown === key ? null : key;
-    },
-    selectOption(key, option) {
-      this.selectedOptions = {
-        ...this.selectedOptions,
-        [key]: option,
-      };
-      this.activeDropdown = null;
-      this.handleSearch();
-    },
-    clearOptions() {
-      this.selectedOptions = { ...this.DEFAULT_OPTIONS };
-      this.handleSearch();
-    },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    },
-    handleScroll() {
-      const bottomOfWindow =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
-      if (bottomOfWindow) {
-        this.loadMoreMovies();
-      }
-    },
+  },
+  created() {
+    this.fetchMovies({ page: 1 });
   },
 };
 </script>

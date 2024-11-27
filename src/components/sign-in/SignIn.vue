@@ -318,7 +318,6 @@ button:hover {
     height: auto;
   }
   .content {
-    padding: 20px;
     width: 70%;
   }
 }

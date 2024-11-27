@@ -1,102 +1,154 @@
 <template>
-  <div class="search-page">
+  <div class="search-page" @scroll="handleScroll">
     <!-- Navbar -->
     <Navbar />
 
     <!-- 검색 기능 -->
-    <div class="search-bar">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="영화 제목을 검색하세요"
-        @keydown.enter="handleSearch"
-      />
-      <button @click="handleSearch">검색</button>
-    </div>
-
-    <!-- 최근 검색어 -->
-    <div v-if="recentSearches.length" class="recent-searches">
-      <h2>최근 검색어</h2>
-      <ul>
-        <li
-          v-for="(query, index) in recentSearches"
-          :key="index"
-          @click="searchFromHistory(query)"
-        >
-          {{ query }}
-        </li>
-      </ul>
+    <h1>영화 검색</h1>
+    <div class="dropdown-container">
+      <label>선호하는 설정을 선택하세요</label>
+      <div v-for="dropdown in dropdownEntries" :key="dropdown.key" class="custom-select">
+        <div class="select-selected" @click="toggleDropdown(dropdown.key)">
+          {{ selectedOptions[dropdown.key] }}
+        </div>
+        <div v-if="activeDropdown === dropdown.key" class="select-items">
+          <div
+            v-for="option in dropdown.options"
+            :key="option"
+            @click="selectOption(dropdown.key, option)"
+          >
+            {{ option }}
+          </div>
+        </div>
+      </div>
+      <button class="clear-options" @click="clearOptions">초기화</button>
     </div>
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <MovieCard
-        v-for="movie in movies"
-        :key="movie.id"
-        :movie="movie"
-        @toggleWishlist="toggleWishlist(movie)"
-        @addViewHistory="addViewHistory(movie)"
-      />
+      <div class="movie-card" v-for="movie in movies" :key="movie.id">
+        <img class="movie-poster" :src="getPosterUrl(movie.poster_path)" :alt="movie.title" />
+        <div class="movie-title">{{ movie.title }}</div>
+      </div>
     </div>
 
-    <!-- 로딩 중 -->
+    <!-- 로딩 중 표시 -->
     <div v-if="loading" class="loading">로딩 중...</div>
-
-    <!-- 데이터가 없는 경우 -->
-    <div v-if="!loading && movies.length === 0 && !errorMessage" class="no-results">
-      검색 결과가 없습니다.
-    </div>
-
-    <!-- 에러 메시지 -->
-    <div v-if="errorMessage" class="error-message">
-      {{ errorMessage }}
-    </div>
+    <div v-if="!loading && movies.length === 0" class="no-results">검색 결과가 없습니다.</div>
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-import MovieCard from "@/components/MovieCard.vue";
-import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Search",
   components: {
     Navbar,
-    MovieCard,
+  },
+  data() {
+    return {
+      dropdowns: {
+        originalLanguage: ["언어 (전체)", "en", "ko", "ja", "fr"],
+        translationLanguage: ["평점 (전체)", "9~10", "8~9", "7~8", "6~7", "5~6", "4점 이하"],
+        sorting: ["장르 (전체)", "28", "12", "16", "35", "80"], // TMDb 장르 ID
+      },
+      DEFAULT_OPTIONS: {
+        originalLanguage: "언어 (전체)",
+        translationLanguage: "평점 (전체)",
+        sorting: "장르 (전체)",
+      },
+      selectedOptions: {
+        originalLanguage: "언어 (전체)",
+        translationLanguage: "평점 (전체)",
+        sorting: "장르 (전체)",
+      },
+      activeDropdown: null,
+      movies: [],
+      currentPage: 1,
+      totalPages: 1,
+      loading: false,
+    };
   },
   computed: {
-    ...mapGetters(["movies", "loading", "searchHistory", "wishlist", "errorMessage"]),
-    searchQuery: {
-      get() {
-        return this.$store.getters.searchQuery;
-      },
-      set(value) {
-        this.$store.commit("SET_SEARCH_QUERY", value);
-      },
-    },
-    recentSearches() {
-      return this.searchHistory.slice().reverse();
+    dropdownEntries() {
+      return Object.entries(this.dropdowns).map(([key, options]) => ({
+        key,
+        options,
+      }));
     },
   },
   methods: {
-    ...mapActions(["fetchMovies", "addSearchHistory", "toggleWishlist", "addViewHistory"]),
-    async handleSearch() {
-      if (!this.searchQuery.trim()) return;
-      this.addSearchHistory(this.searchQuery);
-      await this.fetchMovies({ page: 1 });
+    async fetchMovies(page = 1, append = false) {
+      if (this.loading) return; // 중복 호출 방지
+      this.loading = true;
+      const filters = {
+        language: this.selectedOptions.originalLanguage === "언어 (전체)" ? null : this.selectedOptions.originalLanguage,
+        with_genres: this.selectedOptions.sorting === "장르 (전체)" ? null : this.selectedOptions.sorting,
+        'vote_average.gte': this.selectedOptions.translationLanguage === "평점 (전체)" ? null : parseFloat(this.selectedOptions.translationLanguage.split("~")[0]),
+        page,
+      };
+
+      // API 호출
+      const apiKey = "your_tmdb_api_key"; // 실제 TMDb API 키
+      const url = new URL("https://api.themoviedb.org/3/discover/movie");
+      url.searchParams.append("api_key", apiKey);
+      url.searchParams.append("page", page);
+      if (filters.language) url.searchParams.append("language", filters.language);
+      if (filters.with_genres) url.searchParams.append("with_genres", filters.with_genres);
+      if (filters["vote_average.gte"]) url.searchParams.append("vote_average.gte", filters["vote_average.gte"]);
+
+      try {
+        const response = await fetch(url.toString());
+        const data = await response.json();
+        if (append) {
+          this.movies = [...this.movies, ...data.results];
+        } else {
+          this.movies = data.results;
+        }
+        this.currentPage = data.page;
+        this.totalPages = data.total_pages;
+      } catch (error) {
+        console.error("영화 데이터를 불러오는 중 오류 발생:", error);
+      } finally {
+        this.loading = false;
+      }
     },
-    searchFromHistory(query) {
-      this.searchQuery = query;
-      this.handleSearch();
+    toggleDropdown(key) {
+      this.activeDropdown = this.activeDropdown === key ? null : key;
+    },
+    selectOption(key, option) {
+      this.selectedOptions = {
+        ...this.selectedOptions,
+        [key]: option,
+      };
+      this.activeDropdown = null;
+      this.fetchMovies(1); // 필터 변경 시 첫 페이지로 이동
+    },
+    clearOptions() {
+      this.selectedOptions = { ...this.DEFAULT_OPTIONS };
+      this.fetchMovies(1); // 초기화 후 첫 페이지로 이동
+    },
+    handleScroll() {
+      const bottomOfWindow =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      if (bottomOfWindow && this.currentPage < this.totalPages) {
+        this.fetchMovies(this.currentPage + 1, true); // 다음 페이지 데이터 로드
+      }
+    },
+    getPosterUrl(path) {
+      return path ? `https://image.tmdb.org/t/p/w500/${path}` : "default_poster.png";
     },
   },
   created() {
-    this.fetchMovies({ page: 1 });
+    this.fetchMovies(); // 초기 데이터 로드
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
   },
 };
 </script>
-
 
 <style scoped>
 .search-page {

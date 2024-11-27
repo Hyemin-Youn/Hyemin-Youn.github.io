@@ -309,39 +309,4 @@ button:hover {
   font-size: 0.8rem;
   margin-top: 8px;
 }
-
-@media (max-width: 480px) {
-  .card {
-    width: 90%; /* 모바일 화면의 90%를 차지 */
-    height: auto; /* 콘텐츠 높이에 따라 자동 조정 */
-    position: relative; /* 위치를 고정하지 않고 상대적 배치 */
-    transform: none; /* 3D 변환 제거 */
-    transition: transform 0.8s ease-in-out, opacity 0.8s ease-in-out;
-    opacity: 1; /* 항상 보이도록 설정 */
-    margin: 20px auto; /* 위아래 여백 추가 및 가운데 정렬 */
-    z-index: 2; /* 카드가 위로 보이도록 설정 */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
-    border-radius: 10px; /* 모서리를 부드럽게 */
-  }
-
-  .content {
-    padding: 20px; /* 여백 조정 */
-    box-sizing: border-box; /* 여백 포함하여 크기 계산 */
-  }
-
-  input {
-    font-size: 1rem; /* 모바일에서 입력 필드 글자 크기 조정 */
-    padding: 10px; /* 입력 필드 내 여백 추가 */
-  }
-
-  button {
-    font-size: 1rem; /* 버튼 글자 크기 조정 */
-    padding: 12px; /* 버튼 크기 조정 */
-  }
-
-  h2 {
-    font-size: 1.5rem; /* 제목 크기 조정 */
-    margin-bottom: 10px;
-  }
-}
 </style>

@@ -157,6 +157,13 @@ export default {
       }));
     },
   },
+  created() {
+    this.fetchMovies();
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  beforeDestroy() {
+    window.removeEventListener("scroll", this.handleScroll);
+  },
   methods: {
     ...mapActions(["addSearchHistory", "setSearchResults", "toggleWishlist", "deleteSearchHistory"]),
     async fetchMovies(page = 1, append = false) {
@@ -234,15 +241,9 @@ export default {
         : "default_poster.png";
     },
   },
-  created() {
-    this.fetchMovies();
-    window.addEventListener("scroll", this.handleScroll);
-  },
-  beforeDestroy() {
-    window.removeEventListener("scroll", this.handleScroll);
-  },
 };
 </script>
+
 
 <style scoped>
 .search-page {

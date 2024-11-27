@@ -1,5 +1,8 @@
 <template>
-  <div class="search-page" @scroll="handleScroll">
+  <div
+class="search-page"
+@scroll="handleScroll"
+>
     <!-- Navbar -->
     <Navbar />
 
@@ -11,17 +14,30 @@
         type="text"
         placeholder="영화 제목을 검색하세요"
         @keydown.enter="handleSearch"
-      />
-      <button @click="handleSearch">검색</button>
+      >
+      <button @click="handleSearch">
+검색
+</button>
     </div>
 
     <!-- 최근 검색어 목록 -->
-    <div class="recent-searches" v-if="recentSearches.length">
+    <div
+v-if="recentSearches.length"
+class="recent-searches"
+>
       <h3>최근 검색어</h3>
       <ul>
-        <li v-for="(search, index) in recentSearches" :key="index">
+        <li
+v-for="(search, index) in recentSearches"
+:key="index"
+>
           <span @click="searchFromHistory(search)">{{ search }}</span>
-          <button class="delete-btn" @click="deleteSearchHistory(index)">X</button>
+          <button
+class="delete-btn"
+@click="deleteSearchHistory(index)"
+>
+X
+</button>
         </li>
       </ul>
     </div>
@@ -52,18 +68,27 @@
           </div>
         </div>
       </div>
-      <button class="clear-options" @click="clearOptions">초기화</button>
+      <button
+class="clear-options"
+@click="clearOptions"
+>
+초기화
+</button>
     </div>
 
     <!-- 영화 리스트 -->
     <div class="movie-grid">
-      <div class="movie-card" v-for="movie in movies" :key="movie.id">
+      <div
+v-for="movie in movies"
+:key="movie.id"
+class="movie-card"
+>
         <div class="poster-container">
           <img
             class="movie-poster"
             :src="getPosterUrl(movie.poster_path)"
             :alt="movie.title"
-          />
+          >
           <button
             class="favorite-btn"
             :class="{ favorited: isInWishlist(movie.id) }"
@@ -72,12 +97,19 @@
             ❤
           </button>
         </div>
-        <div class="movie-title">{{ movie.title }}</div>
+        <div class="movie-title">
+{{ movie.title }}
+</div>
       </div>
     </div>
 
     <!-- 로딩 중 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
+    <div
+v-if="loading"
+class="loading"
+>
+로딩 중...
+</div>
   </div>
 </template>
 

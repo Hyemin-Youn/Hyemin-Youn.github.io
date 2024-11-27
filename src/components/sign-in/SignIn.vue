@@ -345,11 +345,11 @@ button:hover {
 @media (max-width: 480px) {
   .wrapper {
     width: 100%; /* 모바일 화면에서 전체 너비 사용 */
-    padding: 10px;
+    padding: 20px;
   }
 
   .content {
-    padding: 30px; /* 모바일 콘텐츠 여백 축소 */
+    padding: 10px; /* 모바일 콘텐츠 여백 축소 */
   }
 
   h2 {

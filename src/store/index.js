@@ -5,6 +5,8 @@ const store = createStore({
     user: JSON.parse(localStorage.getItem("user")) || null,
     isAuthenticated: !!localStorage.getItem("user"),
     wishlist: JSON.parse(localStorage.getItem("wishlist")) || [], // 찜한 리스트
+    searchHistory: JSON.parse(localStorage.getItem("searchHistory")) || [], // 검색 기록
+    viewHistory: JSON.parse(localStorage.getItem("viewHistory")) || [], // 시청 기록
   },
   mutations: {
     setUser(state, user) {
@@ -36,10 +38,28 @@ const store = createStore({
 
       localStorage.setItem("wishlist", JSON.stringify(state.wishlist)); // 로컬스토리지 동기화
     },
+    ADD_SEARCH_HISTORY(state, query) {
+      if (!state.searchHistory.includes(query)) {
+        state.searchHistory.push(query);
+        localStorage.setItem("searchHistory", JSON.stringify(state.searchHistory));
+      }
+    },
+    ADD_VIEW_HISTORY(state, movie) {
+      if (!state.viewHistory.some((item) => item.id === movie.id)) {
+        state.viewHistory.push(movie);
+        localStorage.setItem("viewHistory", JSON.stringify(state.viewHistory));
+      }
+    },
   },
   actions: {
     toggleWishlist({ commit }, movie) {
       commit("TOGGLE_WISHLIST", movie);
+    },
+    addSearchHistory({ commit }, query) {
+      commit("ADD_SEARCH_HISTORY", query);
+    },
+    addViewHistory({ commit }, movie) {
+      commit("ADD_VIEW_HISTORY", movie);
     },
   },
   getters: {
@@ -47,6 +67,8 @@ const store = createStore({
     isInWishlist: (state) => (id) => {
       return state.wishlist.some((movie) => movie.id === id);
     },
+    searchHistory: (state) => state.searchHistory,
+    viewHistory: (state) => state.viewHistory,
   },
 });
 

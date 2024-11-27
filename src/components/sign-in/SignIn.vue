@@ -206,10 +206,8 @@ export default {
 
 /* 컨테이너 */
 .wrapper {
-  width: 90%; /* 화면 크기 대비 90%로 설정 */
-  max-width: 400px; /* 데스크톱 화면에서는 최대 400px */
-  height: auto;
-  padding: 20px;
+  width: 600px;
+  height: 520px;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -217,40 +215,70 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  perspective: 1000px;
 }
 
 /* 카드 */
 .card {
-  width: 100%;
-  background: #e50914;
-  color: white;
-  border-radius: 15px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  width: 560px;
+  height: 480px;
+  position: absolute;
   transform-style: preserve-3d;
-  transition: transform 1s ease-in-out, opacity 1s ease-in-out;
-  padding: 20px;
+  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
+  opacity: 0;
+  z-index: 0;
+}
+
+.card.active {
+  opacity: 1;
+  z-index: 2;
+  transform: rotateY(0deg) translateX(0);
+}
+
+.card.backward {
+  z-index: 1;
+  transform: rotateY(-90deg) translateX(-100%);
+  opacity: 0;
+}
+
+.card.enter {
+  opacity: 0;
+  transform: rotateY(90deg) translateX(100%);
+}
+
+/* 카드 콘텐츠 */
+.content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  text-align: center;
+  background: #e50914;
+  color: #fff;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 /* 텍스트 스타일 */
 h2 {
-  font-size: 1.5rem;
   margin-bottom: 20px;
-  text-align: center;
+  font-size: 1.5rem;
 }
 
 label {
+  display: block;
+  margin-top: 10px;
   font-size: 0.9rem;
-  margin-bottom: 5px;
 }
 
 input {
   width: 100%;
   padding: 10px;
-  margin: 10px 0;
+  margin-top: 6px;
+  margin-bottom: 12px;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 button {
@@ -260,8 +288,8 @@ button {
   color: white;
   border: none;
   border-radius: 5px;
-  font-size: 1rem;
   cursor: pointer;
+  font-size: 0.9rem;
 }
 
 button:hover {
@@ -270,38 +298,30 @@ button:hover {
 
 .switch {
   margin-top: 15px;
-  text-align: center;
-  font-size: 0.9rem;
-  color: white;
+  color: #fff;
   cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.8rem;
 }
 
 .error {
   color: yellow;
   font-size: 0.8rem;
-  margin-top: 5px;
-  text-align: center;
+  margin-top: 8px;
 }
 
-/* 반응형 디자인 */
 @media (max-width: 480px) {
-  .wrapper {
-    width: 95%; /* 모바일에서는 전체 화면 대비 95%로 설정 */
-    padding: 10px;
-  }
-
-  .card {
-    padding: 15px;
-  }
-
-  h2 {
-    font-size: 1.2rem; /* 헤딩 크기 조정 */
-  }
-
-  label,
-  input,
-  button {
-    font-size: 0.9rem; /* 입력 필드와 버튼 크기 축소 */
+  .content {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+    text-align: center;
+    background: #e50914;
+    color: #fff;
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
 }
+
 </style>

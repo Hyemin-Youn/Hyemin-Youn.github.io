@@ -205,23 +205,29 @@ export default {
 }
 
 /* 컨테이너 */
+/* 컨테이너 */
 .wrapper {
-  width: 600px;
-  height: 520px;
+  width: 90%; /* 화면 너비의 90%를 차지하도록 수정 */
+  max-width: 600px; /* 최대 너비는 600px로 제한 */
+  height: auto; /* 높이를 콘텐츠에 맞게 조정 */
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   perspective: 1000px;
+  padding: 20px; /* 여백 추가 */
+  box-sizing: border-box;
 }
 
 /* 카드 */
 .card {
-  width: 560px;
-  height: 480px;
+  width: 100%; /* 카드가 wrapper에 맞게 늘어나도록 수정 */
+  max-width: 560px; /* 최대 너비 제한 */
+  height: auto; /* 카드 높이를 콘텐츠에 맞게 조정 */
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
@@ -229,97 +235,66 @@ export default {
   z-index: 0;
 }
 
-.card.active {
-  opacity: 1;
-  z-index: 2;
-  transform: rotateY(0deg) translateX(0);
-}
-
-.card.backward {
-  z-index: 1;
-  transform: rotateY(-90deg) translateX(-100%);
-  opacity: 0;
-}
-
-.card.enter {
-  opacity: 0;
-  transform: rotateY(90deg) translateX(100%);
-}
-
 /* 카드 콘텐츠 */
 .content {
-  position: absolute;
+  position: relative;
   width: 100%;
-  height: 100%;
-  padding: 30px;
+  height: auto; /* 콘텐츠 높이를 자동으로 조정 */
+  padding: 20px;
   text-align: center;
   background: #e50914;
   color: #fff;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+  box-sizing: border-box;
 }
 
-/* 텍스트 스타일 */
-h2 {
-  margin-bottom: 20px;
-  font-size: 1.5rem;
-}
-
-label {
-  display: block;
-  margin-top: 10px;
-  font-size: 0.9rem;
-}
-
+/* 입력 필드 */
 input {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   margin-top: 6px;
   margin-bottom: 12px;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.3); /* 경계선 추가 */
   border-radius: 5px;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
+/* 버튼 */
 button {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #bf0812;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 button:hover {
   background-color: #a10610;
 }
 
-.switch {
-  margin-top: 15px;
-  color: #fff;
-  cursor: pointer;
-  text-decoration: underline;
-  font-size: 0.8rem;
-}
-
-.error {
-  color: yellow;
-  font-size: 0.8rem;
-  margin-top: 8px;
-}
-
+/* 모바일 반응형 */
 @media (max-width: 480px) {
-  .card {
-  width: 560px;
-  height: 480px;
-  position: absolute;
-  transform-style: preserve-3d;
-  transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
-  opacity: 0;
-  z-index: 0;
-}
-}
+  .wrapper {
+    width: 100%; /* 모바일 화면에서 전체 너비 사용 */
+    padding: 15px; /* 여백 감소 */
+  }
 
-</style>
+  .content {
+    padding: 20px;
+  }
+
+  input {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}

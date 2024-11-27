@@ -285,6 +285,7 @@ input {
   border: none;
   border-radius: 5px;
   font-size: 0.9rem;
+  margin: 20px auto;
 }
 
 button {
@@ -345,27 +346,52 @@ button:hover {
 @media (max-width: 480px) {
   .wrapper {
     width: 100%; /* 모바일 화면에서 전체 너비 사용 */
-    padding: 20px;
+    padding: 10px;
   }
 
   .content {
-    padding: 50px; /* 모바일 콘텐츠 여백 축소 */
-    margin:20px auto; /*외부 여백*/
+    padding: 40px; /* 모바일 콘텐츠 여백 축소 */
   }
 
   h2 {
-    font-size: 1.1rem; /* 제목 크기 더 축소 */
+    font-size: 1rem; /* 제목 크기 더 축소 */
   }
 
   input {
-    font-size: 0.9rem; /* 입력 필드 글자 크기 축소 */
+    font-size: 0.8rem; /* 입력 필드 글자 크기 축소 */
     padding: 8px;
   }
 
   button {
-    font-size: 0.9rem; /* 버튼 글자 크기 축소 */
-    padding: 10px;
+    font-size: 0.8rem; /* 버튼 글자 크기 축소 */
+    padding: 8px;
   }
 }
+
+  /* 컨테이너 가로 폭 */
+  .card {
+      width: 70%; /* 화면 너비의 70%로 설정 */
+      max-width: 350px; /* 최대 350px로 제한 */
+      margin: 0 auto; /* 중앙 정렬 */
+      padding: 20px; /* 내부 여백 */
+      background-color: red; /* 카드 배경색 */
+      border-radius: 10px; /* 둥근 모서리 */
+  }
+
+  /* 버튼과 "Remember Me" 간 간격 조정 */
+  .remember-me {
+      margin-bottom: 10px; /* Remember Me와 버튼 사이 간격 */
+  }
+
+  button {
+      margin-top: 10px; /* 버튼 위쪽 간격 */
+      padding: 10px 20px; /* 버튼 내부 여백 */
+      width: 100%; /* 버튼을 컨테이너 너비에 맞춤 */
+      background-color: darkred; /* 버튼 배경색 */
+      color: white; /* 버튼 텍스트 색 */
+      border: none; /* 버튼 테두리 제거 */
+      border-radius: 5px; /* 버튼 모서리 둥글게 */
+  }
+
 
 </style>

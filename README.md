@@ -21,6 +21,7 @@ This project is built using Vue.js and includes several popular libraries and to
 ## Installed Packages
 Below is a list of major packages installed in the project:
 
+npm install (following packages)
 1. **vue-router**: For managing routing in the Vue.js application.
 2. **axios**: For making HTTP requests.
 3. **@fortawesome/fontawesome-free**: For FontAwesome icons.

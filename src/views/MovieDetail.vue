@@ -1,8 +1,4 @@
 <template>
-<<<<<<< HEAD
-    <div v-if="movie" class="movie-detail">
-      <img :src="makeImagePath(movie.backdrop_path, 'w1280')" alt="Movie Background" />
-=======
     <div
 v-if="movie"
 class="movie-detail"
@@ -11,7 +7,6 @@ class="movie-detail"
 :src="makeImagePath(movie.backdrop_path, 'w1280')"
 alt="Movie Background"
 >
->>>>>>> main
       <div class="content">
         <h2>{{ movie.title }}</h2>
         <p>{{ movie.overview }}</p>

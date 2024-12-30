@@ -1,38 +1,19 @@
 <template>
-<<<<<<< HEAD
-  <div class="search-page">
-=======
   <div
 class="search-page"
 @scroll="handleScroll"
 >
->>>>>>> main
     <!-- Navbar -->
     <Navbar />
 
     <!-- 검색 기능 -->
-<<<<<<< HEAD
-=======
     <h1>영화 검색</h1>
->>>>>>> main
     <div class="search-bar">
       <input
         v-model="searchQuery"
         type="text"
         placeholder="영화 제목을 검색하세요"
         @keydown.enter="handleSearch"
-<<<<<<< HEAD
-      />
-      <button @click="handleSearch">검색</button>
-    </div>
-
-    <!-- 최근 검색어 -->
-    <div v-if="recentSearches.length" class="recent-searches">
-      <h2>최근 검색어</h2>
-      <ul>
-        <li v-for="(query, index) in recentSearches" :key="index" @click="searchFromHistory(query)">
-          {{ query }}
-=======
       >
       <button @click="handleSearch">
 검색
@@ -57,42 +38,10 @@ class="delete-btn"
 >
 X
 </button>
->>>>>>> main
         </li>
       </ul>
     </div>
 
-<<<<<<< HEAD
-    <!-- 영화 리스트 -->
-    <div class="movie-grid">
-      <MovieCard
-        v-for="movie in movies"
-        :key="movie.id"
-        :movie="movie"
-        @toggleWishlist="toggleWishlist(movie)"
-        @addViewHistory="addViewHistory(movie)"
-      />
-    </div>
-
-    <!-- 즐겨찾기 영화 -->
-    <div v-if="wishlist.length" class="wishlist">
-      <h2>즐겨찾기한 영화</h2>
-      <ul>
-        <li v-for="movie in wishlist" :key="movie.id">
-          {{ movie.title }}
-          <button @click="toggleWishlist(movie)">즐겨찾기 제거</button>
-        </li>
-      </ul>
-    </div>
-
-    <!-- 로딩 표시 -->
-    <div v-if="loading" class="loading">로딩 중...</div>
-
-    <!-- TOP 버튼 -->
-    <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
-      TOP(위로)
-    </button>
-=======
     <div class="dropdown-container">
       <label>선호하는 설정을 선택하세요</label>
       <div
@@ -161,30 +110,18 @@ class="loading"
 >
 로딩 중...
 </div>
->>>>>>> main
   </div>
 </template>
 
 <script>
 import Navbar from "@/components/Navbar.vue";
-<<<<<<< HEAD
-import MovieCard from "@/components/MovieCard.vue";
-=======
 import { fetchMovies, searchMovies } from "@/api/movies";
->>>>>>> main
 import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "Search",
   components: {
     Navbar,
-<<<<<<< HEAD
-    MovieCard,
-  },
-  data() {
-    return {
-      searchQuery: "",
-=======
   },
   data() {
     return {
@@ -205,39 +142,10 @@ export default {
         sorting: "언어 (전체)",
       },
       activeDropdown: null,
->>>>>>> main
       movies: [],
       currentPage: 1,
       totalPages: 1,
       loading: false,
-<<<<<<< HEAD
-      showScrollTopButton: false,
-    };
-  },
-  computed: {
-    ...mapGetters(["searchHistory", "wishlist", "viewHistory"]),
-    recentSearches() {
-      return this.searchHistory.slice().reverse(); // 최신순
-    },
-  },
-  methods: {
-    ...mapActions(["addSearchHistory", "toggleWishlist", "addViewHistory"]),
-    async handleSearch() {
-      if (!this.searchQuery.trim()) return;
-
-      // 검색 기록 저장
-      this.addSearchHistory(this.searchQuery);
-
-      // 검색 API 호출 (fetchMovies를 대체할 API 사용 가능)
-      this.loading = true;
-      try {
-        const data = await fetchMovies({ query: this.searchQuery });
-        this.movies = data.results;
-        this.totalPages = data.total_pages;
-        this.currentPage = 1;
-      } catch (error) {
-        console.error("검색 중 오류 발생:", error);
-=======
     };
   },
   computed: {
@@ -297,7 +205,6 @@ export default {
         this.setSearchResults(this.movies);
       } catch (error) {
         console.error("검색 중 오류 발생:", error.message);
->>>>>>> main
       } finally {
         this.loading = false;
       }
@@ -306,16 +213,6 @@ export default {
       this.searchQuery = query;
       this.handleSearch();
     },
-<<<<<<< HEAD
-    toggleWishlist(movie) {
-      this.$store.dispatch("toggleWishlist", movie); // 즐겨찾기 추가/제거
-    },
-    addViewHistory(movie) {
-      this.$store.dispatch("addViewHistory", movie); // 시청 기록 추가
-    },
-    scrollToTop() {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-=======
     toggleDropdown(key) {
       this.activeDropdown = this.activeDropdown === key ? null : key;
     },
@@ -342,16 +239,12 @@ export default {
       return path
         ? `https://image.tmdb.org/t/p/w500/${path}`
         : "default_poster.png";
->>>>>>> main
     },
   },
 };
 </script>
 
-<<<<<<< HEAD
-=======
 
->>>>>>> main
 <style scoped>
 .search-page {
   background-color: #121212;
@@ -386,12 +279,6 @@ export default {
   background-color: #0056b3;
 }
 
-<<<<<<< HEAD
-.recent-searches,
-.wishlist {
-  margin-top: 20px;
-  padding: 0 20px;
-=======
 .recent-searches {
   margin: 20px auto;
   max-width: 70%;
@@ -458,28 +345,12 @@ export default {
   margin: 20px 0;
   display: flex;
   gap: 15px;
->>>>>>> main
 }
 
 .movie-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
-<<<<<<< HEAD
-  padding-top: 20px;
-}
-
-.scroll-top {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background-color: #e50914;
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  cursor: pointer;
-=======
 }
 
 .movie-card {
@@ -505,6 +376,5 @@ export default {
 .loading {
   text-align: center;
   margin: 20px 0;
->>>>>>> main
 }
 </style>

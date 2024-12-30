@@ -11,23 +11,6 @@
           <h2>Login</h2>
           <form @submit.prevent="handleLogin">
             <label for="email">Email</label>
-<<<<<<< HEAD
-            <input id="email" v-model="email" type="email" required />
-
-            <label for="password">Password</label>
-            <input id="password" v-model="password" type="password" required />
-
-            <p v-if="loginError" class="error">{{ loginError }}</p>
-
-            <div class="remember-me">
-              <input id="rememberMe" v-model="rememberMe" type="checkbox" />
-              <label for="rememberMe">Remember Me</label>
-            </div>
-
-            <button type="submit">Sign In</button>
-          </form>
-          <p class="switch" @click="switchToSignup">
-=======
             <input
 id="email"
 v-model="email"
@@ -67,7 +50,6 @@ Sign In
 class="switch"
 @click="switchToSignup"
 >
->>>>>>> main
             Don't have an account? <b>Sign up</b>
           </p>
         </div>
@@ -82,12 +64,6 @@ class="switch"
           <h2>Sign Up</h2>
           <form @submit.prevent="handleRegister">
             <label for="newEmail">Email</label>
-<<<<<<< HEAD
-            <input id="newEmail" v-model="newEmail" type="email" required />
-
-            <label for="newPassword">Password</label>
-            <input id="newPassword" v-model="newPassword" type="password" required />
-=======
             <input
 id="newEmail"
 v-model="newEmail"
@@ -102,7 +78,6 @@ v-model="newPassword"
 type="password"
 required
 >
->>>>>>> main
 
             <label for="confirmPassword">Confirm Password</label>
             <input
@@ -110,20 +85,6 @@ required
               v-model="confirmPassword"
               type="password"
               required
-<<<<<<< HEAD
-            />
-
-            <p v-if="signupError" class="error">{{ signupError }}</p>
-
-            <div class="terms">
-              <input id="terms" v-model="termsAccepted" type="checkbox" />
-              <label for="terms">I have read the <b>Terms and Conditions</b></label>
-            </div>
-
-            <button type="submit" :disabled="!termsAccepted">Register</button>
-          </form>
-          <p class="switch" @click="switchToLogin">
-=======
             >
 
             <p
@@ -153,7 +114,6 @@ Register
 class="switch"
 @click="switchToLogin"
 >
->>>>>>> main
             Already have an account? <b>Sign in</b>
           </p>
         </div>
@@ -238,11 +198,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-<<<<<<< HEAD
-  background-image: url('https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=2574&auto=format&fit=crop');
-=======
   background-image: url('https://images.unsplash.com/photo-1512070679279-8988d32161be?q=80&w=1938&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
->>>>>>> main
   background-size: cover;
   background-position: center;
   z-index: -1;
@@ -250,14 +206,9 @@ export default {
 
 /* 컨테이너 */
 .wrapper {
-<<<<<<< HEAD
-  width: 600px;
-  height: 520px;
-=======
   width: 90%;
   max-width: 600px; /* 데스크톱에서는 최대 600px */
   height: auto; /* 높이를 콘텐츠에 따라 조정 */
->>>>>>> main
   position: absolute;
   top: 50%;
   left: 50%;
@@ -270,48 +221,32 @@ export default {
 
 /* 카드 */
 .card {
-<<<<<<< HEAD
-  width: 560px;
-  height: 480px;
-=======
   width: 100%; /* wrapper에 맞게 크기 조정 */
   max-width: 560px; /* 데스크톱에서 최대 너비 */
   height: auto; /* 높이를 콘텐츠에 따라 자동 조정 */
->>>>>>> main
   position: absolute;
   transform-style: preserve-3d;
   transition: transform 1.2s ease-in-out, opacity 1.2s ease-in-out;
   opacity: 0;
   z-index: 0;
-<<<<<<< HEAD
-}
-
-=======
   margin: 20px auto; /* 화면 중앙 정렬 */
 }
 
 /* 활성 카드 */
->>>>>>> main
 .card.active {
   opacity: 1;
   z-index: 2;
   transform: rotateY(0deg) translateX(0);
 }
 
-<<<<<<< HEAD
-=======
 /* 뒤로 이동 */
->>>>>>> main
 .card.backward {
   z-index: 1;
   transform: rotateY(-90deg) translateX(-100%);
   opacity: 0;
 }
 
-<<<<<<< HEAD
-=======
 /* 카드 애니메이션 진입 */
->>>>>>> main
 .card.enter {
   opacity: 0;
   transform: rotateY(90deg) translateX(100%);
@@ -319,25 +254,15 @@ export default {
 
 /* 카드 콘텐츠 */
 .content {
-<<<<<<< HEAD
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  padding: 30px;
-=======
   width: 100%;
   height: 100%;
   padding: 20px;
->>>>>>> main
   text-align: center;
   background: #e50914;
   color: #fff;
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.15);
-<<<<<<< HEAD
-=======
   box-sizing: border-box;
->>>>>>> main
 }
 
 /* 텍스트 스타일 */
@@ -360,10 +285,7 @@ input {
   border: none;
   border-radius: 5px;
   font-size: 0.9rem;
-<<<<<<< HEAD
-=======
   margin: 20px auto;
->>>>>>> main
 }
 
 button {
@@ -395,22 +317,6 @@ button:hover {
   margin-top: 8px;
 }
 
-<<<<<<< HEAD
-@media (max-width: 480px) {
-  .content {
-    position: absolute;
-    width: 80%;
-    height: 100%;
-    padding: 30px;
-    text-align: center;
-    background: #e50914;
-    color: #fff;
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-  }
-}
-
-=======
 /* 반응형 스타일 */
 @media (max-width: 768px) {
   .wrapper {
@@ -513,5 +419,4 @@ button {
     line-height: 1.2; /* 줄 간격 축소 */
 }
 
->>>>>>> main
 </style>

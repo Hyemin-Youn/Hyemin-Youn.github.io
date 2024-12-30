@@ -1,17 +1,5 @@
 <template>
   <div class="movie-card">
-<<<<<<< HEAD
-    <img :src="posterUrl" :alt="movie.title" class="poster" />
-    <div class="movie-info">
-      <p class="movie-title">{{ movie.title }}</p>
-      <p class="release-date">개봉일: {{ formattedReleaseDate }}</p>
-      <div class="movie-rating" v-if="movie.vote_average">
-        ⭐ {{ movie.vote_average }} / 10
-      </div>
-    </div>
-    <span class="wishlist-icon" @click.stop="handleWishlist">
-      <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'"></i>
-=======
     <img
 :src="posterUrl"
 :alt="movie.title"
@@ -36,7 +24,6 @@ class="wishlist-icon"
 @click.stop="handleWishlist"
 >
       <i :class="isInWishlist(movie.id) ? 'fas fa-heart liked' : 'far fa-heart'" />
->>>>>>> main
     </span>
   </div>
 </template>

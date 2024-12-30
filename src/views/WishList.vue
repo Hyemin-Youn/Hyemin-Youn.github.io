@@ -3,12 +3,6 @@
     <Navbar />
     <h2>내가 찜한 콘텐츠</h2>
 
-<<<<<<< HEAD
-    <div v-if="wishlist.length === 0" class="empty-wishlist">
-      <p>찜한 영화가 없습니다.</p>
-    </div>
-    <div v-else class="wishlist-movies">
-=======
     <div
 v-if="wishlist.length === 0"
 class="empty-wishlist"
@@ -19,7 +13,6 @@ class="empty-wishlist"
 v-else
 class="wishlist-movies"
 >
->>>>>>> main
       <div
         v-for="movie in wishlist"
         :key="movie.id"
@@ -28,16 +21,12 @@ class="wishlist-movies"
       >
         <div class="movie-info">
           <h4>{{ movie.title }}</h4>
-<<<<<<< HEAD
-          <button @click="toggleWishlist(movie)" class="remove-btn">삭제</button>
-=======
           <button
 class="remove-btn"
 @click="toggleWishlist(movie)"
 >
 삭제
 </button>
->>>>>>> main
         </div>
       </div>
     </div>

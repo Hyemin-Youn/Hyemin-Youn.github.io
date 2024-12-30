@@ -5,13 +5,6 @@
   
       <!-- 영화 리스트 -->
       <div class="movie-grid">
-<<<<<<< HEAD
-        <MovieCard v-for="movie in movies" :key="movie.id" :movie="movie" />
-      </div>
-  
-      <!-- Loading Spinner -->
-      <div v-if="loading" class="loading">
-=======
         <MovieCard
 v-for="movie in movies"
 :key="movie.id"
@@ -24,20 +17,15 @@ v-for="movie in movies"
 v-if="loading"
 class="loading"
 >
->>>>>>> main
         로딩 중...
       </div>
   
       <!-- 맨 위로 올라가기 버튼 -->
-<<<<<<< HEAD
-      <button v-if="showScrollTopButton" class="scroll-top" @click="scrollToTop">
-=======
       <button
 v-if="showScrollTopButton"
 class="scroll-top"
 @click="scrollToTop"
 >
->>>>>>> main
         TOP(위로)
       </button>
     </div>
@@ -63,8 +51,6 @@ class="scroll-top"
         showScrollTopButton: false,
       };
     },
-<<<<<<< HEAD
-=======
     created() {
       this.fetchMovies();
       window.addEventListener("scroll", this.handleScroll);
@@ -72,7 +58,6 @@ class="scroll-top"
     beforeDestroy() {
       window.removeEventListener("scroll", this.handleScroll);
     },
->>>>>>> main
     methods: {
       async fetchMovies(page = 1) {
         if (this.loading || page > this.totalPages) return;
@@ -98,16 +83,6 @@ class="scroll-top"
         window.scrollTo({ top: 0, behavior: "smooth" });
       },
     },
-<<<<<<< HEAD
-    created() {
-      this.fetchMovies();
-      window.addEventListener("scroll", this.handleScroll);
-    },
-    beforeDestroy() {
-      window.removeEventListener("scroll", this.handleScroll);
-    },
-=======
->>>>>>> main
   };
   </script>
   

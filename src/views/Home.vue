@@ -3,29 +3,21 @@
     <Navbar />
 
     <div class="home">
-<<<<<<< HEAD
-      <div v-if="isLoading" class="loading-overlay">
-=======
       <div
 v-if="isLoading"
 class="loading-overlay"
 >
->>>>>>> main
         <p>로딩중...</p>
       </div>
 
       <div v-else>
         <Banner :heroMovie="heroMovie" />
         
-<<<<<<< HEAD
-        <div v-for="category in movieCategories" :key="category.name" class="movie-category">
-=======
         <div
 v-for="category in movieCategories"
 :key="category.name"
 class="movie-category"
 >
->>>>>>> main
           <h3>{{ category.title }}</h3>
           <SliderContent :movies="category.movies" />
         </div>

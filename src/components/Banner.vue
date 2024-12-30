@@ -4,23 +4,13 @@
       :style="{ backgroundImage: `url(${bannerImage})` }"
     >
       <div class="banner-content">
-<<<<<<< HEAD
-        <h1 class="banner-title">{{ heroMovie.title }}</h1>
-=======
         <h1 class="banner-title">
 {{ heroMovie.title }}
 </h1>
->>>>>>> main
         <p class="banner-description">
           {{ heroMovie.overview || "영화에 대한 설명이 없습니다." }}
         </p>
         <div class="banner-buttons">
-<<<<<<< HEAD
-          <button class="banner-button play" @click="playMovie">
-            재생
-          </button>
-          <button class="banner-button info" @click="showDetails">
-=======
           <button
 class="banner-button play"
 @click="playMovie"
@@ -31,16 +21,11 @@ class="banner-button play"
 class="banner-button info"
 @click="showDetails"
 >
->>>>>>> main
             상세 정보
           </button>
         </div>
       </div>
-<<<<<<< HEAD
-      <div class="banner-fade"></div>
-=======
       <div class="banner-fade" />
->>>>>>> main
     </div>
   </template>
   

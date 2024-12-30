@@ -20,11 +20,7 @@ app.use(router);
 app.use(store);
 
 // FontAwesome 컴포넌트 등록
-<<<<<<< HEAD
-app.component('font-awesome-icon', FontAwesomeIcon);
-=======
 app.component('FontAwesomeIcon', FontAwesomeIcon);
->>>>>>> main
 
 // Vue 앱 마운트
 app.mount('#app');

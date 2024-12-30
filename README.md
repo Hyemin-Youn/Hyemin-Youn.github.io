@@ -2,20 +2,11 @@
 # Hyemin-Youn
 
 ## Overview
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-이 프로젝트는 Node.js프레임워크 환경에서 Vue.js로 개발된 프론트엔드 넷플릭스 클론 코딩 프로젝트입니다. 기술스택은 Vue입니다.
->>>>>>> main
-=======
 이 프로젝트는 Node.js  기반 개발 환경에서 Vue.js로 개발된 프론트엔드 넷플릭스 클론 코딩 프로젝트입니다. 기술스택은 Vue입니다.
->>>>>>> e0fa95cabcdc92eda64240fc5194ba143e115263
 This project is built using Vue.js and includes several popular libraries and tools for development, styling, and state management.
 
 ---
 
-<<<<<<< HEAD
-=======
 ## Technology Stack
 - **Framework**: Vue.js (Version 3)
 - **State Management**: Vuex
@@ -27,7 +18,6 @@ This project is built using Vue.js and includes several popular libraries and to
 
 ---
 
->>>>>>> main
 ## Installed Packages
 Below is a list of major packages installed in the project:
 
@@ -37,11 +27,7 @@ npm install (following packages)
 3. **@fortawesome/fontawesome-free**: For FontAwesome icons.
 4. **babel-eslint**: For linting JavaScript files.
 5. **@babel/eslint-parser**: A Babel parser for ESLint.
-<<<<<<< HEAD
-6. **vuex@next**: For state management in Vue 3.
-=======
 6. **vuex**: For state management in Vue 3.
->>>>>>> main
 7. **vue-slick-carousel**: For carousel/slider functionality.
 8. **@types/webpack-env**: TypeScript definitions for Webpack.
 9. **@fortawesome/vue-fontawesome**: Integration of FontAwesome with Vue.
@@ -52,12 +38,6 @@ npm install (following packages)
 
 ---
 
-<<<<<<< HEAD
-## Project setup
-Install all dependencies using the following command:
-```
-npm install
-=======
 ## Project Setup
 
 To set up the project locally, follow these steps:
@@ -104,43 +84,11 @@ Hyemin-Youn.github.io/
 ├── .gitignore       # Git ignore file
 ├── README.md        # Project documentation
 └── package.json     # Project dependencies and scripts
->>>>>>> main
 ```
 
 ---
 
 ## Available Scripts
-<<<<<<< HEAD
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
----
-
-## How to Use Environment Variables
-The project uses **dotenv** to manage environment variables. To add your own environment variables:
-1. Create a `.env` file in the root directory.
-2. Add your variables in the following format:
-   ```
-   VUE_APP_VARIABLE_NAME=value
-   ```
-
----
-
-=======
 
 ### Compile and Hot-Reload for Development
 ```bash
@@ -182,24 +130,11 @@ This project is licensed under the MIT License.
       
       
 
->>>>>>> main
 ## Customize configuration
 For more configuration options, see the [Vue CLI Configuration Reference](https://cli.vuejs.org/config/).
 
 ---
 
-<<<<<<< HEAD
-## Contributors
-- **Hyemin Youn**: Developer and maintainer.
-
-
-
-=======
 [!homepage screenshot](./screenshots/homepage.png)
 
-<<<<<<< HEAD
 ---
->>>>>>> main
-=======
----
->>>>>>> e0fa95cabcdc92eda64240fc5194ba143e115263

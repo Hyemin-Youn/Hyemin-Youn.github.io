@@ -15,12 +15,8 @@
     "vue": "^3.2.13",
     "vue-router": "^4.4.5",
     "vue-slick-carousel": "^1.0.6",
-<<<<<<< HEAD
-    "vuex": "^4.0.2"
-=======
     "vue3-slick-carousel": "^1.0.6",
     "vuex": "^4.1.0"
->>>>>>> main
   },
   "scripts": {
     "serve": "vue-cli-service serve",

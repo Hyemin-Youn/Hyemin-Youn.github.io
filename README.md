@@ -3,9 +3,13 @@
 
 ## Overview
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 이 프로젝트는 Node.js프레임워크 환경에서 Vue.js로 개발된 프론트엔드 넷플릭스 클론 코딩 프로젝트입니다. 기술스택은 Vue입니다.
 >>>>>>> main
+=======
+이 프로젝트는 Node.js  기반 개발 환경에서 Vue.js로 개발된 프론트엔드 넷플릭스 클론 코딩 프로젝트입니다. 기술스택은 Vue입니다.
+>>>>>>> e0fa95cabcdc92eda64240fc5194ba143e115263
 This project is built using Vue.js and includes several popular libraries and tools for development, styling, and state management.
 
 ---
@@ -27,6 +31,7 @@ This project is built using Vue.js and includes several popular libraries and to
 ## Installed Packages
 Below is a list of major packages installed in the project:
 
+npm install (following packages)
 1. **vue-router**: For managing routing in the Vue.js application.
 2. **axios**: For making HTTP requests.
 3. **@fortawesome/fontawesome-free**: For FontAwesome icons.
@@ -192,5 +197,9 @@ For more configuration options, see the [Vue CLI Configuration Reference](https:
 =======
 [!homepage screenshot](./screenshots/homepage.png)
 
+<<<<<<< HEAD
 ---
 >>>>>>> main
+=======
+---
+>>>>>>> e0fa95cabcdc92eda64240fc5194ba143e115263
